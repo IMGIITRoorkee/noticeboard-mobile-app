@@ -1,0 +1,1 @@
+enum LoginEvents { togglePasswordView }
