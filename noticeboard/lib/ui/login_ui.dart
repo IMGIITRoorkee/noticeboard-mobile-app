@@ -23,45 +23,59 @@ class _LoginState extends State<Login> {
     final double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              containsBranding(context, _width, _height),
-              SizedBox(
-                height: 20.0,
+      body: SingleChildScrollView(
+        child: Container(
+          height: _height,
+          width: _width,
+          child: Stack(children: [
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  containsBranding(context, _width, _height),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  buildUsernameContainer(_width),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  StreamBuilder(
+                      initialData: true,
+                      stream: loginBloc.showPasswordStream,
+                      builder: (context, snapshot) {
+                        return buildPasswordContainer(_width, snapshot);
+                      }),
+                  SizedBox(
+                    height: _height * 0.04,
+                  ),
+                  StreamBuilder(
+                    initialData: false,
+                    stream: loginBloc.allowedStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.data)
+                        return buildLoginEnabledBtn(_width);
+                      else
+                        return buildLoginDisabledBtn(_width);
+                    },
+                  ),
+                  SizedBox(
+                    height: _height * 0.02,
+                  ),
+                  buildContactImgContainer(_width),
+                ],
               ),
-              buildUsernameContainer(_width),
-              SizedBox(
-                height: 10.0,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: lotsOfLove(context, _width, _height),
               ),
-              StreamBuilder(
-                  initialData: true,
-                  stream: loginBloc.showPasswordStream,
-                  builder: (context, snapshot) {
-                    return buildPasswordContainer(_width, snapshot);
-                  }),
-              SizedBox(
-                height: _height * 0.04,
-              ),
-              StreamBuilder(
-                initialData: false,
-                stream: loginBloc.allowedStream,
-                builder: (context, snapshot) {
-                  if (snapshot.data)
-                    return buildLoginEnabledBtn(_width);
-                  else
-                    return buildLoginDisabledBtn(_width);
-                },
-              ),
-              SizedBox(
-                height: _height * 0.02,
-              ),
-              buildContactImgContainer(_width)
-            ],
-          ),
+            )
+          ]),
         ),
       ),
     );
@@ -97,21 +111,22 @@ class _LoginState extends State<Login> {
   Container buildContactImgContainer(double _width) {
     return Container(
       width: _width * 0.60,
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(child: Text("Having trouble signing in?")),
-            Text(
-              " Contact IMG",
-              overflow: TextOverflow.fade,
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+              child: Text(
+            "Having trouble signing in?",
+            style: TextStyle(fontSize: 12.0),
+          )),
+          Text(
+            "Contact IMG",
+            overflow: TextOverflow.fade,
+            style: TextStyle(
+                fontSize: 12.0,
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
@@ -179,5 +194,30 @@ class _LoginState extends State<Login> {
           },
           icon: !toHide ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
         ));
+  }
+
+  Widget lotsOfLove(BuildContext context, double _width, double _height) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "Made With ",
+          style: TextStyle(
+            color: Colors.black54,
+          ),
+        ),
+        Icon(
+          Icons.favorite,
+          color: Colors.red,
+        ),
+        Text(
+          " by IMG",
+          style: TextStyle(
+            color: Colors.black54,
+          ),
+        ),
+      ],
+    );
   }
 }
