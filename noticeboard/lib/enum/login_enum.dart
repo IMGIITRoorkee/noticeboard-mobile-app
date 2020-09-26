@@ -1,1 +1,1 @@
-enum LoginEvents { togglePasswordView }
+enum LoginEvents { togglePasswordView, loginEvent }

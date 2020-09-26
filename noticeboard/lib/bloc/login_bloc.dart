@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+
 import '../enum/login_enum.dart';
+import '../services/auth/auth_repository.dart';
 
 class LoginBloc {
-  String _email;
+  String _username;
   String _password;
   bool _showPassword = true;
+  BuildContext context;
 
-  final _emailController = StreamController<String>();
-  StreamSink<String> get emailSink => _emailController.sink;
-  Stream<String> get _emailStream => _emailController.stream;
+  final _usernameController = StreamController<String>();
+  StreamSink<String> get usernameSink => _usernameController.sink;
+  Stream<String> get _usernameStream => _usernameController.stream;
 
   final _passwordController = StreamController<String>();
   StreamSink<String> get passwordSink => _passwordController.sink;
@@ -26,32 +30,22 @@ class LoginBloc {
   StreamSink<bool> get _showPasswordSink => _showPasswordConroller.sink;
   Stream<bool> get showPasswordStream => _showPasswordConroller.stream;
 
-  LoginBloc() {
-    _emailStream.listen((email) {
-      if (email != '')
-        _email = email;
-      else
-        _email = null;
+  AuthRepository _authRepository = AuthRepository();
 
-      checkAllowed();
+  LoginBloc() {
+    _usernameStream.listen((username) {
+      usernameListner(username);
     });
     _passwordStream.listen((password) {
-      if (password != '')
-        _password = password;
-      else
-        _password = null;
-      checkAllowed();
+      passwordListener(password);
     });
     _eventStream.listen((event) {
-      if (event == LoginEvents.togglePasswordView) {
-        _showPassword = !_showPassword;
-        _showPasswordSink.add(_showPassword);
-      }
+      eventListener(event);
     });
   }
 
   void disposeStreams() {
-    _emailController.close();
+    _usernameController.close();
     _passwordController.close();
     _allowController.close();
     _eventController.close();
@@ -59,9 +53,36 @@ class LoginBloc {
   }
 
   void checkAllowed() {
-    if (_email != null && _password != null)
+    if (_username != null && _password != null)
       _allowedSink.add(true);
     else
       _allowedSink.add(false);
+  }
+
+  void usernameListner(String username) {
+    if (username != '')
+      _username = username;
+    else
+      _username = null;
+
+    checkAllowed();
+  }
+
+  void passwordListener(String password) {
+    if (password != '')
+      _password = password;
+    else
+      _password = null;
+    checkAllowed();
+  }
+
+  void eventListener(LoginEvents event) {
+    if (event == LoginEvents.togglePasswordView) {
+      _showPassword = !_showPassword;
+      _showPasswordSink.add(_showPassword);
+    } else if (event == LoginEvents.loginEvent) {
+      _authRepository.signInWithUsernamePassword(
+          username: _username, password: _password, context: context);
+    }
   }
 }

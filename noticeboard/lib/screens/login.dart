@@ -18,6 +18,12 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  void initState() {
+    loginBloc.context = context;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
     final double _height = MediaQuery.of(context).size.height;
@@ -86,7 +92,7 @@ class _LoginState extends State<Login> {
       width: _width * 0.75,
       child: TextField(
         decoration: usernameDecoration,
-        onChanged: (value) => loginBloc.emailSink.add(value),
+        onChanged: (value) => loginBloc.usernameSink.add(value),
       ),
     );
   }
@@ -114,7 +120,9 @@ class _LoginState extends State<Login> {
           ),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-          onPressed: () {},
+          onPressed: () {
+            loginBloc.eventSink.add(LoginEvents.loginEvent);
+          },
         ));
   }
 
