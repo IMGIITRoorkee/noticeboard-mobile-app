@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/login.dart';
+import './routes/routing_constants.dart';
+import './routes/routing.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login(),
+      onGenerateRoute: Router.generateRoute,
+      initialRoute: loginRoute,
     );
   }
 }
