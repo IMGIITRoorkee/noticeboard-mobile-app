@@ -3,6 +3,7 @@ import 'package:noticeboard/screens/profile.dart';
 import './routing_constants.dart';
 import '../screens/login.dart';
 import '../models/user_profile.dart';
+import '../screens/institute_notices.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,6 +16,8 @@ class Router {
             builder: (context) => Profile(
                   userProfile: userProfile,
                 ));
+      case instituteNoticesRoute:
+        return MaterialPageRoute(builder: (context) => Home());
     }
   }
 }

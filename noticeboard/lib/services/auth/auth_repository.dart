@@ -1,8 +1,10 @@
+import 'package:noticeboard/routes/routing_constants.dart';
+
 import '../../models/user_tokens.dart';
-import '../../models/user_profile.dart';
 import 'auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../global/toast.dart';
+import '../../models/user_profile.dart';
 
 class AuthRepository {
   AuthService _authService = AuthService();
@@ -17,8 +19,7 @@ class AuthRepository {
       await _authService.storeRefreshToken(_refreshTokenObj);
       cancelToast();
       showToast('Login Successful');
-      // UserProfile userProfile = await fetchUserProfile();
-      // Navigator.pushNamed(context, profileRoute, arguments: userProfile);
+      Navigator.pushReplacementNamed(context, instituteNoticesRoute);
     } catch (e) {
       showToast('Login failed');
     }
