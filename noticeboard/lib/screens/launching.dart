@@ -10,6 +10,12 @@ class _LauncherState extends State<Launcher> {
   final _authRepository = AuthRepository();
 
   @override
+  void initState() {
+    _authRepository.checkIfAlreadySignedIn(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
     final double _height = MediaQuery.of(context).size.height;

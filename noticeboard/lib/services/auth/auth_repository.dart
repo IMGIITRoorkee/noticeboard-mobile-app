@@ -24,6 +24,16 @@ class AuthRepository {
     }
   }
 
+  Future checkIfAlreadySignedIn(BuildContext context) async {
+    RefreshToken refreshToken = await _authService.fetchRefreshToken();
+    await Future.delayed(Duration(seconds: 1));
+    if (refreshToken.refreshToken != null) {
+      Navigator.pushReplacementNamed(context, instituteNoticesRoute);
+    } else {
+      Navigator.pushReplacementNamed(context, loginRoute);
+    }
+  }
+
   Future<UserProfile> fetchUserProfile() async {
     try {
       RefreshToken refreshTokenObj = await _authService.fetchRefreshToken();
