@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/user_profile.dart';
 import '../styles/profile_constants.dart';
+import '../bloc/profile_bloc.dart';
+import '../enum/profile_enum.dart';
 
 class Profile extends StatefulWidget {
   final UserProfile userProfile;
@@ -11,6 +13,20 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final ProfileBloc _profileBloc = ProfileBloc();
+
+  @override
+  void initState() {
+    _profileBloc.context = context;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _profileBloc.disposeStreams();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
@@ -64,7 +80,8 @@ class _ProfileState extends State<Profile> {
                     Icons.collections_bookmark,
                     color: Colors.grey[600],
                   ),
-                  'Bookmarks'),
+                  'Bookmarks',
+                  ProfileEvents.logoutEvent),
               SizedBox(
                 height: 17.0,
               ),
@@ -81,7 +98,8 @@ class _ProfileState extends State<Profile> {
                     Icons.feedback,
                     color: Colors.grey[600],
                   ),
-                  'Feedback'),
+                  'Feedback',
+                  ProfileEvents.logoutEvent),
               SizedBox(
                 height: 12.0,
               ),
@@ -90,7 +108,8 @@ class _ProfileState extends State<Profile> {
                     Icons.settings,
                     color: Colors.grey[600],
                   ),
-                  'Notification settings'),
+                  'Notification settings',
+                  ProfileEvents.logoutEvent),
               SizedBox(
                 height: 15.0,
               ),
@@ -99,7 +118,8 @@ class _ProfileState extends State<Profile> {
                     Icons.exit_to_app,
                     color: Colors.grey[600],
                   ),
-                  'Logout')
+                  'Logout',
+                  ProfileEvents.logoutEvent)
             ],
           ),
         ),
@@ -107,18 +127,23 @@ class _ProfileState extends State<Profile> {
     ));
   }
 
-  Row buildMenuItem(Icon icon, String text) {
-    return Row(
-      children: [
-        icon,
-        SizedBox(
-          width: 15.0,
-        ),
-        Text(
-          text,
-          style: boldMediumGreyMediumSize,
-        )
-      ],
+  GestureDetector buildMenuItem(Icon icon, String text, ProfileEvents event) {
+    return GestureDetector(
+      onTap: () {
+        _profileBloc.eventSink.add(event);
+      },
+      child: Row(
+        children: [
+          icon,
+          SizedBox(
+            width: 15.0,
+          ),
+          Text(
+            text,
+            style: boldMediumGreyMediumSize,
+          )
+        ],
+      ),
     );
   }
 }

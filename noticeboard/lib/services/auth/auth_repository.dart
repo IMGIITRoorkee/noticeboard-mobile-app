@@ -17,8 +17,7 @@ class AuthRepository {
       RefreshToken _refreshTokenObj =
           await _authService.fetchUserTokens(userObj);
       await _authService.storeRefreshToken(_refreshTokenObj);
-      cancelToast();
-      showToast('Login Successful');
+
       Navigator.pushReplacementNamed(context, instituteNoticesRoute);
     } catch (e) {
       showToast('Login failed');
@@ -40,5 +39,9 @@ class AuthRepository {
     } catch (e) {
       showToast('Unable to fetch Profile');
     }
+  }
+
+  Future logout() async {
+    await _authService.deleteRefreshToken();
   }
 }

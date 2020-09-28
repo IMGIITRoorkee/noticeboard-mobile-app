@@ -4,10 +4,9 @@ import '../services/auth/auth_repository.dart';
 import '../models/user_profile.dart';
 
 class InstituteNoticesRepository {
-  AuthRepository authRepository = AuthRepository();
+  AuthRepository _authRepository = AuthRepository();
   Future pushProfileScreen(BuildContext context) async {
-    UserProfile userProfile = await authRepository.fetchUserProfile();
-    Navigator.pushReplacementNamed(context, profileRoute,
-        arguments: userProfile);
+    UserProfile userProfile = await _authRepository.fetchUserProfile();
+    Navigator.pushNamed(context, profileRoute, arguments: userProfile);
   }
 }
