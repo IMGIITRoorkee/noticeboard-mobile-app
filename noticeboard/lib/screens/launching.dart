@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+import '../services/auth/auth_repository.dart';
+
+class Launcher extends StatefulWidget {
+  @override
+  _LauncherState createState() => _LauncherState();
+}
+
+class _LauncherState extends State<Launcher> {
+  final _authRepository = AuthRepository();
+
+  @override
+  Widget build(BuildContext context) {
+    final double _width = MediaQuery.of(context).size.width;
+    final double _height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Container(
+          width: _width * 0.65,
+          height: _width * 0.65,
+          child: FittedBox(
+            child: Image.asset('assets/images/splash_logo.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+  }
+}
