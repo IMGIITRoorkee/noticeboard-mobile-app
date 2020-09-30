@@ -9,18 +9,22 @@ class ApiService {
   AuthService _authService = AuthService();
 
   Future<List<NoticeIntro>> fetchallNotices() async {
-    AccessToken accessTokenObj =
-        await _authService.fetchAccessTokenFromRefresh();
-    final http.Response allNoticesResponse = await http
-        .get(BASE_URL + ALL_NOTICES, headers: {
-      AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-    });
-    if (allNoticesResponse.statusCode == 200) {
-      final body = jsonDecode(allNoticesResponse.body);
-      Iterable list = body['results'];
-      return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-    } else {
-      throw Exception('Failed to load all notices');
+    try {
+      AccessToken accessTokenObj =
+          await _authService.fetchAccessTokenFromRefresh();
+      final http.Response allNoticesResponse = await http
+          .get(BASE_URL + ALL_NOTICES, headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+      if (allNoticesResponse.statusCode == 200) {
+        final body = jsonDecode(allNoticesResponse.body);
+        Iterable list = body['results'];
+        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+      } else {
+        throw Exception('Failed to load notices');
+      }
+    } catch (e) {
+      throw Exception('Failed to load notices');
     }
   }
 }

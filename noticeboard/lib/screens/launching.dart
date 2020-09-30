@@ -23,10 +23,10 @@ class _LauncherState extends State<Launcher> {
       backgroundColor: Colors.white,
       body: Center(
         child: Container(
-          width: _width * 0.65,
-          height: _width * 0.65,
+          width: _width * 0.55,
+          height: _width * 0.55,
           child: FittedBox(
-            child: Image.asset('assets/images/splash_logo.jpg'),
+            child: Image.asset('assets/images/splash_logo.png'),
             fit: BoxFit.fill,
           ),
         ),

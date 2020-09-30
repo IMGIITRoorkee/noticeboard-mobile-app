@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../enum/insti_notices_enum.dart';
 import '../bloc/insti_notices_bloc.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -14,6 +13,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _instituteNoticesBloc.context = context;
+    _instituteNoticesBloc.eventSink
+        .add(InstituteNoticesEvent.fetchInstituteNotices);
     super.initState();
   }
 
@@ -23,12 +24,15 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _instituteNoticesBloc.eventSink
+              .add(InstituteNoticesEvent.fetchInstituteNotices);
+        },
+      ),
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
@@ -52,8 +56,20 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      body: Center(
-        child: Text('Institute notices'),
+      body: StreamBuilder(
+        stream: _instituteNoticesBloc.instiNoticesStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Center(
+              child: Text(snapshot.data.length.toString()),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error));
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

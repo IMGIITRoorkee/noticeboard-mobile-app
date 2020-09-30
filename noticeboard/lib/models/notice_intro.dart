@@ -18,7 +18,7 @@ class NoticeIntro {
 
   static String convertDateToRequiredFormat(String dateOriginal) {
     DateTime dateObj = DateTime.parse(dateOriginal);
-    List format = [hh, ':', nn, ' ', am, ', ', M, ' ', dd, ', ', yy];
+    List<String> format = [hh, ':', nn, ' ', am, ', ', M, ' ', dd, ', ', yy];
     String formattedDateString = formatDate(dateObj, format);
     return formattedDateString;
   }

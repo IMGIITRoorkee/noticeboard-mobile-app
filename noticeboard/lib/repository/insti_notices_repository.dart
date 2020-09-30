@@ -15,12 +15,7 @@ class InstituteNoticesRepository {
   }
 
   Future<List<NoticeIntro>> fetchInstituteNotices() async {
-    try {
-      List<NoticeIntro> allInstituteNotices =
-          await _apiService.fetchallNotices();
-      return allInstituteNotices;
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+    List<NoticeIntro> allInstituteNotices = await _apiService.fetchallNotices();
+    return allInstituteNotices;
   }
 }

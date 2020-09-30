@@ -118,8 +118,6 @@ class _LoginState extends State<Login> {
             "Log In",
             style: TextStyle(fontSize: 17.0, color: Colors.white),
           ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
           onPressed: () {
             loginBloc.eventSink.add(LoginEvents.loginEvent);
           },
@@ -136,8 +134,6 @@ class _LoginState extends State<Login> {
             "Log In",
             style: TextStyle(fontSize: 17.0),
           ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
           onPressed: () {},
         ));
   }
