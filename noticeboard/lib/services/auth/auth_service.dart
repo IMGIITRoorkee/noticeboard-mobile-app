@@ -35,11 +35,14 @@ class AuthService {
     await storage.delete(key: "refreshToken");
   }
 
-  Future<AccessToken> fetchAccessTokenFromRefresh(dynamic obj) async {
+  Future<AccessToken> fetchAccessTokenFromRefresh() async {
+    RefreshToken refreshTokenObj = await fetchRefreshToken();
+
+    var refreshObj = {"refresh": refreshTokenObj.refreshToken};
     final http.Response postResponse = await http.post(
         BASE_URL + EP_ACCESS_TOKEN,
         headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
-        body: jsonEncode(obj));
+        body: jsonEncode(refreshObj));
 
     if (postResponse.statusCode == 200) {
       return AccessToken.fromJSON(jsonDecode(postResponse.body));
@@ -48,10 +51,11 @@ class AuthService {
     }
   }
 
-  Future<UserProfile> fetchUserProfile(AccessToken accessToken) async {
+  Future<UserProfile> fetchUserProfile() async {
+    AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
     final http.Response userProfileResponse = await http
         .get(BASE_URL + EP_WHO_AM_I, headers: {
-      AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessToken.accessToken
+      AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
     });
 
     if (userProfileResponse.statusCode == 200) {

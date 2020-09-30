@@ -37,14 +37,7 @@ class AuthRepository {
 
   Future<UserProfile> fetchUserProfile() async {
     try {
-      RefreshToken refreshTokenObj = await _authService.fetchRefreshToken();
-
-      var refreshObj = {"refresh": refreshTokenObj.refreshToken};
-      AccessToken accessTokenObj =
-          await _authService.fetchAccessTokenFromRefresh(refreshObj);
-
-      UserProfile userProfileObj =
-          await _authService.fetchUserProfile(accessTokenObj);
+      UserProfile userProfileObj = await _authService.fetchUserProfile();
 
       return userProfileObj;
     } catch (e) {
