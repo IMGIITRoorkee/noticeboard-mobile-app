@@ -10,6 +10,7 @@ class ApiService {
 
   Future<List<NoticeIntro>> fetchallNotices() async {
     try {
+      print('apiiiiiiii');
       AccessToken accessTokenObj =
           await _authService.fetchAccessTokenFromRefresh();
       final http.Response allNoticesResponse = await http

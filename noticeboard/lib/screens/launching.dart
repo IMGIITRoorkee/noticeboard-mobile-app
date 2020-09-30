@@ -18,7 +18,7 @@ class _LauncherState extends State<Launcher> {
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

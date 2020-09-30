@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noticeboard/models/notice_intro.dart';
 import '../enum/insti_notices_enum.dart';
 import '../bloc/insti_notices_bloc.dart';
 
@@ -13,9 +14,18 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _instituteNoticesBloc.context = context;
+    fetchNoticeEventSink();
+    super.initState();
+  }
+
+  void fetchNoticeEventSink() {
     _instituteNoticesBloc.eventSink
         .add(InstituteNoticesEvent.fetchInstituteNotices);
-    super.initState();
+  }
+
+  Future refreshNotices() async {
+    fetchNoticeEventSink();
+    await Future.delayed(Duration(seconds: 1));
   }
 
   @override
@@ -27,12 +37,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _instituteNoticesBloc.eventSink
-              .add(InstituteNoticesEvent.fetchInstituteNotices);
-        },
-      ),
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
@@ -60,17 +64,44 @@ class _HomeState extends State<Home> {
         stream: _instituteNoticesBloc.instiNoticesStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Center(
-              child: Text(snapshot.data.length.toString()),
-            );
+            if (snapshot.data.length == 0) return buildNoResults();
+            return buildNoticesList(snapshot);
           } else if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error));
+            return buildErrorWidget(snapshot);
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return buildLoading();
         },
       ),
     );
   }
+
+  Padding buildNoticesList(AsyncSnapshot snapshot) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: RefreshIndicator(
+        onRefresh: refreshNotices,
+        child: ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              NoticeIntro noticeIntroObj = snapshot.data[index];
+              return Text(noticeIntroObj.title);
+            }),
+      ),
+    );
+  }
+
+  Center buildNoResults() {
+    return Center(
+      child: Text('No Notices'),
+    );
+  }
+
+  Center buildLoading() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Center buildErrorWidget(AsyncSnapshot snapshot) =>
+      Center(child: Text(snapshot.error));
 }
