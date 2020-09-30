@@ -6,3 +6,4 @@ const String CONTENT_TYPE_KEY = 'Content-Type';
 const String CONTENT_TYPE = 'application/json';
 const String AUTHORIZAION_KEY = 'Authorization';
 const String AUTHORIZATION_PREFIX = 'Bearer ';
+const String ALL_NOTICES = 'api/noticeboard/new/';

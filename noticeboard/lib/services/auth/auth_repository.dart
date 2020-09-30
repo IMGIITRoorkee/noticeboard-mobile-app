@@ -42,6 +42,7 @@ class AuthRepository {
       return userProfileObj;
     } catch (e) {
       showToast('Unable to fetch Profile');
+      return null;
     }
   }
 

@@ -21,6 +21,8 @@ class Router {
                 ));
       case instituteNoticesRoute:
         return MaterialPageRoute(builder: (context) => Home());
+      default:
+        return MaterialPageRoute(builder: (context) => Login());
     }
   }
 }
