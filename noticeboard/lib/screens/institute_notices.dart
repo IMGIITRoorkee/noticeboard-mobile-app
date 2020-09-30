@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../enum/insti_notices_enum.dart';
 import '../bloc/insti_notices_bloc.dart';
 
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -22,9 +23,12 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
+ 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,

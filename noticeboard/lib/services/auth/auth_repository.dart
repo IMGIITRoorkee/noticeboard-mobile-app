@@ -19,6 +19,7 @@ class AuthRepository {
       await _authService.storeRefreshToken(_refreshTokenObj);
 
       Navigator.pushReplacementNamed(context, instituteNoticesRoute);
+      cancelToast();
     } catch (e) {
       showToast('Login failed');
     }
