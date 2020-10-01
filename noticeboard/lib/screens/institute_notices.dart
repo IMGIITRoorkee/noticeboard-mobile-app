@@ -36,6 +36,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    double _height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -60,32 +62,45 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      body: StreamBuilder(
-        stream: _instituteNoticesBloc.instiNoticesStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.length == 0) return buildNoResults();
-            return buildNoticesList(snapshot);
-          } else if (snapshot.hasError) {
-            return buildErrorWidget(snapshot);
-          }
-          return buildLoading();
-        },
+      body: RefreshIndicator(
+        onRefresh: refreshNotices,
+        child: ListView(
+          children: [
+            Container(
+              height: _height * 0.88,
+              width: _width,
+              child: StreamBuilder(
+                stream: _instituteNoticesBloc.instiNoticesStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.length == 0) return buildNoResults();
+                    return buildNoticesList(snapshot, _width);
+                  } else if (snapshot.hasError) {
+                    return buildErrorWidget(snapshot);
+                  }
+                  return buildLoading();
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Padding buildNoticesList(AsyncSnapshot snapshot) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: RefreshIndicator(
-        onRefresh: refreshNotices,
-        child: ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) {
-              NoticeIntro noticeIntroObj = snapshot.data[index];
-              return Text(noticeIntroObj.title);
-            }),
+  Center buildNoticesList(AsyncSnapshot snapshot, double width) {
+    return Center(
+      child: Container(
+        width: width * 0.9,
+        child: RefreshIndicator(
+          onRefresh: refreshNotices,
+          child: ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                NoticeIntro noticeIntroObj = snapshot.data[index];
+                return Text(noticeIntroObj.title);
+              }),
+        ),
       ),
     );
   }
