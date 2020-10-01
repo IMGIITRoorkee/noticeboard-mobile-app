@@ -88,22 +88,23 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Center buildNoticesList(AsyncSnapshot snapshot, double width, double height) {
-    return Center(
-      child: Container(
-        width: width * 0.9,
-        child: RefreshIndicator(
-          onRefresh: refreshNotices,
-          child: ListView.separated(
-              separatorBuilder: (context, index) => Divider(
-                    color: Colors.black,
-                  ),
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                NoticeIntro noticeIntroObj = snapshot.data[index];
-                return buildListItem(noticeIntroObj, width, height);
-              }),
-        ),
+  Container buildNoticesList(
+      AsyncSnapshot snapshot, double width, double height) {
+    return Container(
+      width: width,
+      child: RefreshIndicator(
+        onRefresh: refreshNotices,
+        child: ListView.separated(
+            separatorBuilder: (context, index) => Container(
+                  width: width,
+                  color: Colors.black,
+                  height: 2.0,
+                ),
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              NoticeIntro noticeIntroObj = snapshot.data[index];
+              return buildListItem(noticeIntroObj, width, height);
+            }),
       ),
     );
   }
@@ -111,47 +112,59 @@ class _HomeState extends State<Home> {
   Container buildListItem(
       NoticeIntro noticeIntroObj, double width, double height) {
     return Container(
+      color: !noticeIntroObj.read ? Colors.white : Colors.grey[200],
       width: width,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      width: width,
+                      child: Text(
+                        noticeIntroObj.department,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Container(
                     width: width,
-                    child: Text(
-                      noticeIntroObj.department,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Container(
-                  width: width,
-                  child: Text(noticeIntroObj.dateCreated,
-                      overflow: TextOverflow.ellipsis),
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Container(
-                    width: width,
-                    child: Text(noticeIntroObj.title,
-                        overflow: TextOverflow.ellipsis))
-              ],
+                    child: Text(noticeIntroObj.dateCreated,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Container(
+                      width: width,
+                      child: Text(noticeIntroObj.title,
+                          overflow: TextOverflow.ellipsis))
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Icon(
-              Icons.bookmark_border,
-              size: 30.0,
-            ),
-          )
-        ],
+            Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: bookMarkIconDecider(noticeIntroObj.starred))
+          ],
+        ),
       ),
+    );
+  }
+
+  Icon bookMarkIconDecider(bool isBookmarked) {
+    if (isBookmarked)
+      return Icon(
+        Icons.bookmark,
+        size: 30.0,
+      );
+    return Icon(
+      Icons.bookmark_border,
+      size: 30.0,
     );
   }
 
