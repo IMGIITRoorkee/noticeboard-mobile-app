@@ -17,6 +17,12 @@ class InstituteNoticesBloc {
   Stream<List<NoticeIntro>> get instiNoticesStream =>
       _instituteNoticesController.stream;
 
+  final _instituteNoticeObjController = StreamController<NoticeIntro>();
+  StreamSink<NoticeIntro> get instituteNoticeObjSink =>
+      _instituteNoticeObjController.sink;
+  Stream<NoticeIntro> get _instituteNoticeObjStream =>
+      _instituteNoticeObjController.stream;
+
   InstituteNoticesRepository _instituteNoticesRepository =
       InstituteNoticesRepository();
 
@@ -24,7 +30,7 @@ class InstituteNoticesBloc {
     _eventStream.listen((event) async {
       if (event == InstituteNoticesEvent.pushProfileEvent) {
         _instituteNoticesRepository.pushProfileScreen(context);
-      } else if (event == InstituteNoticesEvent.fetchInstituteNotices) {
+      } else if (event == InstituteNoticesEvent.fetchInstituteNoticesEvent) {
         try {
           List<NoticeIntro> allinstituteNotices =
               await _instituteNoticesRepository.fetchInstituteNotices();
@@ -34,10 +40,28 @@ class InstituteNoticesBloc {
         }
       }
     });
+
+    _instituteNoticeObjStream.listen((object) async {
+      if (object.starred) {
+        var obj = {
+          "keyword": "unstar",
+          "notices": [object.id]
+        };
+        await _instituteNoticesRepository.unbookmarkNotice(context, obj);
+      } else {
+        var obj = {
+          "keyword": "star",
+          "notices": [object.id]
+        };
+        await _instituteNoticesRepository.bookmarkNotice(context, obj);
+      }
+      eventSink.add(InstituteNoticesEvent.fetchInstituteNoticesEvent);
+    });
   }
 
   void disposeStreams() {
     _eventController.close();
     _instituteNoticesController.close();
+    _instituteNoticeObjController.close();
   }
 }

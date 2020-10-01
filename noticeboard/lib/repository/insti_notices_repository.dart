@@ -4,6 +4,7 @@ import '../services/auth/auth_repository.dart';
 import '../models/user_profile.dart';
 import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
+import '../global/toast.dart';
 
 class InstituteNoticesRepository {
   AuthRepository _authRepository = AuthRepository();
@@ -17,5 +18,23 @@ class InstituteNoticesRepository {
   Future<List<NoticeIntro>> fetchInstituteNotices() async {
     List<NoticeIntro> allInstituteNotices = await _apiService.fetchallNotices();
     return allInstituteNotices;
+  }
+
+  Future bookmarkNotice(BuildContext context, var obj) async {
+    try {
+      await _apiService.starReadNotice(obj);
+      showToast('Bookmarked successfully');
+    } catch (e) {
+      showToast('Failure bookmarking');
+    }
+  }
+
+  Future unbookmarkNotice(BuildContext context, var obj) async {
+    try {
+      await _apiService.starReadNotice(obj);
+      showToast('Unbookmarked successfully');
+    } catch (e) {
+      showToast('Failure unbookmarking');
+    }
   }
 }

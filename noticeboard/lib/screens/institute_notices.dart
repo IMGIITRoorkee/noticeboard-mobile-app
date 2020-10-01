@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
 
   void fetchNoticeEventSink() {
     _instituteNoticesBloc.eventSink
-        .add(InstituteNoticesEvent.fetchInstituteNotices);
+        .add(InstituteNoticesEvent.fetchInstituteNoticesEvent);
   }
 
   Future refreshNotices() async {
@@ -149,7 +149,12 @@ class _HomeState extends State<Home> {
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: bookMarkIconDecider(noticeIntroObj.starred))
+                child: GestureDetector(
+                    onTap: () {
+                      _instituteNoticesBloc.instituteNoticeObjSink
+                          .add(noticeIntroObj);
+                    },
+                    child: bookMarkIconDecider(noticeIntroObj.starred)))
           ],
         ),
       ),
