@@ -4,6 +4,8 @@ import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
 
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+
 class NoticeDetail extends StatefulWidget {
   final NoticeIntro noticeIntro;
   NoticeDetail({@required this.noticeIntro});
@@ -79,7 +81,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(12.0),
-        child: Text(snapshot.data.content),
+        child: HtmlWidget(snapshot.data.content),
       ),
     );
   }
