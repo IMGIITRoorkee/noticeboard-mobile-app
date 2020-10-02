@@ -15,6 +15,10 @@ class InstituteNoticesRepository {
     Navigator.pushNamed(context, profileRoute, arguments: userProfile);
   }
 
+  void noticeDetail(BuildContext context, NoticeIntro noticeIntro) {
+    Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro);
+  }
+
   Future<List<NoticeIntro>> fetchInstituteNotices() async {
     List<NoticeIntro> allInstituteNotices = await _apiService.fetchallNotices();
     return allInstituteNotices;
@@ -22,7 +26,7 @@ class InstituteNoticesRepository {
 
   Future bookmarkNotice(BuildContext context, var obj) async {
     try {
-      await _apiService.starReadNotice(obj);
+      await _apiService.markUnmarkNotice(obj);
       showToast('Bookmarked successfully');
     } catch (e) {
       showToast('Failure bookmarking');
@@ -31,7 +35,7 @@ class InstituteNoticesRepository {
 
   Future unbookmarkNotice(BuildContext context, var obj) async {
     try {
-      await _apiService.starReadNotice(obj);
+      await _apiService.markUnmarkNotice(obj);
       showToast('Unbookmarked successfully');
     } catch (e) {
       showToast('Failure unbookmarking');

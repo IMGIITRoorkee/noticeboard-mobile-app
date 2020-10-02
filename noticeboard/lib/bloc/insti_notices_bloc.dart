@@ -59,6 +59,10 @@ class InstituteNoticesBloc {
     });
   }
 
+  void pushNoticeDetail(NoticeIntro noticeIntro) {
+    _instituteNoticesRepository.noticeDetail(context, noticeIntro);
+  }
+
   void disposeStreams() {
     _eventController.close();
     _instituteNoticesController.close();

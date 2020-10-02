@@ -120,31 +120,36 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
+              child: GestureDetector(
+                onTap: () {
+                  _instituteNoticesBloc.pushNoticeDetail(noticeIntroObj);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        width: width,
+                        child: Text(
+                          noticeIntroObj.department,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Container(
                       width: width,
-                      child: Text(
-                        noticeIntroObj.department,
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                    width: width,
-                    child: Text(noticeIntroObj.dateCreated,
-                        overflow: TextOverflow.ellipsis),
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                      width: width,
-                      child: Text(noticeIntroObj.title,
-                          overflow: TextOverflow.ellipsis))
-                ],
+                      child: Text(noticeIntroObj.dateCreated,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Container(
+                        width: width,
+                        child: Text(noticeIntroObj.title,
+                            overflow: TextOverflow.ellipsis))
+                  ],
+                ),
               ),
             ),
             Padding(

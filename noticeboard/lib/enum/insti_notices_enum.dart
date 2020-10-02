@@ -1,4 +1,1 @@
-enum InstituteNoticesEvent {
-  pushProfileEvent,
-  fetchInstituteNoticesEvent,
-}
+enum InstituteNoticesEvent { pushProfileEvent, fetchInstituteNoticesEvent }

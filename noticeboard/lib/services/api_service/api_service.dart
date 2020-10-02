@@ -4,13 +4,13 @@ import '../../models/user_tokens.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../services/endpoints/urls.dart';
+import '../../models/notice_content.dart';
 
 class ApiService {
   AuthService _authService = AuthService();
 
   Future<List<NoticeIntro>> fetchallNotices() async {
     try {
-      print('apiiiiiiii');
       AccessToken accessTokenObj =
           await _authService.fetchAccessTokenFromRefresh();
       final http.Response allNoticesResponse = await http
@@ -29,7 +29,7 @@ class ApiService {
     }
   }
 
-  Future starReadNotice(var obj) async {
+  Future markUnmarkNotice(var obj) async {
     try {
       AccessToken accessTokenObj =
           await _authService.fetchAccessTokenFromRefresh();
@@ -44,6 +44,24 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Failure');
+    }
+  }
+
+  Future<NoticeContent> fetchNoticeContent(int id) async {
+    try {
+      AccessToken accessTokenObj =
+          await _authService.fetchAccessTokenFromRefresh();
+      final http.Response contentResponse = await http
+          .get(BASE_URL + ALL_NOTICES + id.toString() + '/', headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+      if (contentResponse.statusCode == 200) {
+        return NoticeContent.fromJSON(jsonDecode(contentResponse.body));
+      } else {
+        throw Exception('Failure fetching details');
+      }
+    } catch (e) {
+      throw Exception('Failure fetching details');
     }
   }
 }
