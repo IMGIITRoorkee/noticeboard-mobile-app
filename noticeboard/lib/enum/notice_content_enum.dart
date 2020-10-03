@@ -1,1 +1,1 @@
-enum NoticeContentEvents { fetchContent }
+enum NoticeContentEvents { fetchContent, toggleStar }

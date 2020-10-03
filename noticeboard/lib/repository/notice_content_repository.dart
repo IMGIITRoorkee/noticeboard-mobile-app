@@ -8,4 +8,12 @@ class NoticeContentRepository {
     NoticeContent noticeContent = await _apiService.fetchNoticeContent(id);
     return noticeContent;
   }
+
+  Future bookmarkNotice(var obj) async {
+    await _apiService.markUnmarkNotice(obj);
+  }
+
+  Future unbookmarkNotice(var obj) async {
+    await _apiService.markUnmarkNotice(obj);
+  }
 }

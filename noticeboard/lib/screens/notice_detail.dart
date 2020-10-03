@@ -1,8 +1,8 @@
 import 'package:noticeboard/enum/notice_content_enum.dart';
-
 import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
+import '../global/global_functions.dart';
 
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
@@ -23,6 +23,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
   @override
   void initState() {
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
+    _noticeContentBloc.starred = widget.noticeIntro.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
     super.initState();
   }
@@ -117,7 +118,18 @@ class _NoticeDetailState extends State<NoticeDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(widget.noticeIntro.dateCreated),
-                Icon(Icons.bookmark_border)
+                StreamBuilder(
+                  stream: _noticeContentBloc.starStream,
+                  initialData: widget.noticeIntro.starred,
+                  builder: (context, snapshot) {
+                    return GestureDetector(
+                        onTap: () {
+                          _noticeContentBloc.eventSink
+                              .add(NoticeContentEvents.toggleStar);
+                        },
+                        child: bookMarkIconDecider(snapshot.data));
+                  },
+                )
               ],
             )
           ],

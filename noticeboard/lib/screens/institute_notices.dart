@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import '../enum/insti_notices_enum.dart';
 import '../bloc/insti_notices_bloc.dart';
+import '../global/global_functions.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -32,6 +33,10 @@ class _HomeState extends State<Home> {
   void dispose() {
     _instituteNoticesBloc.disposeStreams();
     super.dispose();
+  }
+
+  void pushNoticeDetail(NoticeIntro noticeIntro) {
+    _instituteNoticesBloc.pushNoticeDetail(noticeIntro);
   }
 
   @override
@@ -122,7 +127,7 @@ class _HomeState extends State<Home> {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  _instituteNoticesBloc.pushNoticeDetail(noticeIntroObj);
+                  pushNoticeDetail(noticeIntroObj);
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,18 +168,6 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-    );
-  }
-
-  Icon bookMarkIconDecider(bool isBookmarked) {
-    if (isBookmarked)
-      return Icon(
-        Icons.bookmark,
-        size: 30.0,
-      );
-    return Icon(
-      Icons.bookmark_border,
-      size: 30.0,
     );
   }
 

@@ -24,21 +24,21 @@ class InstituteNoticesRepository {
     return allInstituteNotices;
   }
 
-  Future bookmarkNotice(BuildContext context, var obj) async {
+  Future bookmarkNotice(var obj) async {
     try {
       await _apiService.markUnmarkNotice(obj);
-      showToast('Bookmarked successfully');
+      showToast('Notice marked');
     } catch (e) {
-      showToast('Failure bookmarking');
+      showToast('Failure marking');
     }
   }
 
-  Future unbookmarkNotice(BuildContext context, var obj) async {
+  Future unbookmarkNotice(var obj) async {
     try {
       await _apiService.markUnmarkNotice(obj);
-      showToast('Unbookmarked successfully');
+      showToast('Notice unmarked');
     } catch (e) {
-      showToast('Failure unbookmarking');
+      showToast('Failure unmarking');
     }
   }
 }

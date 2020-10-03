@@ -3,6 +3,7 @@ import 'package:noticeboard/repository/insti_notices_repository.dart';
 import '../models/notice_intro.dart';
 import '../enum/insti_notices_enum.dart';
 import 'package:flutter/material.dart';
+import '../routes/routing_constants.dart';
 
 class InstituteNoticesBloc {
   BuildContext context;
@@ -47,20 +48,22 @@ class InstituteNoticesBloc {
           "keyword": "unstar",
           "notices": [object.id]
         };
-        await _instituteNoticesRepository.unbookmarkNotice(context, obj);
+        await _instituteNoticesRepository.unbookmarkNotice(obj);
       } else {
         var obj = {
           "keyword": "star",
           "notices": [object.id]
         };
-        await _instituteNoticesRepository.bookmarkNotice(context, obj);
+        await _instituteNoticesRepository.bookmarkNotice(obj);
       }
       eventSink.add(InstituteNoticesEvent.fetchInstituteNoticesEvent);
     });
   }
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
-    _instituteNoticesRepository.noticeDetail(context, noticeIntro);
+    Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro)
+        .then((value) =>
+            eventSink.add(InstituteNoticesEvent.fetchInstituteNoticesEvent));
   }
 
   void disposeStreams() {
