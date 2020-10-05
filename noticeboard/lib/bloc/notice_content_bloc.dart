@@ -4,6 +4,7 @@ import '../models/notice_content.dart';
 import '../models/notice_intro.dart';
 import '../repository/notice_content_repository.dart';
 import '../global/toast.dart';
+import 'package:share/share.dart';
 
 class NoticeContentBloc {
   NoticeIntro noticeIntro;
@@ -62,6 +63,11 @@ class NoticeContentBloc {
             showToast('Failure marking');
           }
         }
+      } else if (event == NoticeContentEvents.shareNotice) {
+        Share.share(
+            'http://internet.channeli.in/noticeboard/notice/' +
+                noticeIntro.id.toString(),
+            subject: 'Share notice');
       }
     });
   }

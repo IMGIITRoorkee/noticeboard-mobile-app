@@ -3,6 +3,7 @@ import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
 import '../global/global_functions.dart';
+import 'package:diagonal_scrollview/diagonal_scrollview.dart';
 
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
@@ -78,10 +79,11 @@ class _NoticeDetailState extends State<NoticeDetail> {
     );
   }
 
-  SingleChildScrollView buildContent(AsyncSnapshot snapshot) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.all(12.0),
+  Container buildContent(AsyncSnapshot snapshot) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: DiagonalScrollView(
+        enableZoom: true,
         child: HtmlWidget(snapshot.data.content),
       ),
     );
@@ -101,7 +103,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
       color: Colors.blue[200],
       width: _width,
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             Row(
@@ -112,23 +114,40 @@ class _NoticeDetailState extends State<NoticeDetail> {
               ],
             ),
             SizedBox(
-              height: 20.0,
+              height: 5.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(widget.noticeIntro.dateCreated),
-                StreamBuilder(
-                  stream: _noticeContentBloc.starStream,
-                  initialData: widget.noticeIntro.starred,
-                  builder: (context, snapshot) {
-                    return GestureDetector(
-                        onTap: () {
-                          _noticeContentBloc.eventSink
-                              .add(NoticeContentEvents.toggleStar);
-                        },
-                        child: bookMarkIconDecider(snapshot.data));
-                  },
+                Row(
+                  children: [
+                    StreamBuilder(
+                      stream: _noticeContentBloc.starStream,
+                      initialData: widget.noticeIntro.starred,
+                      builder: (context, snapshot) {
+                        return GestureDetector(
+                            onTap: () {
+                              _noticeContentBloc.eventSink
+                                  .add(NoticeContentEvents.toggleStar);
+                            },
+                            child: bookMarkIconDecider(snapshot.data));
+                      },
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _noticeContentBloc.eventSink
+                            .add(NoticeContentEvents.shareNotice);
+                      },
+                      child: Icon(
+                        Icons.share,
+                        size: 30.0,
+                      ),
+                    )
+                  ],
                 )
               ],
             )
