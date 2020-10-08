@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart';
+import '../enum/dynamic_fetch_enum.dart';
 
 class NoticeIntro {
   final int id;
@@ -32,4 +33,10 @@ class NoticeIntro {
         read: json['read'],
         starred: json['starred']);
   }
+}
+
+class ListNoticeMetaData {
+  final String appBarLabel;
+  final DynamicFetch dynamicFetch;
+  ListNoticeMetaData({this.appBarLabel, this.dynamicFetch});
 }

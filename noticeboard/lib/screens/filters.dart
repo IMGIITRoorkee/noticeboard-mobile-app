@@ -345,12 +345,17 @@ class _FiltersState extends State<Filters> {
           ),
           Expanded(
             flex: 5,
-            child: Container(
-              color: Colors.blue[700],
-              child: Center(
-                child: Text(
-                  'Apply',
-                  style: TextStyle(color: Colors.white, fontSize: 17.0),
+            child: GestureDetector(
+              onTap: () {
+                _filtersBloc.eventSink.add(FilterEvents.applyFilter);
+              },
+              child: Container(
+                color: Colors.blue[700],
+                child: Center(
+                  child: Text(
+                    'Apply',
+                    style: TextStyle(color: Colors.white, fontSize: 17.0),
+                  ),
                 ),
               ),
             ),

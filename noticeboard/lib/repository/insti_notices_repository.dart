@@ -24,6 +24,12 @@ class InstituteNoticesRepository {
     return allInstituteNotices;
   }
 
+  Future<List<NoticeIntro>> fetchFilteredNotices(String endpoint) async {
+    List<NoticeIntro> filteredNotices =
+        await _apiService.fetchFilteredNotices(endpoint);
+    return filteredNotices;
+  }
+
   Future bookmarkNotice(var obj) async {
     try {
       await _apiService.markUnmarkNotice(obj);

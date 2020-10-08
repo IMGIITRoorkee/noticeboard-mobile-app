@@ -65,7 +65,9 @@ class FiltersBloc {
         resetDateRange();
       else if (event == FilterEvents.resetGlobalSlug)
         resetGlobalSlug();
-      else if (event == FilterEvents.cancelFilter) cancelFilters();
+      else if (event == FilterEvents.cancelFilter)
+        cancelFilters();
+      else if (event == FilterEvents.applyFilter) applyFilter();
     });
 
     globalSelectionStream.listen((selection) {
@@ -85,15 +87,16 @@ class FiltersBloc {
 
   void globalSlugHandler(GlobalSelection selection) {
     globalSelection = selection;
-
-    if (globalSelection.globalDisplayName == 'Authorities') {
-      _selectedCatSink.add(0);
-    } else if (globalSelection.globalDisplayName == 'Bhawans') {
-      _selectedCatSink.add(1);
-    } else if (globalSelection.globalDisplayName == 'Centres') {
-      _selectedCatSink.add(2);
-    } else if (globalSelection.globalDisplayName == 'Departments') {
-      _selectedCatSink.add(3);
+    if (globalSelection != null) {
+      if (globalSelection.globalDisplayName == 'Authorities') {
+        _selectedCatSink.add(0);
+      } else if (globalSelection.globalDisplayName == 'Bhawans') {
+        _selectedCatSink.add(1);
+      } else if (globalSelection.globalDisplayName == 'Centres') {
+        _selectedCatSink.add(2);
+      } else if (globalSelection.globalDisplayName == 'Departments') {
+        _selectedCatSink.add(3);
+      }
     }
   }
 
@@ -146,5 +149,32 @@ class FiltersBloc {
 
   void cancelFilters() {
     Navigator.pop(context);
+  }
+
+  void applyFilter() {
+    if (globalSelection == null && dateTimeRange == null) {
+      Navigator.pop(context);
+    } else if (globalSelection == null) {
+      String start = formatDate(dateTimeRange.start, [yyyy, '-', mm, '-', dd]);
+      String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
+      String dateFilterEndpoint =
+          'api/noticeboard/date_filter_view/?start=$start&end=$end';
+      FilterResult filterResult = FilterResult(endpoint: dateFilterEndpoint);
+      Navigator.pop(context, filterResult);
+    } else if (dateTimeRange == null) {
+      print(globalSelection.globalSlug);
+      print(globalSelection.display);
+      FilterResult filterResult = FilterResult(
+          endpoint: globalSelection.globalSlug, label: globalSelection.display);
+      Navigator.pop(context, filterResult);
+    } else {
+      String start = formatDate(dateTimeRange.start, [yyyy, '-', mm, '-', dd]);
+      String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
+      String endPoint =
+          'api/noticeboard/date_filter_view/?start=$start&end=$end&${globalSelection.globalSlug.substring(24)}';
+      FilterResult filterResult =
+          FilterResult(label: globalSelection.display, endpoint: endPoint);
+      Navigator.pop(context, filterResult);
+    }
   }
 }

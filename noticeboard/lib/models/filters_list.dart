@@ -23,8 +23,7 @@ class Category {
   Category({this.mainDisplay, this.mainSlug, this.bannerList});
 
   static String toMainEndPoint(String orSlug) {
-    return 'api/noticeboard/filter/?main_category=noticeboard__authorities' +
-        orSlug;
+    return 'api/noticeboard/filter/?main_category=' + orSlug;
   }
 
   factory Category.fromJSON(dynamic json) {
@@ -42,4 +41,10 @@ class GlobalSelection {
   final String globalDisplayName;
   final String display;
   GlobalSelection({this.globalDisplayName, this.globalSlug, this.display});
+}
+
+class FilterResult {
+  final String label;
+  final String endpoint;
+  FilterResult({this.endpoint, this.label});
 }

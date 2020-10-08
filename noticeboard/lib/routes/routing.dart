@@ -24,7 +24,12 @@ class Router {
                   userProfile: userProfile,
                 ));
       case instituteNoticesRoute:
-        return MaterialPageRoute(builder: (context) => Home());
+        ListNoticeMetaData listNoticeMetaData = settings.arguments;
+        print(listNoticeMetaData.appBarLabel);
+        return MaterialPageRoute(
+            builder: (context) => Home(
+                  listNoticeMetaData: listNoticeMetaData,
+                ));
       case noticeDetailRoute:
         NoticeIntro noticeIntro = settings.arguments;
         return MaterialPageRoute(

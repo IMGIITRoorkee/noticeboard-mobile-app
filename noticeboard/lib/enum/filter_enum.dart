@@ -3,5 +3,6 @@ enum FilterEvents {
   pickDateRange,
   resetGlobalSlug,
   resetDateRange,
-  cancelFilter
+  cancelFilter,
+  applyFilter
 }

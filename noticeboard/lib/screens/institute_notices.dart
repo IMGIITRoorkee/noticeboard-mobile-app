@@ -5,6 +5,8 @@ import '../bloc/insti_notices_bloc.dart';
 import '../global/global_functions.dart';
 
 class Home extends StatefulWidget {
+  final ListNoticeMetaData listNoticeMetaData;
+  Home({@required this.listNoticeMetaData});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -15,17 +17,14 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _instituteNoticesBloc.context = context;
-    fetchNoticeEventSink();
+    _instituteNoticesBloc.listNoticeMetaData = widget.listNoticeMetaData;
+    _instituteNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
+    _instituteNoticesBloc.dynamicFetchNotices();
     super.initState();
   }
 
-  void fetchNoticeEventSink() {
-    _instituteNoticesBloc.eventSink
-        .add(InstituteNoticesEvent.fetchInstituteNoticesEvent);
-  }
-
-  Future refreshNotices() async {
-    fetchNoticeEventSink();
+  Future<void> refreshNotices() async {
+    _instituteNoticesBloc.dynamicFetchNotices();
     await Future.delayed(Duration(seconds: 1));
   }
 
@@ -61,10 +60,15 @@ class _HomeState extends State<Home> {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: Text(
-          'Institute Notices',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: StreamBuilder(
+            initialData: widget.listNoticeMetaData.appBarLabel,
+            stream: _instituteNoticesBloc.appBarLabelStream,
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.data,
+                style: TextStyle(color: Colors.black),
+              );
+            }),
         automaticallyImplyLeading: false,
         leading: Container(
           padding: EdgeInsets.only(left: 11.0, top: 5.0),

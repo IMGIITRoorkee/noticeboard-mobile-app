@@ -30,6 +30,26 @@ class ApiService {
     }
   }
 
+  Future<List<NoticeIntro>> fetchFilteredNotices(String endpoint) async {
+    try {
+      AccessToken accessTokenObj =
+          await _authService.fetchAccessTokenFromRefresh();
+      final http.Response response = await http.get(BASE_URL + endpoint,
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+          });
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        Iterable list = body['results'];
+        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+      } else {
+        throw Exception('Failed to load notices');
+      }
+    } catch (e) {
+      throw Exception('Failed to load notices');
+    }
+  }
+
   Future markUnmarkNotice(var obj) async {
     try {
       AccessToken accessTokenObj =
@@ -78,7 +98,6 @@ class ApiService {
       if (filterListResponse.statusCode == 200) {
         final body = jsonDecode(filterListResponse.body);
         Iterable list = body;
-        print(list);
         return list.map((category) => Category.fromJSON(category)).toList();
       } else {
         throw Exception('Error fetching filters');
