@@ -46,6 +46,18 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              _instituteNoticesBloc.eventSink
+                  .add(InstituteNoticesEvent.pushFilters);
+            },
+          )
+        ],
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.white,

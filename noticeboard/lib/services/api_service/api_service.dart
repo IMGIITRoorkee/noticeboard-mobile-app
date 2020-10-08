@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../services/endpoints/urls.dart';
 import '../../models/notice_content.dart';
+import '../../models/filters_list.dart';
 
 class ApiService {
   AuthService _authService = AuthService();
@@ -62,6 +63,28 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Failure fetching details');
+    }
+  }
+
+  Future<List<Category>> fetchFilters() async {
+    try {
+      AccessToken accessTokenObj =
+          await _authService.fetchAccessTokenFromRefresh();
+      final http.Response filterListResponse = await http
+          .get(BASE_URL + FILTERS_LIST, headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+
+      if (filterListResponse.statusCode == 200) {
+        final body = jsonDecode(filterListResponse.body);
+        Iterable list = body;
+        print(list);
+        return list.map((category) => Category.fromJSON(category)).toList();
+      } else {
+        throw Exception('Error fetching filters');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

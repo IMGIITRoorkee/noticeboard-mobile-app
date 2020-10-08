@@ -39,6 +39,8 @@ class InstituteNoticesBloc {
         } catch (e) {
           _instiNoticesSink.addError(e.message.toString());
         }
+      } else if (event == InstituteNoticesEvent.pushFilters) {
+        pushFilters();
       }
     });
 
@@ -70,5 +72,9 @@ class InstituteNoticesBloc {
     _eventController.close();
     _instituteNoticesController.close();
     _instituteNoticeObjController.close();
+  }
+
+  void pushFilters() async {
+    Navigator.pushNamed(context, filterRoute);
   }
 }

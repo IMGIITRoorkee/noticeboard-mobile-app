@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import './routes/routing_constants.dart';
 import './routes/routing.dart';
 
-import './screens/filters.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -18,9 +16,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Filters(),
-      // onGenerateRoute: Router.generateRoute,
-      // initialRoute: launchingRoute,
+      onGenerateRoute: Router.generateRoute,
+      initialRoute: launchingRoute,
     );
   }
 }

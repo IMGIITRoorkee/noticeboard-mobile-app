@@ -8,6 +8,7 @@ import '../screens/institute_notices.dart';
 import '../screens/launching.dart';
 import '../models/notice_intro.dart';
 import '../screens/notice_detail.dart';
+import '../screens/filters.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -30,6 +31,8 @@ class Router {
             builder: (context) => NoticeDetail(
                   noticeIntro: noticeIntro,
                 ));
+      case filterRoute:
+        return MaterialPageRoute(builder: (context) => Filters());
       default:
         return MaterialPageRoute(builder: (context) => Login());
     }
