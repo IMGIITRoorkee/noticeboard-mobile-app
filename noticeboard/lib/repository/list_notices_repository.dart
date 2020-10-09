@@ -6,7 +6,7 @@ import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
 import '../global/toast.dart';
 
-class InstituteNoticesRepository {
+class ListNoticesRepository {
   AuthRepository _authRepository = AuthRepository();
   ApiService _apiService = ApiService();
 

@@ -1,4 +1,4 @@
-enum InstituteNoticesEvent {
+enum ListNoticesEvent {
   pushProfileEvent,
   fetchInstituteNoticesEvent,
   pushFilters

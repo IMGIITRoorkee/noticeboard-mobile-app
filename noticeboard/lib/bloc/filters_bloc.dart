@@ -162,8 +162,6 @@ class FiltersBloc {
       FilterResult filterResult = FilterResult(endpoint: dateFilterEndpoint);
       Navigator.pop(context, filterResult);
     } else if (dateTimeRange == null) {
-      print(globalSelection.globalSlug);
-      print(globalSelection.display);
       FilterResult filterResult = FilterResult(
           endpoint: globalSelection.globalSlug, label: globalSelection.display);
       Navigator.pop(context, filterResult);

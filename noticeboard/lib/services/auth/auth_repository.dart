@@ -22,7 +22,7 @@ class AuthRepository {
       ListNoticeMetaData listNoticeMetaData = ListNoticeMetaData(
           dynamicFetch: DynamicFetch.fetchInstituteNotices,
           appBarLabel: 'Institute Notices');
-      Navigator.pushReplacementNamed(context, instituteNoticesRoute,
+      Navigator.pushReplacementNamed(context, listNoticesRoute,
           arguments: listNoticeMetaData);
       cancelToast();
     } catch (e) {
@@ -37,7 +37,7 @@ class AuthRepository {
       ListNoticeMetaData listNoticeMetaData = ListNoticeMetaData(
           dynamicFetch: DynamicFetch.fetchInstituteNotices,
           appBarLabel: 'Institute Notices');
-      Navigator.pushReplacementNamed(context, instituteNoticesRoute,
+      Navigator.pushReplacementNamed(context, listNoticesRoute,
           arguments: listNoticeMetaData);
     } else {
       Navigator.pushReplacementNamed(context, loginRoute);

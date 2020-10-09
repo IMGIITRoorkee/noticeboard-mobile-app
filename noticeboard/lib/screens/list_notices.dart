@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:noticeboard/models/notice_intro.dart';
-import '../enum/insti_notices_enum.dart';
-import '../bloc/insti_notices_bloc.dart';
+import '../enum/list_notices_enum.dart';
+import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
 
-class Home extends StatefulWidget {
+class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
-  Home({@required this.listNoticeMetaData});
+  ListNotices({@required this.listNoticeMetaData});
   @override
-  _HomeState createState() => _HomeState();
+  _ListNoticesState createState() => _ListNoticesState();
 }
 
-class _HomeState extends State<Home> {
-  final InstituteNoticesBloc _instituteNoticesBloc = InstituteNoticesBloc();
+class _ListNoticesState extends State<ListNotices> {
+  final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
 
   @override
   void initState() {
-    _instituteNoticesBloc.context = context;
-    _instituteNoticesBloc.listNoticeMetaData = widget.listNoticeMetaData;
-    _instituteNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
-    _instituteNoticesBloc.dynamicFetchNotices();
+    _listNoticesBloc.context = context;
+    _listNoticesBloc.listNoticeMetaData = widget.listNoticeMetaData;
+    _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
+    _listNoticesBloc.dynamicFetchNotices();
     super.initState();
   }
 
   Future<void> refreshNotices() async {
-    _instituteNoticesBloc.dynamicFetchNotices();
+    _listNoticesBloc.dynamicFetchNotices();
     await Future.delayed(Duration(seconds: 1));
   }
 
   @override
   void dispose() {
-    _instituteNoticesBloc.disposeStreams();
+    _listNoticesBloc.disposeStreams();
     super.dispose();
   }
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
-    _instituteNoticesBloc.pushNoticeDetail(noticeIntro);
+    _listNoticesBloc.pushNoticeDetail(noticeIntro);
   }
 
   @override
@@ -52,8 +52,7 @@ class _HomeState extends State<Home> {
               color: Colors.black,
             ),
             onPressed: () {
-              _instituteNoticesBloc.eventSink
-                  .add(InstituteNoticesEvent.pushFilters);
+              _listNoticesBloc.eventSink.add(ListNoticesEvent.pushFilters);
             },
           )
         ],
@@ -62,7 +61,7 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.white,
         title: StreamBuilder(
             initialData: widget.listNoticeMetaData.appBarLabel,
-            stream: _instituteNoticesBloc.appBarLabelStream,
+            stream: _listNoticesBloc.appBarLabelStream,
             builder: (context, snapshot) {
               return Text(
                 snapshot.data,
@@ -74,8 +73,7 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.only(left: 11.0, top: 5.0),
           child: GestureDetector(
             onTap: () {
-              _instituteNoticesBloc.eventSink
-                  .add(InstituteNoticesEvent.pushProfileEvent);
+              _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
             },
             child: CircleAvatar(
               backgroundColor: Colors.grey[500],
@@ -91,7 +89,7 @@ class _HomeState extends State<Home> {
               height: height * 0.88,
               width: width,
               child: StreamBuilder(
-                stream: _instituteNoticesBloc.instiNoticesStream,
+                stream: _listNoticesBloc.listNoticesStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) return buildNoResults();
@@ -177,8 +175,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.only(left: 10.0),
                 child: GestureDetector(
                     onTap: () {
-                      _instituteNoticesBloc.instituteNoticeObjSink
-                          .add(noticeIntroObj);
+                      _listNoticesBloc.noticeObjSink.add(noticeIntroObj);
                     },
                     child: bookMarkIconDecider(noticeIntroObj.starred)))
           ],

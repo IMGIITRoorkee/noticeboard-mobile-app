@@ -4,7 +4,7 @@ import 'package:noticeboard/screens/profile.dart';
 import './routing_constants.dart';
 import '../screens/login.dart';
 import '../models/user_profile.dart';
-import '../screens/institute_notices.dart';
+import '../screens/list_notices.dart';
 import '../screens/launching.dart';
 import '../models/notice_intro.dart';
 import '../screens/notice_detail.dart';
@@ -23,11 +23,11 @@ class Router {
             builder: (context) => Profile(
                   userProfile: userProfile,
                 ));
-      case instituteNoticesRoute:
+      case listNoticesRoute:
         ListNoticeMetaData listNoticeMetaData = settings.arguments;
-        print(listNoticeMetaData.appBarLabel);
+
         return MaterialPageRoute(
-            builder: (context) => Home(
+            builder: (context) => ListNotices(
                   listNoticeMetaData: listNoticeMetaData,
                 ));
       case noticeDetailRoute:
