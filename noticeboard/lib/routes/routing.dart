@@ -10,7 +10,7 @@ import '../models/notice_intro.dart';
 import '../screens/notice_detail.dart';
 import '../screens/filters.dart';
 
-class Router {
+class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case launchingRoute:
