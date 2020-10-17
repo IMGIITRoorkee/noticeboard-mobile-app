@@ -13,7 +13,8 @@ class ApiService {
   Future<List<NoticeIntro>> fetchallNotices() async {
     try {
       AccessToken accessTokenObj =
-          await _authService.fetchAccessTokenFromRefresh();
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
       final http.Response allNoticesResponse = await http
           .get(BASE_URL + ALL_NOTICES, headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
@@ -33,7 +34,8 @@ class ApiService {
   Future<List<NoticeIntro>> fetchFilteredNotices(String endpoint) async {
     try {
       AccessToken accessTokenObj =
-          await _authService.fetchAccessTokenFromRefresh();
+          //     await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
       final http.Response response = await http.get(BASE_URL + endpoint,
           headers: {
             AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
@@ -53,7 +55,8 @@ class ApiService {
   Future markUnmarkNotice(var obj) async {
     try {
       AccessToken accessTokenObj =
-          await _authService.fetchAccessTokenFromRefresh();
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
       final http.Response postResponse = await http.post(BASE_URL + STAR_READ,
           headers: {
             AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
@@ -71,7 +74,8 @@ class ApiService {
   Future<NoticeContent> fetchNoticeContent(int id) async {
     try {
       AccessToken accessTokenObj =
-          await _authService.fetchAccessTokenFromRefresh();
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
       final http.Response contentResponse = await http
           .get(BASE_URL + ALL_NOTICES + id.toString() + '/', headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
@@ -89,7 +93,8 @@ class ApiService {
   Future<List<Category>> fetchFilters() async {
     try {
       AccessToken accessTokenObj =
-          await _authService.fetchAccessTokenFromRefresh();
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
       final http.Response filterListResponse = await http
           .get(BASE_URL + FILTERS_LIST, headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken

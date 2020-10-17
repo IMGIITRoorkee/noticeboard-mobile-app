@@ -7,6 +7,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
   final storage = new FlutterSecureStorage();
+  AuthService() {
+    initHandle();
+  }
+  initHandle() async {
+    RefreshToken refreshToken = await fetchRefreshToken();
+    if (refreshToken.refreshToken != null) {
+      AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
+      storeAccessToken(accessTokenObj);
+    }
+  }
 
   Future<RefreshToken> fetchUserTokens(dynamic obj) async {
     final http.Response postResponse = await http.post(
@@ -25,14 +35,24 @@ class AuthService {
         key: "refreshToken", value: userRefreshToken.refreshToken);
   }
 
+  Future storeAccessToken(AccessToken userAccessToken) async {
+    await storage.write(key: "accessToken", value: userAccessToken.accessToken);
+  }
+
   Future<RefreshToken> fetchRefreshToken() async {
     String refreshToken = await storage.read(key: "refreshToken");
 
     return RefreshToken(refreshToken: refreshToken);
   }
 
+  Future<AccessToken> fetchAccessToken() async {
+    String accessToken = await storage.read(key: "accessToken");
+
+    return AccessToken(accessToken: accessToken);
+  }
+
   Future deleteRefreshToken() async {
-    await storage.delete(key: "refreshToken");
+    await storage.deleteAll();
   }
 
   Future<AccessToken> fetchAccessTokenFromRefresh() async {
@@ -52,7 +72,8 @@ class AuthService {
   }
 
   Future<UserProfile> fetchUserProfile() async {
-    AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
+    //AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
+    AccessToken accessTokenObj = await fetchAccessToken();
     final http.Response userProfileResponse = await http
         .get(BASE_URL + EP_WHO_AM_I, headers: {
       AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import '../enum/list_notices_enum.dart';
 import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
+import 'package:focused_menu/focused_menu.dart';
 
 class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
@@ -139,10 +142,43 @@ class _ListNoticesState extends State<ListNotices> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: GestureDetector(
-                onTap: () {
+              //pushNoticeDetail(noticeIntroObj);
+              child: FocusedMenuHolder(
+                onPressed: () {
                   pushNoticeDetail(noticeIntroObj);
                 },
+                menuWidth: MediaQuery.of(context).size.width * 0.50,
+                blurSize: 5.0,
+                menuItemExtent: 45,
+                menuBoxDecoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                duration: Duration(milliseconds: 100),
+                animateMenuItems: true,
+                blurBackgroundColor: Colors.black54,
+                menuOffset:
+                    10.0, // Offset value to show menuItem from the selected item
+                bottomOffsetHeight:
+                    80.0, // Offset height to consider, for showing the menu item ( for example bottom navigation bar), so that the popup menu will be shown on top of selected item.
+                menuItems: <FocusedMenuItem>[
+                  // Add Each FocusedMenuItem  for Menu Options
+                  FocusedMenuItem(
+                      title: Text("Toggle Mark"),
+                      trailingIcon: bookMarkIconDecider(noticeIntroObj.starred),
+                      onPressed: () {
+                        _listNoticesBloc.noticeObjSink.add(noticeIntroObj);
+                        HapticFeedback.lightImpact();
+                      }),
+
+                  FocusedMenuItem(
+                      title: Text("Mark as Read"),
+                      trailingIcon: Icon(Icons.visibility),
+                      onPressed: () {}),
+                  FocusedMenuItem(
+                      title: Text("Mark as unread"),
+                      trailingIcon: Icon(Icons.visibility_off),
+                      onPressed: () {}),
+                ],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -171,13 +207,13 @@ class _ListNoticesState extends State<ListNotices> {
                 ),
               ),
             ),
-            Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: GestureDetector(
-                    onTap: () {
-                      _listNoticesBloc.noticeObjSink.add(noticeIntroObj);
-                    },
-                    child: bookMarkIconDecider(noticeIntroObj.starred)))
+            // Padding(
+            //     padding: const EdgeInsets.only(left: 10.0),
+            //     child: GestureDetector(
+            //         onTap: () {
+            //           _listNoticesBloc.noticeObjSink.add(noticeIntroObj);
+            //         },
+            //         child: bookMarkIconDecider(noticeIntroObj.starred)))
           ],
         ),
       ),
