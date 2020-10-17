@@ -1,12 +1,9 @@
-import 'package:noticeboard/enum/dynamic_fetch_enum.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
-
 import '../../models/user_tokens.dart';
 import 'auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../global/toast.dart';
 import '../../models/user_profile.dart';
-import '../../models/notice_intro.dart';
 
 class AuthRepository {
   AuthService _authService = AuthService();
@@ -19,11 +16,8 @@ class AuthRepository {
       RefreshToken _refreshTokenObj =
           await _authService.fetchUserTokens(userObj);
       await _authService.storeRefreshToken(_refreshTokenObj);
-      ListNoticeMetaData listNoticeMetaData = ListNoticeMetaData(
-          dynamicFetch: DynamicFetch.fetchInstituteNotices,
-          appBarLabel: 'Institute Notices');
-      Navigator.pushReplacementNamed(context, listNoticesRoute,
-          arguments: listNoticeMetaData);
+
+      Navigator.pushReplacementNamed(context, bottomNavigationRoute);
       cancelToast();
     } catch (e) {
       showToast('Login failed');
@@ -34,11 +28,7 @@ class AuthRepository {
     RefreshToken refreshToken = await _authService.fetchRefreshToken();
     await Future.delayed(Duration(seconds: 1));
     if (refreshToken.refreshToken != null) {
-      ListNoticeMetaData listNoticeMetaData = ListNoticeMetaData(
-          dynamicFetch: DynamicFetch.fetchInstituteNotices,
-          appBarLabel: 'Institute Notices');
-      Navigator.pushReplacementNamed(context, listNoticesRoute,
-          arguments: listNoticeMetaData);
+      Navigator.pushReplacementNamed(context, bottomNavigationRoute);
     } else {
       Navigator.pushReplacementNamed(context, loginRoute);
     }

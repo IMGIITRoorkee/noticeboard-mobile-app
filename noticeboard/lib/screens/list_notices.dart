@@ -59,7 +59,7 @@ class _ListNoticesState extends State<ListNotices> {
             },
           )
         ],
-        elevation: 0,
+        elevation: 4,
         centerTitle: true,
         backgroundColor: Colors.white,
         title: StreamBuilder(
@@ -68,18 +68,23 @@ class _ListNoticesState extends State<ListNotices> {
             builder: (context, snapshot) {
               return Text(
                 snapshot.data,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(fontSize: 18.0, color: Colors.black),
               );
             }),
         automaticallyImplyLeading: false,
         leading: Container(
-          padding: EdgeInsets.only(left: 11.0, top: 5.0),
+          padding: EdgeInsets.only(left: 11.0),
           child: GestureDetector(
             onTap: () {
               _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
             },
             child: CircleAvatar(
-              backgroundColor: Colors.grey[500],
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.account_circle,
+                color: Colors.black,
+                size: 45.0,
+              ),
             ),
           ),
         ),
@@ -89,7 +94,7 @@ class _ListNoticesState extends State<ListNotices> {
         child: ListView(
           children: [
             Container(
-              height: height * 0.88,
+              height: height * 0.80,
               width: width,
               child: StreamBuilder(
                 stream: _listNoticesBloc.listNoticesStream,

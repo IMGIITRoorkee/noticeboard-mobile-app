@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noticeboard/models/notice_intro.dart';
+import 'package:noticeboard/screens/bottom_navigation.dart';
 import 'package:noticeboard/screens/profile.dart';
 import './routing_constants.dart';
 import '../screens/login.dart';
@@ -17,6 +18,8 @@ class MyRouter {
         return MaterialPageRoute(builder: (context) => Launcher());
       case loginRoute:
         return MaterialPageRoute(builder: (context) => Login());
+      case bottomNavigationRoute:
+        return MaterialPageRoute(builder: (context) => MyBottomNavigationBar());
       case profileRoute:
         UserProfile userProfile = settings.arguments;
         return MaterialPageRoute(

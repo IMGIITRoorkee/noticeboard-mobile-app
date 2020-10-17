@@ -12,7 +12,8 @@ class AuthService {
   }
   initHandle() async {
     RefreshToken refreshToken = await fetchRefreshToken();
-    if (refreshToken.refreshToken != null) {
+    AccessToken accessToken = await fetchAccessToken();
+    if (refreshToken.refreshToken != null && accessToken.accessToken != null) {
       AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
       storeAccessToken(accessTokenObj);
     }
