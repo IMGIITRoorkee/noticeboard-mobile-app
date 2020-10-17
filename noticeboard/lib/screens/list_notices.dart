@@ -168,27 +168,28 @@ class _ListNoticesState extends State<ListNotices> {
                 menuItems: <FocusedMenuItem>[
                   // Add Each FocusedMenuItem  for Menu Options
                   FocusedMenuItem(
-                      title: Text("Toggle Mark"),
+                      title: Text(bookMarkTextDecider(noticeIntroObj.starred)),
                       trailingIcon: bookMarkIconDecider(noticeIntroObj.starred),
                       onPressed: () {
                         _listNoticesBloc.toggleBookMarkSink.add(noticeIntroObj);
                         HapticFeedback.lightImpact();
                       }),
 
-                  FocusedMenuItem(
-                      title: Text("Mark as Read"),
-                      trailingIcon: Icon(Icons.visibility),
-                      onPressed: () {
-                        _listNoticesBloc.markReadSink.add(noticeIntroObj);
-                        HapticFeedback.lightImpact();
-                      }),
-                  FocusedMenuItem(
-                      title: Text("Mark as unread"),
-                      trailingIcon: Icon(Icons.visibility_off),
-                      onPressed: () {
-                        _listNoticesBloc.markUnreadSink.add(noticeIntroObj);
-                        HapticFeedback.lightImpact();
-                      }),
+                  !noticeIntroObj.read
+                      ? FocusedMenuItem(
+                          title: Text("Mark as Read"),
+                          trailingIcon: Icon(Icons.visibility),
+                          onPressed: () {
+                            _listNoticesBloc.markReadSink.add(noticeIntroObj);
+                            HapticFeedback.lightImpact();
+                          })
+                      : FocusedMenuItem(
+                          title: Text("Mark as unread"),
+                          trailingIcon: Icon(Icons.visibility_off),
+                          onPressed: () {
+                            _listNoticesBloc.markUnreadSink.add(noticeIntroObj);
+                            HapticFeedback.lightImpact();
+                          }),
                 ],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
