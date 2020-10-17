@@ -20,8 +20,15 @@ class ListNoticesRepository {
   }
 
   Future<List<NoticeIntro>> fetchInstituteNotices() async {
-    List<NoticeIntro> allInstituteNotices = await _apiService.fetchallNotices();
+    List<NoticeIntro> allInstituteNotices =
+        await _apiService.fetchInstituteNotices();
     return allInstituteNotices;
+  }
+
+  Future<List<NoticeIntro>> fetchPlacementNotices() async {
+    List<NoticeIntro> allPlacementNotices =
+        await _apiService.fetchPlacementNotices();
+    return allPlacementNotices;
   }
 
   Future<List<NoticeIntro>> fetchFilteredNotices(String endpoint) async {

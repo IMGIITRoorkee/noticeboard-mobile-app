@@ -10,7 +10,7 @@ import '../../models/filters_list.dart';
 class ApiService {
   AuthService _authService = AuthService();
 
-  Future<List<NoticeIntro>> fetchallNotices() async {
+  Future<List<NoticeIntro>> fetchInstituteNotices() async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
@@ -22,6 +22,29 @@ class ApiService {
       if (allNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allNoticesResponse.body);
         Iterable list = body['results'];
+        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+      } else {
+        throw Exception('Failed to load notices');
+      }
+    } catch (e) {
+      throw Exception('Failed to load notices');
+    }
+  }
+
+  Future<List<NoticeIntro>> fetchPlacementNotices() async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
+      final http.Response placementNoticesResponse = await http
+          .get(BASE_URL + PLACEMENT_NOTICES, headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+
+      if (placementNoticesResponse.statusCode == 200) {
+        final body = jsonDecode(placementNoticesResponse.body);
+        Iterable list = body['results'];
+
         return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
       } else {
         throw Exception('Failed to load notices');

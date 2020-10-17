@@ -18,7 +18,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     ListNotices(
         listNoticeMetaData: ListNoticeMetaData(
             appBarLabel: 'Placement and Internships',
-            dynamicFetch: DynamicFetch.fetchInstituteNotices))
+            dynamicFetch: DynamicFetch.fetchPlacementNotices))
   ];
 
   @override

@@ -98,12 +98,26 @@ class ListNoticesBloc {
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
+    } else if (dynamicFetch == DynamicFetch.fetchPlacementNotices) {
+      try {
+        List<NoticeIntro> allPlacementNotices =
+            await _listNoticesRepository.fetchPlacementNotices();
+        _listNoticesSink.add(allPlacementNotices);
+        _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
+      } catch (e) {
+        _listNoticesSink.addError(e.message.toString());
+      }
     } else if (dynamicFetch == DynamicFetch.fetchFilterNotices) {
       try {
         if (filterResult.label != null)
           _appBarLabelSink.add(filterResult.label);
-        else
+        else {
           _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
+          if (listNoticeMetaData.dynamicFetch ==
+              DynamicFetch.fetchPlacementNotices)
+            filterResult.endpoint += '&banner=1';
+        }
+        print(filterResult.endpoint);
         List<NoticeIntro> allFilteredNotices = await _listNoticesRepository
             .fetchFilteredNotices(filterResult.endpoint);
         _listNoticesSink.add(allFilteredNotices);

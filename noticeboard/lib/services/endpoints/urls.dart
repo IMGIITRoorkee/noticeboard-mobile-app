@@ -10,3 +10,4 @@ const String AUTHORIZATION_PREFIX = 'Bearer ';
 const String ALL_NOTICES = 'api/noticeboard/new/';
 const String STAR_READ = 'api/noticeboard/star_read/';
 const String FILTERS_LIST = 'api/noticeboard/filter_list/';
+const String PLACEMENT_NOTICES = 'api/noticeboard/filter/?banner=1';

@@ -45,6 +45,6 @@ class GlobalSelection {
 
 class FilterResult {
   final String label;
-  final String endpoint;
+  String endpoint;
   FilterResult({this.endpoint, this.label});
 }
