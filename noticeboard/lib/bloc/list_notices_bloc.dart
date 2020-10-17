@@ -23,13 +23,23 @@ class ListNoticesBloc {
   Stream<List<NoticeIntro>> get listNoticesStream =>
       _listNoticesController.stream;
 
-  final _noticeObjController = StreamController<NoticeIntro>();
-  StreamSink<NoticeIntro> get noticeObjSink => _noticeObjController.sink;
-  Stream<NoticeIntro> get _noticeObjStream => _noticeObjController.stream;
+  final _toggleBookmarkController = StreamController<NoticeIntro>();
+  StreamSink<NoticeIntro> get toggleBookMarkSink =>
+      _toggleBookmarkController.sink;
+  Stream<NoticeIntro> get _toggleBookMarkStream =>
+      _toggleBookmarkController.stream;
 
   final _appBarLabelController = StreamController<String>();
   StreamSink<String> get _appBarLabelSink => _appBarLabelController.sink;
   Stream<String> get appBarLabelStream => _appBarLabelController.stream;
+
+  final _markReadController = StreamController<NoticeIntro>();
+  StreamSink<NoticeIntro> get markReadSink => _markReadController.sink;
+  Stream<NoticeIntro> get _markReadStream => _markReadController.stream;
+
+  final _markUnreadController = StreamController<NoticeIntro>();
+  StreamSink<NoticeIntro> get markUnreadSink => _markUnreadController.sink;
+  Stream<NoticeIntro> get _markUnreadStream => _markUnreadController.stream;
 
   ListNoticesRepository _listNoticesRepository = ListNoticesRepository();
 
@@ -42,7 +52,25 @@ class ListNoticesBloc {
       }
     });
 
-    _noticeObjStream.listen((object) async {
+    _markReadStream.listen((object) async {
+      var obj = {
+        "keyword": "read",
+        "notices": [object.id]
+      };
+      await _listNoticesRepository.markReadUnreadNotice(obj);
+      dynamicFetchNotices();
+    });
+
+    _markUnreadStream.listen((object) async {
+      var obj = {
+        "keyword": "unread",
+        "notices": [object.id]
+      };
+      await _listNoticesRepository.markReadUnreadNotice(obj);
+      dynamicFetchNotices();
+    });
+
+    _toggleBookMarkStream.listen((object) async {
       if (object.starred) {
         var obj = {
           "keyword": "unstar",
@@ -93,8 +121,10 @@ class ListNoticesBloc {
   void disposeStreams() {
     _eventController.close();
     _listNoticesController.close();
-    _noticeObjController.close();
+    _toggleBookmarkController.close();
     _appBarLabelController.close();
+    _markReadController.close();
+    _markUnreadController.close();
   }
 
   void pushFilters() async {

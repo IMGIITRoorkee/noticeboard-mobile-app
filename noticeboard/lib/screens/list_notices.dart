@@ -134,7 +134,7 @@ class _ListNoticesState extends State<ListNotices> {
   Container buildListItem(
       NoticeIntro noticeIntroObj, double width, double height) {
     return Container(
-      color: !noticeIntroObj.read ? Colors.white : Colors.grey[200],
+      color: !noticeIntroObj.read ? Colors.white : Colors.grey[400],
       width: width,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -166,18 +166,24 @@ class _ListNoticesState extends State<ListNotices> {
                       title: Text("Toggle Mark"),
                       trailingIcon: bookMarkIconDecider(noticeIntroObj.starred),
                       onPressed: () {
-                        _listNoticesBloc.noticeObjSink.add(noticeIntroObj);
+                        _listNoticesBloc.toggleBookMarkSink.add(noticeIntroObj);
                         HapticFeedback.lightImpact();
                       }),
 
                   FocusedMenuItem(
                       title: Text("Mark as Read"),
                       trailingIcon: Icon(Icons.visibility),
-                      onPressed: () {}),
+                      onPressed: () {
+                        _listNoticesBloc.markReadSink.add(noticeIntroObj);
+                        HapticFeedback.lightImpact();
+                      }),
                   FocusedMenuItem(
                       title: Text("Mark as unread"),
                       trailingIcon: Icon(Icons.visibility_off),
-                      onPressed: () {}),
+                      onPressed: () {
+                        _listNoticesBloc.markUnreadSink.add(noticeIntroObj);
+                        HapticFeedback.lightImpact();
+                      }),
                 ],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

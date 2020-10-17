@@ -47,4 +47,10 @@ class ListNoticesRepository {
       showToast('Failure unmarking');
     }
   }
+
+  Future markReadUnreadNotice(var obj) async {
+    try {
+      await _apiService.markReadUnreadNotice(obj);
+    } catch (e) {}
+  }
 }
