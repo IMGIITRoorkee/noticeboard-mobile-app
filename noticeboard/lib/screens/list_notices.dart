@@ -54,6 +54,7 @@ class _ListNoticesState extends State<ListNotices> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leadingWidth: 30.0,
         actions: [
           IconButton(
             icon: Icon(
@@ -68,18 +69,24 @@ class _ListNoticesState extends State<ListNotices> {
         elevation: 4,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: StreamBuilder(
-            initialData: widget.listNoticeMetaData.appBarLabel,
-            stream: _listNoticesBloc.appBarLabelStream,
-            builder: (context, snapshot) {
-              return Text(
-                snapshot.data,
-                style: TextStyle(fontSize: 18.0, color: Colors.black),
-              );
-            }),
+        title: Container(
+          height: 50.0,
+          padding: EdgeInsets.symmetric(vertical: 6.0),
+          child: TextField(
+            decoration: new InputDecoration(
+              suffixIcon: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {},
+              ),
+              filled: true,
+              fillColor: Colors.grey[300],
+              hintText: 'Search all notices',
+            ),
+          ),
+        ),
         automaticallyImplyLeading: false,
         leading: Container(
-          padding: EdgeInsets.only(left: 11.0),
+          padding: EdgeInsets.all(5.0),
           child: GestureDetector(
             onTap: () {
               _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
@@ -89,7 +96,7 @@ class _ListNoticesState extends State<ListNotices> {
               child: Icon(
                 Icons.account_circle,
                 color: Colors.black,
-                size: 45.0,
+                size: 40.0,
               ),
             ),
           ),
@@ -99,8 +106,23 @@ class _ListNoticesState extends State<ListNotices> {
         onRefresh: refreshNotices,
         child: ListView(
           children: [
+            StreamBuilder(
+                initialData: widget.listNoticeMetaData.appBarLabel,
+                stream: _listNoticesBloc.appBarLabelStream,
+                builder: (context, snapshot) {
+                  return Container(
+                    padding: EdgeInsets.only(left: 12.0, top: 6.0, bottom: 6.0),
+                    child: Text(
+                      snapshot.data,
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }),
             Container(
-              height: height * 0.80,
+              height: height * 0.75,
               width: width,
               child: StreamBuilder(
                 stream: _listNoticesBloc.listNoticesStream,
