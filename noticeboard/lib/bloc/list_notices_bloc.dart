@@ -12,6 +12,7 @@ class ListNoticesBloc {
   DynamicFetch dynamicFetch;
   FilterResult filterResult;
   ListNoticeMetaData listNoticeMetaData;
+  int page = 1;
 
   final _eventController = StreamController<ListNoticesEvent>();
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
@@ -92,7 +93,7 @@ class ListNoticesBloc {
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices) {
       try {
         List<NoticeIntro> allinstituteNotices =
-            await _listNoticesRepository.fetchInstituteNotices();
+            await _listNoticesRepository.fetchInstituteNotices(page);
         _listNoticesSink.add(allinstituteNotices);
         _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       } catch (e) {
@@ -101,7 +102,7 @@ class ListNoticesBloc {
     } else if (dynamicFetch == DynamicFetch.fetchPlacementNotices) {
       try {
         List<NoticeIntro> allPlacementNotices =
-            await _listNoticesRepository.fetchPlacementNotices();
+            await _listNoticesRepository.fetchPlacementNotices(page);
         _listNoticesSink.add(allPlacementNotices);
         _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       } catch (e) {
@@ -119,7 +120,7 @@ class ListNoticesBloc {
         }
         print(filterResult.endpoint);
         List<NoticeIntro> allFilteredNotices = await _listNoticesRepository
-            .fetchFilteredNotices(filterResult.endpoint);
+            .fetchFilteredNotices(filterResult.endpoint, page);
         _listNoticesSink.add(allFilteredNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
@@ -139,6 +140,11 @@ class ListNoticesBloc {
     _appBarLabelController.close();
     _markReadController.close();
     _markUnreadController.close();
+  }
+
+  void loadMore() {
+    page++;
+    dynamicFetchNotices();
   }
 
   void pushFilters() async {

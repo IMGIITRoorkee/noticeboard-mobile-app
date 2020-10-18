@@ -15,6 +15,7 @@ class ListNotices extends StatefulWidget {
 }
 
 class _ListNoticesState extends State<ListNotices> {
+  final ScrollController _sc = new ScrollController();
   final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
 
   @override
@@ -24,6 +25,11 @@ class _ListNoticesState extends State<ListNotices> {
     _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
     _listNoticesBloc.dynamicFetchNotices();
     super.initState();
+    // _sc.addListener(() {
+    //   if (_sc.position.pixels == _sc.position.maxScrollExtent) {
+    //     _listNoticesBloc.loadMore();
+    //   }
+    // });
   }
 
   Future<void> refreshNotices() async {
@@ -122,6 +128,7 @@ class _ListNoticesState extends State<ListNotices> {
       child: RefreshIndicator(
         onRefresh: refreshNotices,
         child: ListView.separated(
+            controller: _sc,
             separatorBuilder: (context, index) => Container(
                   width: width,
                   color: Colors.black,

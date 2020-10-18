@@ -10,13 +10,13 @@ import '../../models/filters_list.dart';
 class ApiService {
   AuthService _authService = AuthService();
 
-  Future<List<NoticeIntro>> fetchInstituteNotices() async {
+  Future<List<NoticeIntro>> fetchInstituteNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response allNoticesResponse = await http
-          .get(BASE_URL + ALL_NOTICES, headers: {
+          .get(BASE_URL + ALL_NOTICES + '?page=${page.toString()}', headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
       });
       if (allNoticesResponse.statusCode == 200) {
@@ -31,15 +31,16 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchPlacementNotices() async {
+  Future<List<NoticeIntro>> fetchPlacementNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response placementNoticesResponse = await http
-          .get(BASE_URL + PLACEMENT_NOTICES, headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response placementNoticesResponse = await http.get(
+          BASE_URL + PLACEMENT_NOTICES + '&page=${page.toString()}',
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+          });
 
       if (placementNoticesResponse.statusCode == 200) {
         final body = jsonDecode(placementNoticesResponse.body);
@@ -54,15 +55,16 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchFilteredNotices(String endpoint) async {
+  Future<List<NoticeIntro>> fetchFilteredNotices(
+      String endpoint, int page) async {
     try {
       AccessToken accessTokenObj =
           //     await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response response = await http.get(BASE_URL + endpoint,
-          headers: {
-            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-          });
+      final http.Response response = await http
+          .get(BASE_URL + endpoint + '&page=${page.toString()}', headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         Iterable list = body['results'];
