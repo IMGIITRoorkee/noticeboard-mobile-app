@@ -30,7 +30,7 @@ class LoginBloc {
   StreamSink<bool> get _showPasswordSink => _showPasswordConroller.sink;
   Stream<bool> get showPasswordStream => _showPasswordConroller.stream;
 
-  final _progressController = StreamController<LoginState>.broadcast();
+  final _progressController = StreamController<LoginState>();
   StreamSink<LoginState> get _progressSink => _progressController.sink;
   Stream<LoginState> get progressStream => _progressController.stream;
 

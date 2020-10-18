@@ -36,8 +36,6 @@ class MyRouter {
                 ));
       case filterRoute:
         return MaterialPageRoute(builder: (context) => Filters());
-      default:
-        return MaterialPageRoute(builder: (context) => Login());
     }
   }
 }
