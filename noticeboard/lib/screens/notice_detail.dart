@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
 import '../global/global_functions.dart';
 import 'package:diagonal_scrollview/diagonal_scrollview.dart';
-
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoticeDetail extends StatefulWidget {
   final NoticeIntro noticeIntro;
@@ -20,7 +20,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
   _NoticeDetailState({this.noticeIntro});
 
   NoticeContentBloc _noticeContentBloc = NoticeContentBloc();
-
+  final String prefix = 'https://internet.channeli.in/';
   @override
   void initState() {
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
@@ -84,7 +84,18 @@ class _NoticeDetailState extends State<NoticeDetail> {
       padding: EdgeInsets.all(10.0),
       child: DiagonalScrollView(
         enableZoom: true,
-        child: HtmlWidget(snapshot.data.content),
+        child: Html(
+          data: snapshot.data.content,
+          onLinkTap: (link) {
+            if (link.startsWith('/')) {
+              String channeliLink = prefix;
+              channeliLink += link;
+              launchURL(channeliLink);
+            } else {
+              launchURL(link);
+            }
+          },
+        ),
       ),
     );
   }
@@ -155,5 +166,11 @@ class _NoticeDetailState extends State<NoticeDetail> {
         ),
       ),
     );
+  }
+
+  launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {}
   }
 }
