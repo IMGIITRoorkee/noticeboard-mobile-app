@@ -14,13 +14,17 @@ class AuthService {
   }
 
   Future<RefreshToken> fetchUserTokens(dynamic obj) async {
-    final http.Response postResponse = await http.post(
-        BASE_URL + EP_REFRESH_TOKEN,
-        headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
-        body: jsonEncode(obj));
-    if (postResponse.statusCode == 200) {
-      return RefreshToken.fromJSON(jsonDecode(postResponse.body));
-    } else {
+    try {
+      final http.Response postResponse = await http.post(
+          BASE_URL + EP_REFRESH_TOKEN,
+          headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
+          body: jsonEncode(obj));
+      if (postResponse.statusCode == 200) {
+        return RefreshToken.fromJSON(jsonDecode(postResponse.body));
+      } else {
+        throw Exception('Login Failed');
+      }
+    } catch (e) {
       throw Exception('Login Failed');
     }
   }

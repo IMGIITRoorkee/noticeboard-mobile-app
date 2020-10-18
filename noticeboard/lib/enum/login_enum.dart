@@ -1,1 +1,7 @@
-enum LoginEvents { togglePasswordView, loginEvent }
+enum LoginEvents {
+  togglePasswordView,
+  loginEvent,
+  inProgress,
+  initLogin,
+}
+enum LoginState { inProgress, initLogin }

@@ -11,16 +11,14 @@ class AuthRepository {
   Future signInWithUsernamePassword(
       {String username, String password, BuildContext context}) async {
     try {
-      showToast('Attempting Login');
       var userObj = {"username": username, "password": password};
       RefreshToken _refreshTokenObj =
           await _authService.fetchUserTokens(userObj);
       await _authService.storeRefreshToken(_refreshTokenObj);
       await _authService.initHandle();
       Navigator.pushReplacementNamed(context, bottomNavigationRoute);
-      cancelToast();
     } catch (e) {
-      showToast('Login failed');
+      throw Exception(e);
     }
   }
 

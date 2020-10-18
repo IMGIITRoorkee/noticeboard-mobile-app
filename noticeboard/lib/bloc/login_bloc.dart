@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import '../global/toast.dart';
 import '../enum/login_enum.dart';
 import '../services/auth/auth_repository.dart';
 
@@ -10,25 +10,29 @@ class LoginBloc {
   bool _showPassword = true;
   BuildContext context;
 
-  final _usernameController = StreamController<String>();
+  final _usernameController = StreamController<String>.broadcast();
   StreamSink<String> get usernameSink => _usernameController.sink;
   Stream<String> get _usernameStream => _usernameController.stream;
 
-  final _passwordController = StreamController<String>();
+  final _passwordController = StreamController<String>.broadcast();
   StreamSink<String> get passwordSink => _passwordController.sink;
   Stream<String> get _passwordStream => _passwordController.stream;
 
-  final _allowController = StreamController<bool>();
+  final _allowController = StreamController<bool>.broadcast();
   StreamSink<bool> get _allowedSink => _allowController.sink;
   Stream<bool> get allowedStream => _allowController.stream;
 
-  final _eventController = StreamController<LoginEvents>();
+  final _eventController = StreamController<LoginEvents>.broadcast();
   StreamSink<LoginEvents> get eventSink => _eventController.sink;
   Stream<LoginEvents> get _eventStream => _eventController.stream;
 
-  final _showPasswordConroller = StreamController<bool>();
+  final _showPasswordConroller = StreamController<bool>.broadcast();
   StreamSink<bool> get _showPasswordSink => _showPasswordConroller.sink;
   Stream<bool> get showPasswordStream => _showPasswordConroller.stream;
+
+  final _progressController = StreamController<LoginState>.broadcast();
+  StreamSink<LoginState> get _progressSink => _progressController.sink;
+  Stream<LoginState> get progressStream => _progressController.stream;
 
   AuthRepository _authRepository = AuthRepository();
 
@@ -50,6 +54,7 @@ class LoginBloc {
     _allowController.close();
     _eventController.close();
     _showPasswordConroller.close();
+    _progressController.close();
   }
 
   void checkAllowed() {
@@ -76,13 +81,19 @@ class LoginBloc {
     checkAllowed();
   }
 
-  void eventListener(LoginEvents event) {
+  void eventListener(LoginEvents event) async {
     if (event == LoginEvents.togglePasswordView) {
       _showPassword = !_showPassword;
       _showPasswordSink.add(_showPassword);
     } else if (event == LoginEvents.loginEvent) {
-      _authRepository.signInWithUsernamePassword(
-          username: _username, password: _password, context: context);
+      try {
+        _progressSink.add(LoginState.inProgress);
+        await _authRepository.signInWithUsernamePassword(
+            username: _username, password: _password, context: context);
+      } catch (e) {
+        showToast('Login failed');
+        _progressSink.add(LoginState.initLogin);
+      }
     }
   }
 }

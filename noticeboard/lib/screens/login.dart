@@ -9,17 +9,17 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final loginBloc = LoginBloc();
+  final _loginBloc = LoginBloc();
 
   @override
   void dispose() {
-    loginBloc.disposeStreams();
+    _loginBloc.disposeStreams();
     super.dispose();
   }
 
   @override
   void initState() {
-    loginBloc.context = context;
+    _loginBloc.context = context;
     super.initState();
   }
 
@@ -29,61 +29,70 @@ class _LoginState extends State<Login> {
     final double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          height: _height,
-          width: _width,
-          child: Stack(children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  containsBranding(context, _width, _height),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  buildUsernameContainer(_width),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  StreamBuilder(
-                      initialData: true,
-                      stream: loginBloc.showPasswordStream,
-                      builder: (context, snapshot) {
-                        return buildPasswordContainer(_width, snapshot);
-                      }),
-                  SizedBox(
-                    height: _height * 0.04,
-                  ),
-                  StreamBuilder(
-                    initialData: false,
-                    stream: loginBloc.allowedStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.data)
-                        return buildLoginEnabledBtn(_width);
-                      else
-                        return buildLoginDisabledBtn(_width);
-                    },
-                  ),
-                  SizedBox(
-                    height: _height * 0.02,
-                  ),
-                  buildContactImgContainer(_width),
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: lotsOfLove(context, _width, _height),
-              ),
-            )
-          ]),
-        ),
-      ),
+      body: StreamBuilder(
+          initialData: LoginState.initLogin,
+          stream: _loginBloc.progressStream,
+          builder: (context, snapshot) {
+            if (snapshot.data == LoginState.initLogin)
+              return SingleChildScrollView(
+                child: Container(
+                  height: _height,
+                  width: _width,
+                  child: Stack(children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          containsBranding(context, _width, _height),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          buildUsernameContainer(_width),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          StreamBuilder(
+                              initialData: true,
+                              stream: _loginBloc.showPasswordStream,
+                              builder: (context, snapshot) {
+                                return buildPasswordContainer(_width, snapshot);
+                              }),
+                          SizedBox(
+                            height: _height * 0.04,
+                          ),
+                          StreamBuilder(
+                            initialData: false,
+                            stream: _loginBloc.allowedStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.data)
+                                return buildLoginEnabledBtn(_width);
+                              else
+                                return buildLoginDisabledBtn(_width);
+                            },
+                          ),
+                          SizedBox(
+                            height: _height * 0.02,
+                          ),
+                          buildContactImgContainer(_width),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: lotsOfLove(context, _width, _height),
+                      ),
+                    )
+                  ]),
+                ),
+              );
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
     );
   }
 
@@ -92,7 +101,7 @@ class _LoginState extends State<Login> {
       width: _width * 0.75,
       child: TextField(
         decoration: usernameDecoration,
-        onChanged: (value) => loginBloc.usernameSink.add(value),
+        onChanged: (value) => _loginBloc.usernameSink.add(value),
       ),
     );
   }
@@ -103,7 +112,7 @@ class _LoginState extends State<Login> {
       child: TextField(
         obscureText: snapshot.data,
         decoration: buildpasswordDecoration(snapshot.data),
-        onChanged: (value) => loginBloc.passwordSink.add(value),
+        onChanged: (value) => _loginBloc.passwordSink.add(value),
       ),
     );
   }
@@ -119,7 +128,7 @@ class _LoginState extends State<Login> {
             style: TextStyle(fontSize: 17.0, color: Colors.white),
           ),
           onPressed: () {
-            loginBloc.eventSink.add(LoginEvents.loginEvent);
+            _loginBloc.eventSink.add(LoginEvents.loginEvent);
           },
         ));
   }
@@ -144,7 +153,7 @@ class _LoginState extends State<Login> {
         prefixIcon: Icon(Icons.vpn_key),
         suffixIcon: IconButton(
           onPressed: () {
-            loginBloc.eventSink.add(LoginEvents.togglePasswordView);
+            _loginBloc.eventSink.add(LoginEvents.togglePasswordView);
           },
           icon: !toHide ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
         ));
