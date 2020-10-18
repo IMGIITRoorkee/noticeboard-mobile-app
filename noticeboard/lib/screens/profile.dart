@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
+    final double _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
         appBar: AppBar(
@@ -41,63 +42,83 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  FutureBuilder(
-                      future: _authRepository.fetchUserProfile(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CircleAvatar(
-                                radius: 45.0,
-                                backgroundColor: Colors.grey[400],
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(
-                                snapshot.data.fullName,
-                                style: blackSuperBoldMediumSize,
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(
-                                snapshot.data.degreeName,
-                                style: lightGreySmallSize,
-                              ),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Text(
-                                snapshot.data.currentYear,
-                                style: lightGreySmallSize,
-                              ),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Container(
-                                color: Colors.amberAccent,
-                                width: _width,
-                                child: Center(
-                                  child: Text(
-                                    snapshot.data.branchName,
-                                    style: lightGreySmallSize,
-                                    overflow: TextOverflow.ellipsis,
+                  Container(
+                    constraints: BoxConstraints(minHeight: _height * 0.28),
+                    child: FutureBuilder(
+                        future: _authRepository.fetchUserProfile(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 45.0,
+                                  backgroundColor: Colors.grey[400],
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Container(
+                                  width: _width,
+                                  child: Center(
+                                    child: Text(
+                                      snapshot.data.fullName,
+                                      style: blackSuperBoldMediumSize,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Container(
+                                  width: _width,
+                                  child: Center(
+                                    child: Text(
+                                      snapshot.data.degreeName,
+                                      style: lightGreySmallSize,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      softWrap: false,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Text(
+                                  snapshot.data.currentYear,
+                                  style: lightGreySmallSize,
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  width: _width,
+                                  child: Center(
+                                    child: Text(
+                                      snapshot.data.branchName,
+                                      style: lightGreySmallSize,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(snapshot.error),
+                            );
+                          }
                           return Center(
-                            child: Text(snapshot.error),
+                            child: CircularProgressIndicator(),
                           );
-                        }
-                        return Center(
-                          child: Text('Loading Profile ...'),
-                        );
-                      }),
+                        }),
+                  ),
                   SizedBox(
                     height: 40.0,
                   ),
