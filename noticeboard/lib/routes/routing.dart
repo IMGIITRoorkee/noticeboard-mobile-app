@@ -4,7 +4,6 @@ import 'package:noticeboard/screens/bottom_navigation.dart';
 import 'package:noticeboard/screens/profile.dart';
 import './routing_constants.dart';
 import '../screens/login.dart';
-import '../models/user_profile.dart';
 import '../screens/list_notices.dart';
 import '../screens/launching.dart';
 import '../models/notice_intro.dart';
@@ -21,11 +20,7 @@ class MyRouter {
       case bottomNavigationRoute:
         return MaterialPageRoute(builder: (context) => MyBottomNavigationBar());
       case profileRoute:
-        UserProfile userProfile = settings.arguments;
-        return MaterialPageRoute(
-            builder: (context) => Profile(
-                  userProfile: userProfile,
-                ));
+        return MaterialPageRoute(builder: (context) => Profile());
       case listNoticesRoute:
         ListNoticeMetaData listNoticeMetaData = settings.arguments;
 

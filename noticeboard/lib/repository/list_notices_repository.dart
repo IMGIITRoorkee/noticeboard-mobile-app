@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import '../routes/routing_constants.dart';
-import '../services/auth/auth_repository.dart';
-import '../models/user_profile.dart';
 import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
 import '../global/toast.dart';
 
 class ListNoticesRepository {
-  AuthRepository _authRepository = AuthRepository();
   ApiService _apiService = ApiService();
 
   Future pushProfileScreen(BuildContext context) async {
-    UserProfile userProfile = await _authRepository.fetchUserProfile();
-    Navigator.pushNamed(context, profileRoute, arguments: userProfile);
+    Navigator.pushNamed(context, profileRoute);
   }
 
   void noticeDetail(BuildContext context, NoticeIntro noticeIntro) {

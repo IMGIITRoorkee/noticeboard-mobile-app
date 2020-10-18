@@ -54,7 +54,7 @@ class _ListNoticesState extends State<ListNotices> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leadingWidth: 30.0,
+        leadingWidth: 50.0,
         actions: [
           IconButton(
             icon: Icon(
@@ -85,19 +85,16 @@ class _ListNoticesState extends State<ListNotices> {
           ),
         ),
         automaticallyImplyLeading: false,
-        leading: Container(
-          padding: EdgeInsets.all(5.0),
-          child: GestureDetector(
-            onTap: () {
-              _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.account_circle,
-                color: Colors.black,
-                size: 40.0,
-              ),
+        leading: GestureDetector(
+          onTap: () {
+            _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 10.0),
+            child: Icon(
+              Icons.account_circle,
+              color: Colors.black,
+              size: 50.0,
             ),
           ),
         ),

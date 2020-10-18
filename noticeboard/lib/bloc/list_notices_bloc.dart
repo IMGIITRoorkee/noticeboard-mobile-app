@@ -118,7 +118,7 @@ class ListNoticesBloc {
               DynamicFetch.fetchPlacementNotices)
             filterResult.endpoint += '&banner=82';
         }
-        print(filterResult.endpoint);
+
         List<NoticeIntro> allFilteredNotices = await _listNoticesRepository
             .fetchFilteredNotices(filterResult.endpoint, page);
         _listNoticesSink.add(allFilteredNotices);
