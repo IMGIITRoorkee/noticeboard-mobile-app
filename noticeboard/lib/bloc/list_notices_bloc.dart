@@ -130,7 +130,6 @@ class ListNoticesBloc {
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
     Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro);
-    // .then((value) => dynamicFetchNotices());
   }
 
   void disposeStreams() {
