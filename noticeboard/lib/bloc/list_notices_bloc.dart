@@ -116,7 +116,7 @@ class ListNoticesBloc {
           _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
           if (listNoticeMetaData.dynamicFetch ==
               DynamicFetch.fetchPlacementNotices)
-            filterResult.endpoint += '&banner=1';
+            filterResult.endpoint += '&banner=82';
         }
         print(filterResult.endpoint);
         List<NoticeIntro> allFilteredNotices = await _listNoticesRepository

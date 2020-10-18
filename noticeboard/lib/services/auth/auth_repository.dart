@@ -16,7 +16,7 @@ class AuthRepository {
       RefreshToken _refreshTokenObj =
           await _authService.fetchUserTokens(userObj);
       await _authService.storeRefreshToken(_refreshTokenObj);
-
+      await _authService.initHandle();
       Navigator.pushReplacementNamed(context, bottomNavigationRoute);
       cancelToast();
     } catch (e) {
@@ -28,6 +28,7 @@ class AuthRepository {
     RefreshToken refreshToken = await _authService.fetchRefreshToken();
     await Future.delayed(Duration(seconds: 1));
     if (refreshToken.refreshToken != null) {
+      await _authService.initHandle();
       Navigator.pushReplacementNamed(context, bottomNavigationRoute);
     } else {
       Navigator.pushReplacementNamed(context, loginRoute);

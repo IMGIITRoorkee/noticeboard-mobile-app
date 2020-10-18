@@ -7,16 +7,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
   final storage = new FlutterSecureStorage();
-  AuthService() {
-    initHandle();
-  }
+
   initHandle() async {
-    RefreshToken refreshToken = await fetchRefreshToken();
-    AccessToken accessToken = await fetchAccessToken();
-    if (refreshToken.refreshToken != null && accessToken.accessToken != null) {
-      AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
-      storeAccessToken(accessTokenObj);
-    }
+    AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
+    storeAccessToken(accessTokenObj);
   }
 
   Future<RefreshToken> fetchUserTokens(dynamic obj) async {
