@@ -1,5 +1,8 @@
 enum DynamicFetch {
   fetchInstituteNotices,
   fetchFilterNotices,
-  fetchPlacementNotices
+  fetchPlacementNotices,
+  fetchImportantNotices,
+  fetchExpiredNotices,
+  fetchBookmarkedNotices
 }

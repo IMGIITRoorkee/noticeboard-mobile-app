@@ -125,6 +125,30 @@ class ListNoticesBloc {
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
+    } else if (dynamicFetch == DynamicFetch.fetchImportantNotices) {
+      try {
+        List<NoticeIntro> allImportantNotices =
+            await _listNoticesRepository.fetchImportantNotices(page);
+        _listNoticesSink.add(allImportantNotices);
+      } catch (e) {
+        _listNoticesSink.addError(e.message.toString());
+      }
+    } else if (dynamicFetch == DynamicFetch.fetchExpiredNotices) {
+      try {
+        List<NoticeIntro> allExpiredNotices =
+            await _listNoticesRepository.fetchExpiredNotices(page);
+        _listNoticesSink.add(allExpiredNotices);
+      } catch (e) {
+        _listNoticesSink.addError(e.message.toString());
+      }
+    } else if (dynamicFetch == DynamicFetch.fetchBookmarkedNotices) {
+      try {
+        List<NoticeIntro> allBookmarkedNotices =
+            await _listNoticesRepository.fetchBookmarkedNotices(page);
+        _listNoticesSink.add(allBookmarkedNotices);
+      } catch (e) {
+        _listNoticesSink.addError(e.message.toString());
+      }
     }
   }
 

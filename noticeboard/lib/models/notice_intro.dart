@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart';
+import 'package:flutter/material.dart';
 import '../enum/dynamic_fetch_enum.dart';
 
 class NoticeIntro {
@@ -38,5 +39,9 @@ class NoticeIntro {
 class ListNoticeMetaData {
   final String appBarLabel;
   final DynamicFetch dynamicFetch;
-  ListNoticeMetaData({this.appBarLabel, this.dynamicFetch});
+  final bool noFilters;
+  ListNoticeMetaData(
+      {@required this.appBarLabel,
+      @required this.dynamicFetch,
+      @required this.noFilters});
 }

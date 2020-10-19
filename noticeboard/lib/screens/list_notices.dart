@@ -53,72 +53,87 @@ class _ListNoticesState extends State<ListNotices> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leadingWidth: 50.0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              _listNoticesBloc.eventSink.add(ListNoticesEvent.pushFilters);
-            },
-          )
-        ],
-        elevation: 4,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: Container(
-          height: 50.0,
-          padding: EdgeInsets.symmetric(vertical: 6.0),
-          child: TextField(
-            decoration: new InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {},
+      appBar: widget.listNoticeMetaData.noFilters
+          ? AppBar(
+              title: Text(
+                widget.listNoticeMetaData.appBarLabel,
+                style: TextStyle(color: Colors.black),
               ),
-              filled: true,
-              fillColor: Colors.grey[300],
-              hintText: 'Search all notices',
+              automaticallyImplyLeading: false,
+              elevation: 4,
+              centerTitle: true,
+              backgroundColor: Colors.white,
+            )
+          : AppBar(
+              leadingWidth: 50.0,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.filter_list,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    _listNoticesBloc.eventSink
+                        .add(ListNoticesEvent.pushFilters);
+                  },
+                )
+              ],
+              elevation: 4,
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              title: Container(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(vertical: 6.0),
+                child: TextField(
+                  decoration: new InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    hintText: 'Search all notices',
+                  ),
+                ),
+              ),
+              automaticallyImplyLeading: false,
+              leading: GestureDetector(
+                onTap: () {
+                  _listNoticesBloc.eventSink
+                      .add(ListNoticesEvent.pushProfileEvent);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 10.0),
+                  child: Icon(
+                    Icons.account_circle,
+                    color: Colors.black,
+                    size: 50.0,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        leading: GestureDetector(
-          onTap: () {
-            _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
-          },
-          child: Container(
-            margin: EdgeInsets.only(left: 10.0),
-            child: Icon(
-              Icons.account_circle,
-              color: Colors.black,
-              size: 50.0,
-            ),
-          ),
-        ),
-      ),
       body: RefreshIndicator(
         onRefresh: refreshNotices,
         child: ListView(
           children: [
-            StreamBuilder(
-                initialData: widget.listNoticeMetaData.appBarLabel,
-                stream: _listNoticesBloc.appBarLabelStream,
-                builder: (context, snapshot) {
-                  return Container(
-                    padding:
-                        EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
-                    child: Text(
-                      snapshot.data,
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  );
-                }),
+            !widget.listNoticeMetaData.noFilters
+                ? StreamBuilder(
+                    initialData: widget.listNoticeMetaData.appBarLabel,
+                    stream: _listNoticesBloc.appBarLabelStream,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.only(
+                            left: 12.0, top: 12.0, bottom: 12.0),
+                        child: Text(
+                          snapshot.data,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    })
+                : Container(),
             Container(
               height: height * 0.735,
               width: width,
