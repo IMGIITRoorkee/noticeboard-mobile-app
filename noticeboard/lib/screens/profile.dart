@@ -51,9 +51,12 @@ class _ProfileState extends State<Profile> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                CircleAvatar(
-                                  radius: 45.0,
-                                  backgroundColor: Colors.grey[400],
+                                Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  child: FadeInImage.assetNetwork(
+                                      placeholder: 'assets/images/user1.jpg',
+                                      image: snapshot.data.picUrl),
                                 ),
                                 SizedBox(
                                   height: 10.0,
