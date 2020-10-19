@@ -16,7 +16,7 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response allNoticesResponse = await http
-          .get(BASE_URL + ALL_NOTICES + '?page=${page.toString()}', headers: {
+          .get(BASE_URL + ALL_NOTICES + page.toString(), headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
       });
       if (allNoticesResponse.statusCode == 200) {
@@ -29,6 +29,69 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Failed to load notices');
+    }
+  }
+
+  Future<List<NoticeIntro>> fetchImportantNotices(int page) async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
+      final http.Response allImportantNoticesResponse = await http
+          .get(BASE_URL + IMPORTANT_NOTICES + page.toString(), headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+      if (allImportantNoticesResponse.statusCode == 200) {
+        final body = jsonDecode(allImportantNoticesResponse.body);
+        Iterable list = body['results'];
+        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+      } else {
+        throw Exception('Failed to load important notices');
+      }
+    } catch (e) {
+      throw Exception('Failed to load important notices');
+    }
+  }
+
+  Future<List<NoticeIntro>> fetchExpiredNotices(int page) async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
+      final http.Response allExpiredNoticesResponse = await http
+          .get(BASE_URL + EXPIRED_NOTICES + page.toString(), headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+      if (allExpiredNoticesResponse.statusCode == 200) {
+        final body = jsonDecode(allExpiredNoticesResponse.body);
+        Iterable list = body['results'];
+        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+      } else {
+        throw Exception('Failed to load expired notices');
+      }
+    } catch (e) {
+      throw Exception('Failed to load expired notices');
+    }
+  }
+
+  Future<List<NoticeIntro>> fetchBookmarkedNotices(int page) async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
+      final http.Response allBookmarkedNoticesResponse = await http
+          .get(BASE_URL + BOOKMARKED_NOTICES + page.toString(), headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+      if (allBookmarkedNoticesResponse.statusCode == 200) {
+        final body = jsonDecode(allBookmarkedNoticesResponse.body);
+        Iterable list = body['results'];
+        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+      } else {
+        throw Exception('Failed to load bookmarked notices');
+      }
+    } catch (e) {
+      throw Exception('Failed to load bookmarked notices');
     }
   }
 

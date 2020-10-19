@@ -32,6 +32,13 @@ class NoticeContentBloc {
           NoticeContent noticeContent =
               await noticeContentRepository.fetchNoticeContent(noticeIntro.id);
           _contentSink.add(noticeContent);
+          if (!noticeIntro.read) {
+            var obj = {
+              "keyword": "read",
+              "notices": [noticeIntro.id]
+            };
+            await noticeContentRepository.readNotice(obj);
+          }
         } catch (e) {
           _contentSink.addError(e.message.toString());
         }

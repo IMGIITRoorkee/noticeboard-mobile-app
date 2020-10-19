@@ -21,6 +21,24 @@ class ListNoticesRepository {
     return allInstituteNotices;
   }
 
+  Future<List<NoticeIntro>> fetchImportantNotices(int page) async {
+    List<NoticeIntro> allImportantNotices =
+        await _apiService.fetchImportantNotices(page);
+    return allImportantNotices;
+  }
+
+  Future<List<NoticeIntro>> fetchExpiredNotices(int page) async {
+    List<NoticeIntro> allExpiredNotices =
+        await _apiService.fetchExpiredNotices(page);
+    return allExpiredNotices;
+  }
+
+  Future<List<NoticeIntro>> fetchBookmarkedNotices(int page) async {
+    List<NoticeIntro> allBookmarkedNotices =
+        await _apiService.fetchBookmarkedNotices(page);
+    return allBookmarkedNotices;
+  }
+
   Future<List<NoticeIntro>> fetchPlacementNotices(int page) async {
     List<NoticeIntro> allPlacementNotices =
         await _apiService.fetchPlacementNotices(page);

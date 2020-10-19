@@ -16,4 +16,8 @@ class NoticeContentRepository {
   Future unbookmarkNotice(var obj) async {
     await _apiService.markUnmarkNotice(obj);
   }
+
+  Future readNotice(var obj) async {
+    await _apiService.markReadUnreadNotice(obj);
+  }
 }

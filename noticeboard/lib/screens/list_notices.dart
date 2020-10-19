@@ -108,7 +108,8 @@ class _ListNoticesState extends State<ListNotices> {
                 stream: _listNoticesBloc.appBarLabelStream,
                 builder: (context, snapshot) {
                   return Container(
-                    padding: EdgeInsets.only(left: 12.0, top: 6.0, bottom: 6.0),
+                    padding:
+                        EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
                     child: Text(
                       snapshot.data,
                       style: TextStyle(
@@ -119,7 +120,7 @@ class _ListNoticesState extends State<ListNotices> {
                   );
                 }),
             Container(
-              height: height * 0.75,
+              height: height * 0.735,
               width: width,
               child: StreamBuilder(
                 stream: _listNoticesBloc.listNoticesStream,
@@ -151,7 +152,7 @@ class _ListNoticesState extends State<ListNotices> {
             separatorBuilder: (context, index) => Container(
                   width: width,
                   color: Colors.black,
-                  height: 2.0,
+                  height: 0.5,
                 ),
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
@@ -168,7 +169,7 @@ class _ListNoticesState extends State<ListNotices> {
       color: !noticeIntroObj.read ? Colors.white : Colors.grey[400],
       width: width,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
