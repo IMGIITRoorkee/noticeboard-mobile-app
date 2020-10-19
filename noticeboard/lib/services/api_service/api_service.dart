@@ -22,6 +22,7 @@ class ApiService {
       if (allNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allNoticesResponse.body);
         Iterable list = body['results'];
+        list = list.where((notice) => notice['banner']['id'] != 82).toList();
         return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
       } else {
         throw Exception('Failed to load notices');
