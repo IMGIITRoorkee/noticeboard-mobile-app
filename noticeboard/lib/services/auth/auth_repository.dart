@@ -16,6 +16,8 @@ class AuthRepository {
           await _authService.fetchUserTokens(userObj);
       await _authService.storeRefreshToken(_refreshTokenObj);
       await _authService.initHandle();
+      UserProfile userProfile = await fetchUserProfile();
+      await _authService.storeProfile(userProfile);
       Navigator.pushReplacementNamed(context, bottomNavigationRoute);
     } catch (e) {
       throw Exception(e);
@@ -46,5 +48,10 @@ class AuthRepository {
 
   Future logout() async {
     await _authService.deleteRefreshToken();
+  }
+
+  Future<UserProfile> fetchProfileFromStorage() async {
+    UserProfile userProfile = await _authService.fetchProfileFromStorage();
+    return userProfile;
   }
 }

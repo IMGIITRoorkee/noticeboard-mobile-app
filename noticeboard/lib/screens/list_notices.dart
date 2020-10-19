@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:noticeboard/models/notice_intro.dart';
+import 'package:noticeboard/services/auth/auth_repository.dart';
 import '../enum/list_notices_enum.dart';
 import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
@@ -17,6 +18,7 @@ class ListNotices extends StatefulWidget {
 class _ListNoticesState extends State<ListNotices> {
   final ScrollController _sc = new ScrollController();
   final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
+  final AuthRepository _authRepository = AuthRepository();
 
   @override
   void initState() {
@@ -65,7 +67,7 @@ class _ListNoticesState extends State<ListNotices> {
               backgroundColor: Colors.white,
             )
           : AppBar(
-              leadingWidth: 50.0,
+              leadingWidth: 55.0,
               actions: [
                 IconButton(
                   icon: Icon(
@@ -102,14 +104,7 @@ class _ListNoticesState extends State<ListNotices> {
                   _listNoticesBloc.eventSink
                       .add(ListNoticesEvent.pushProfileEvent);
                 },
-                child: Container(
-                  margin: EdgeInsets.only(left: 10.0),
-                  child: Icon(
-                    Icons.account_circle,
-                    color: Colors.black,
-                    size: 50.0,
-                  ),
-                ),
+                child: Center(child: buildProfilePic()),
               ),
             ),
       body: RefreshIndicator(
@@ -152,6 +147,40 @@ class _ListNoticesState extends State<ListNotices> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  FutureBuilder buildProfilePic() {
+    return FutureBuilder(
+        future: _authRepository.fetchProfileFromStorage(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.picUrl != "") {
+              return Padding(
+                padding:
+                    const EdgeInsets.only(left: 10.0, top: 4.0, bottom: 4.0),
+                child: Container(
+                  child: FadeInImage.assetNetwork(
+                      placeholder: 'assets/images/user1.jpg',
+                      image: snapshot.data.picUrl),
+                ),
+              );
+            } else {
+              return buildNoPic();
+            }
+          } else if (snapshot.hasError) {
+            return buildNoPic();
+          }
+          return buildNoPic();
+        });
+  }
+
+  Padding buildNoPic() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0, top: 4.0, bottom: 4.0),
+      child: Container(
+        child: Image.asset('assets/images/user1.jpg'),
       ),
     );
   }

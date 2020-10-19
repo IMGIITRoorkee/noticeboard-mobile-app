@@ -45,7 +45,7 @@ class _ProfileState extends State<Profile> {
                   Container(
                     constraints: BoxConstraints(minHeight: _height * 0.28),
                     child: FutureBuilder(
-                        future: _authRepository.fetchUserProfile(),
+                        future: _authRepository.fetchProfileFromStorage(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Column(

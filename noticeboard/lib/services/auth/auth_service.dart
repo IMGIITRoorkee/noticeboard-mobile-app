@@ -38,6 +38,35 @@ class AuthService {
     await storage.write(key: "accessToken", value: userAccessToken.accessToken);
   }
 
+  Future storeProfile(UserProfile userProfile) async {
+    if (userProfile.picUrl != null) {
+      await storage.write(
+          key: "picUrl",
+          value: "https://internet.channeli.in/" + userProfile.picUrl);
+    } else {
+      await storage.write(key: "picUrl", value: "");
+    }
+    await storage.write(key: "fullName", value: userProfile.fullName);
+    await storage.write(key: "degreeName", value: userProfile.degreeName);
+    await storage.write(key: "currentYear", value: userProfile.currentYear);
+    await storage.write(key: "branchName", value: userProfile.branchName);
+  }
+
+  Future<UserProfile> fetchProfileFromStorage() async {
+    String picUrl = await storage.read(key: "picUrl");
+    String fullName = await storage.read(key: "fullName");
+    String degreeName = await storage.read(key: "degreeName");
+    String currentYear = await storage.read(key: "currentYear");
+    String branchName = await storage.read(key: "branchName");
+    UserProfile userProfile = UserProfile(
+        picUrl: picUrl,
+        fullName: fullName,
+        degreeName: degreeName,
+        currentYear: currentYear,
+        branchName: branchName);
+    return userProfile;
+  }
+
   Future<RefreshToken> fetchRefreshToken() async {
     String refreshToken = await storage.read(key: "refreshToken");
 
