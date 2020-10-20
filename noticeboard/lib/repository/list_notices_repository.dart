@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noticeboard/models/paginated_info.dart';
 import '../routes/routing_constants.dart';
 import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
@@ -39,8 +40,8 @@ class ListNoticesRepository {
     return allBookmarkedNotices;
   }
 
-  Future<List<NoticeIntro>> fetchPlacementNotices(int page) async {
-    List<NoticeIntro> allPlacementNotices =
+  Future<PaginatedInfo> fetchPlacementNotices(int page) async {
+    PaginatedInfo allPlacementNotices =
         await _apiService.fetchPlacementNotices(page);
     return allPlacementNotices;
   }

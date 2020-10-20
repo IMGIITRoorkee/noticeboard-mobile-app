@@ -7,6 +7,7 @@ import '../enum/list_notices_enum.dart';
 import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
@@ -27,11 +28,6 @@ class _ListNoticesState extends State<ListNotices> {
     _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
     _listNoticesBloc.dynamicFetchNotices();
     super.initState();
-    // _sc.addListener(() {
-    //   if (_sc.position.pixels == _sc.position.maxScrollExtent) {
-    //     _listNoticesBloc.loadMore();
-    //   }
-    // });
   }
 
   Future<void> refreshNotices() async {
@@ -47,6 +43,15 @@ class _ListNoticesState extends State<ListNotices> {
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
     _listNoticesBloc.pushNoticeDetail(noticeIntro);
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification is ScrollEndNotification) {
+      if (_sc.position.extentAfter == 0) {
+        _listNoticesBloc.loadMore();
+      }
+    }
+    return false;
   }
 
   @override
@@ -191,18 +196,57 @@ class _ListNoticesState extends State<ListNotices> {
       width: width,
       child: RefreshIndicator(
         onRefresh: refreshNotices,
-        child: ListView.separated(
-            controller: _sc,
-            separatorBuilder: (context, index) => Container(
-                  width: width,
-                  color: Colors.black,
-                  height: 0.5,
-                ),
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) {
-              NoticeIntro noticeIntroObj = snapshot.data[index];
-              return buildListItem(noticeIntroObj, width, height);
-            }),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: _handleScrollNotification,
+          child: ListView.separated(
+              controller: _sc,
+              separatorBuilder: (context, index) => Container(
+                    width: width,
+                    color: Colors.black,
+                    height: 0.5,
+                  ),
+              itemCount: snapshot.data.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == snapshot.data.length) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[400],
+                    highlightColor: Colors.grey[200],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: width * 0.9,
+                            height: 10.0,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Container(
+                            width: width * 0.4,
+                            height: 10.0,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Container(
+                            width: width * 0.9,
+                            height: 10.0,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                NoticeIntro noticeIntroObj = snapshot.data[index];
+                return buildListItem(noticeIntroObj, width, height);
+              }),
+        ),
       ),
     );
   }

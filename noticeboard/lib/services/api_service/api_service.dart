@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../../services/endpoints/urls.dart';
 import '../../models/notice_content.dart';
 import '../../models/filters_list.dart';
+import '../../models/paginated_info.dart';
 
 class ApiService {
   AuthService _authService = AuthService();
@@ -95,7 +96,7 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchPlacementNotices(int page) async {
+  Future<PaginatedInfo> fetchPlacementNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
@@ -108,9 +109,12 @@ class ApiService {
 
       if (placementNoticesResponse.statusCode == 200) {
         final body = jsonDecode(placementNoticesResponse.body);
+        bool hasMore = body['next'] == null ? false : true;
+
         Iterable list = body['results'];
 
-        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        return PaginatedInfo(list: list, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }

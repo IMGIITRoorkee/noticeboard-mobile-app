@@ -10,13 +10,14 @@ class NoticeIntro {
   final bool read;
   final bool starred;
 
-  NoticeIntro(
-      {this.id,
-      this.title,
-      this.dateCreated,
-      this.department,
-      this.read,
-      this.starred});
+  NoticeIntro({
+    this.id,
+    this.title,
+    this.dateCreated,
+    this.department,
+    this.read,
+    this.starred,
+  });
 
   static String convertDateToRequiredFormat(String dateOriginal) {
     DateTime dateObj = DateTime.parse(dateOriginal);
@@ -27,12 +28,13 @@ class NoticeIntro {
 
   factory NoticeIntro.fromJSON(dynamic json) {
     return NoticeIntro(
-        id: json['id'],
-        title: json['title'],
-        dateCreated: convertDateToRequiredFormat(json['datetimeCreated']),
-        department: json['banner']['name'],
-        read: json['read'],
-        starred: json['starred']);
+      id: json['id'],
+      title: json['title'],
+      dateCreated: convertDateToRequiredFormat(json['datetimeModified']),
+      department: json['banner']['name'],
+      read: json['read'],
+      starred: json['starred'],
+    );
   }
 }
 

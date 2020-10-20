@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:noticeboard/models/paginated_info.dart';
 import 'package:noticeboard/repository/list_notices_repository.dart';
 import '../models/notice_intro.dart';
 import '../enum/list_notices_enum.dart';
@@ -13,6 +14,9 @@ class ListNoticesBloc {
   FilterResult filterResult;
   ListNoticeMetaData listNoticeMetaData;
   int page = 1;
+  bool lazyLoad = false;
+  List<NoticeIntro> dynamicNoticeList;
+  bool hasMore = true;
 
   final _eventController = StreamController<ListNoticesEvent>();
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
@@ -90,7 +94,6 @@ class ListNoticesBloc {
   }
 
   void dynamicFetchNotices() async {
-    _listNoticesSink.add(null);
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices) {
       _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       try {
@@ -103,9 +106,17 @@ class ListNoticesBloc {
     } else if (dynamicFetch == DynamicFetch.fetchPlacementNotices) {
       _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       try {
-        List<NoticeIntro> allPlacementNotices =
+        PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchPlacementNotices(page);
-        _listNoticesSink.add(allPlacementNotices);
+        List<NoticeIntro> allPlacementNotices = paginatedInfo.list;
+        if (!paginatedInfo.hasMore) hasMore = false;
+        if (!lazyLoad) {
+          dynamicNoticeList = allPlacementNotices;
+          _listNoticesSink.add(dynamicNoticeList);
+        } else {
+          dynamicNoticeList.addAll(allPlacementNotices);
+        }
+        _listNoticesSink.add(dynamicNoticeList);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -166,13 +177,25 @@ class ListNoticesBloc {
     _markUnreadController.close();
   }
 
-  void loadMore() {
-    page++;
+  void refreshNotices() {
+    lazyLoad = false;
     dynamicFetchNotices();
+  }
+
+  void loadMore() {
+    print('called');
+    if (hasMore) {
+      page++;
+      lazyLoad = true;
+      dynamicFetchNotices();
+    }
   }
 
   void pushFilters() async {
     Navigator.pushNamed(context, filterRoute).then((value) {
+      page = 1;
+      hasMore = true;
+      lazyLoad = false;
       if (value != null) {
         filterResult = value;
         dynamicFetch = DynamicFetch.fetchFilterNotices;
