@@ -141,7 +141,7 @@ class _ListNoticesState extends State<ListNotices> {
                   } else if (snapshot.hasError) {
                     return buildErrorWidget(snapshot);
                   }
-                  return buildLoading();
+                  return buildShimmerList(context); //buildLoading();
                 },
               ),
             )

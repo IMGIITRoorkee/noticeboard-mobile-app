@@ -90,21 +90,22 @@ class ListNoticesBloc {
   }
 
   void dynamicFetchNotices() async {
+    _listNoticesSink.add(null);
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices) {
+      _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       try {
         List<NoticeIntro> allinstituteNotices =
             await _listNoticesRepository.fetchInstituteNotices(page);
         _listNoticesSink.add(allinstituteNotices);
-        _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
     } else if (dynamicFetch == DynamicFetch.fetchPlacementNotices) {
+      _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       try {
         List<NoticeIntro> allPlacementNotices =
             await _listNoticesRepository.fetchPlacementNotices(page);
         _listNoticesSink.add(allPlacementNotices);
-        _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
