@@ -3,7 +3,7 @@ import 'package:noticeboard/models/paginated_info.dart';
 import '../routes/routing_constants.dart';
 import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
-import '../global/toast.dart';
+import '../global/global_functions.dart';
 
 class ListNoticesRepository {
   ApiService _apiService = ApiService();
@@ -52,21 +52,22 @@ class ListNoticesRepository {
     return filteredNotices;
   }
 
-  Future bookmarkNotice(var obj) async {
+  Future bookmarkNotice(var obj, BuildContext context) async {
     try {
       await _apiService.markUnmarkNotice(obj);
-      showToast('Notice marked');
+
+      showMyFlushBar(context, 'Notice marked', true);
     } catch (e) {
-      showToast('Failure marking');
+      showMyFlushBar(context, 'Failure marking', false);
     }
   }
 
-  Future unbookmarkNotice(var obj) async {
+  Future unbookmarkNotice(var obj, BuildContext context) async {
     try {
       await _apiService.markUnmarkNotice(obj);
-      showToast('Notice unmarked');
+      showMyFlushBar(context, 'Notice unmarked', true);
     } catch (e) {
-      showToast('Failure unmarking');
+      showMyFlushBar(context, 'Failure unmarking', false);
     }
   }
 

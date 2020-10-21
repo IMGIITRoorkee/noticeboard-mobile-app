@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../global/toast.dart';
 import '../enum/login_enum.dart';
 import '../services/auth/auth_repository.dart';
+import '../global/global_functions.dart';
 
 class LoginBloc {
   String _username;
@@ -91,7 +91,7 @@ class LoginBloc {
         await _authRepository.signInWithUsernamePassword(
             username: _username, password: _password, context: context);
       } catch (e) {
-        showToast('Login failed');
+        showMyFlushBar(context, 'Invalid Credentials', false);
         _progressSink.add(LoginState.initLogin);
       }
     }

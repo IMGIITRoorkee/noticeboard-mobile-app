@@ -80,13 +80,13 @@ class ListNoticesBloc {
           "keyword": "unstar",
           "notices": [object.id]
         };
-        await _listNoticesRepository.unbookmarkNotice(obj);
+        await _listNoticesRepository.unbookmarkNotice(obj, context);
       } else {
         var obj = {
           "keyword": "star",
           "notices": [object.id]
         };
-        await _listNoticesRepository.bookmarkNotice(obj);
+        await _listNoticesRepository.bookmarkNotice(obj, context);
       }
       dynamicFetchNotices();
     });

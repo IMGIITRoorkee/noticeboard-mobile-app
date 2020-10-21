@@ -2,7 +2,7 @@ import 'package:noticeboard/routes/routing_constants.dart';
 import '../../models/user_tokens.dart';
 import 'auth_service.dart';
 import 'package:flutter/material.dart';
-import '../../global/toast.dart';
+import '../../global/global_functions.dart';
 import '../../models/user_profile.dart';
 
 class AuthRepository {
@@ -16,7 +16,7 @@ class AuthRepository {
           await _authService.fetchUserTokens(userObj);
       await _authService.storeRefreshToken(_refreshTokenObj);
       await _authService.initHandle();
-      UserProfile userProfile = await fetchUserProfile();
+      UserProfile userProfile = await fetchUserProfile(context);
       await _authService.storeProfile(userProfile);
       Navigator.pushReplacementNamed(context, bottomNavigationRoute);
     } catch (e) {
@@ -35,13 +35,13 @@ class AuthRepository {
     }
   }
 
-  Future<UserProfile> fetchUserProfile() async {
+  Future<UserProfile> fetchUserProfile(BuildContext context) async {
     try {
       UserProfile userProfileObj = await _authService.fetchUserProfile();
 
       return userProfileObj;
     } catch (e) {
-      showToast('Unable to fetch Profile');
+      showMyFlushBar(context, 'Failure fetching profile', false);
       return null;
     }
   }

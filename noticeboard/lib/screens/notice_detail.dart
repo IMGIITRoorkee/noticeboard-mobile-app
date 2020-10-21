@@ -23,6 +23,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
   final String prefix = 'https://internet.channeli.in/';
   @override
   void initState() {
+    _noticeContentBloc.context = context;
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
     _noticeContentBloc.starred = widget.noticeIntro.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);

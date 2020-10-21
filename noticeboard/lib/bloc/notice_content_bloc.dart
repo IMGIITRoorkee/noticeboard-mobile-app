@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:noticeboard/enum/notice_content_enum.dart';
 import '../models/notice_content.dart';
 import '../models/notice_intro.dart';
 import '../repository/notice_content_repository.dart';
-import '../global/toast.dart';
 import 'package:share/share.dart';
+import '../global/global_functions.dart';
 
 class NoticeContentBloc {
+  BuildContext context;
   NoticeIntro noticeIntro;
   bool starred;
 
@@ -52,9 +54,9 @@ class NoticeContentBloc {
             await noticeContentRepository.unbookmarkNotice(obj);
             starred = !starred;
             _starSink.add(starred);
-            showToast('Notice unmarked');
+            showMyFlushBar(context, 'Notice unmarked', true);
           } catch (e) {
-            showToast('Failure unmarking');
+            showMyFlushBar(context, 'Failure unmarking', false);
           }
         } else {
           var obj = {
@@ -65,9 +67,9 @@ class NoticeContentBloc {
             await noticeContentRepository.bookmarkNotice(obj);
             starred = !starred;
             _starSink.add(starred);
-            showToast('Notice marked');
+            showMyFlushBar(context, 'Notice marked', true);
           } catch (e) {
-            showToast('Failure marking');
+            showMyFlushBar(context, 'Failure marking', false);
           }
         }
       } else if (event == NoticeContentEvents.shareNotice) {
