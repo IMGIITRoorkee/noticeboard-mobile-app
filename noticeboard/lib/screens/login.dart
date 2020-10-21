@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noticeboard/enum/login_enum.dart';
 import '../bloc/login_bloc.dart';
 import '../styles/login_constants.dart';
+import '../global/global_functions.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -83,14 +84,14 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.bottomCenter,
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
-                        child: lotsOfLove(context, _width, _height),
+                        child: lotsOfLove(context, _width),
                       ),
                     )
                   ]),
                 ),
               );
             return Center(
-              child: CircularProgressIndicator(),
+              child: spinner(),
             );
           }),
     );

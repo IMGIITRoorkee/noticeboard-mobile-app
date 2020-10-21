@@ -94,17 +94,17 @@ class ListNoticesBloc {
 
   Future dynamicFetchNotices() async {
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices)
-      fetchInstituteNotices();
+      await fetchInstituteNotices();
     else if (dynamicFetch == DynamicFetch.fetchPlacementNotices)
-      fetchPlacementNotices();
+      await fetchPlacementNotices();
     else if (dynamicFetch == DynamicFetch.fetchFilterNotices)
-      fetchFilteredNotices();
+      await fetchFilteredNotices();
     else if (dynamicFetch == DynamicFetch.fetchImportantNotices)
-      fetchImportantNotices();
+      await fetchImportantNotices();
     else if (dynamicFetch == DynamicFetch.fetchExpiredNotices)
-      fetchExpiredNotices();
+      await fetchExpiredNotices();
     else if (dynamicFetch == DynamicFetch.fetchBookmarkedNotices)
-      fetchBookmarkedNotices();
+      await fetchBookmarkedNotices();
   }
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {

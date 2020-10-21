@@ -3,6 +3,7 @@ import 'package:noticeboard/enum/filter_enum.dart';
 import 'package:noticeboard/models/filters_list.dart';
 import '../bloc/filters_bloc.dart';
 import 'package:date_format/date_format.dart';
+import '../global/global_functions.dart';
 
 class Filters extends StatefulWidget {
   @override
@@ -373,7 +374,7 @@ class _FiltersState extends State<Filters> {
 
   Center buildLoadingFilters() {
     return Center(
-      child: CircularProgressIndicator(),
+      child: spinner(),
     );
   }
 }

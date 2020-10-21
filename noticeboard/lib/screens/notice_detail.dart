@@ -100,8 +100,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     );
   }
 
-  Container buildLoadingWidget() =>
-      Container(child: CircularProgressIndicator());
+  Container buildLoadingWidget() => Container(child: spinner());
 
   Container buildErrorWidget(AsyncSnapshot snapshot) {
     return Container(

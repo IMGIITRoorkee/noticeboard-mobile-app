@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 Icon bookMarkIconDecider(bool isBookmarked) {
   if (!isBookmarked)
@@ -58,5 +59,12 @@ Container buildShimmerList(BuildContext context, int notices) {
             ),
           );
         }),
+  );
+}
+
+SpinKitFadingCube spinner() {
+  return SpinKitFadingCube(
+    color: Colors.blue[900],
+    size: 40.0,
   );
 }

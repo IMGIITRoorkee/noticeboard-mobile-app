@@ -3,6 +3,7 @@ import '../styles/profile_constants.dart';
 import '../bloc/profile_bloc.dart';
 import '../enum/profile_enum.dart';
 import '../services/auth/auth_repository.dart';
+import '../global/global_functions.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -118,7 +119,7 @@ class _ProfileState extends State<Profile> {
                             );
                           }
                           return Center(
-                            child: CircularProgressIndicator(),
+                            child: spinner(),
                           );
                         }),
                   ),

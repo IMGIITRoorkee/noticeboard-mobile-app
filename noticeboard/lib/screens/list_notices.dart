@@ -322,12 +322,6 @@ class _ListNoticesState extends State<ListNotices> {
     );
   }
 
-  Center buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
   Center buildErrorWidget(AsyncSnapshot snapshot) =>
       Center(child: Text(snapshot.error));
 }

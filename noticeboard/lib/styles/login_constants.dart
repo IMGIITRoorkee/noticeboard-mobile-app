@@ -53,7 +53,7 @@ Container buildContactImgContainer(double _width) {
   );
 }
 
-Widget lotsOfLove(BuildContext context, double _width, double _height) {
+Widget lotsOfLove(BuildContext context, double _width) {
   return Row(
     mainAxisSize: MainAxisSize.min,
     mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +66,7 @@ Widget lotsOfLove(BuildContext context, double _width, double _height) {
       ),
       Icon(
         Icons.favorite,
-        color: Colors.red,
+        color: Colors.red[900],
       ),
       Text(
         " by IMG",
