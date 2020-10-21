@@ -17,7 +17,7 @@ class ListNotices extends StatefulWidget {
 }
 
 class _ListNoticesState extends State<ListNotices> {
-  final ScrollController _sc = new ScrollController();
+  // final ScrollController _sc = new ScrollController();
   final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
   final AuthRepository _authRepository = AuthRepository();
 
@@ -45,13 +45,10 @@ class _ListNoticesState extends State<ListNotices> {
     _listNoticesBloc.pushNoticeDetail(noticeIntro);
   }
 
-  bool _handleScrollNotification(ScrollNotification notification) {
-    if (notification is ScrollEndNotification) {
-      if (_sc.position.extentAfter == 0) {
-        _listNoticesBloc.loadMore();
-      }
+  bool _handleScrollNotification(ScrollNotification scrollInfo) {
+    if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+      _listNoticesBloc.loadMore();
     }
-    return false;
   }
 
   @override
@@ -202,7 +199,6 @@ class _ListNoticesState extends State<ListNotices> {
           onNotification: _handleScrollNotification,
           child: CupertinoScrollbar(
             child: ListView.separated(
-                controller: _sc,
                 separatorBuilder: (context, index) => Container(
                       width: width,
                       color: Colors.black,

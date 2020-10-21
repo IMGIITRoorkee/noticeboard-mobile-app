@@ -17,6 +17,7 @@ class ListNoticesBloc {
   bool lazyLoad = false;
   List<NoticeIntro> dynamicNoticeList;
   bool hasMore = true;
+  bool isLoading = false;
 
   final _eventController = StreamController<ListNoticesEvent>();
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
@@ -91,7 +92,7 @@ class ListNoticesBloc {
     });
   }
 
-  void dynamicFetchNotices() async {
+  Future dynamicFetchNotices() async {
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices) {
       _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       try {
@@ -214,26 +215,30 @@ class ListNoticesBloc {
     _markUnreadController.close();
   }
 
-  void refreshNotices() {
+  Future refreshNotices() async {
     page = 1;
     hasMore = true;
     lazyLoad = false;
+    isLoading = false;
     dynamicFetchNotices();
   }
 
-  void loadMore() {
-    if (hasMore) {
+  Future loadMore() async {
+    if (!isLoading && hasMore) {
+      isLoading = true;
       page++;
       lazyLoad = true;
-      dynamicFetchNotices();
+      await dynamicFetchNotices();
+      isLoading = false;
     }
   }
 
-  void pushFilters() async {
+  Future pushFilters() async {
     Navigator.pushNamed(context, filterRoute).then((value) {
       page = 1;
       hasMore = true;
       lazyLoad = false;
+      isLoading = false;
       if (value != null) {
         filterResult = value;
         dynamicFetch = DynamicFetch.fetchFilterNotices;

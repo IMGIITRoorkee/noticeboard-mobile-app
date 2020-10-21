@@ -26,7 +26,7 @@ class ApiService {
         bool hasMore = body['next'] == null ? false : true;
 
         Iterable list = body['results'];
-        list = list.where((notice) => notice['banner']['id'] != 82).toList();
+        //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
         return PaginatedInfo(list: list, hasMore: hasMore);
