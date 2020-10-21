@@ -99,14 +99,7 @@ class ListNoticesBloc {
         PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchInstituteNotices(page);
         List<NoticeIntro> allInstituteNotices = paginatedInfo.list;
-        if (!paginatedInfo.hasMore) hasMore = false;
-        if (!lazyLoad) {
-          dynamicNoticeList = allInstituteNotices;
-        } else {
-          dynamicNoticeList.addAll(allInstituteNotices);
-        }
-        _listNoticesSink
-            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+        handleAfterFetch(paginatedInfo.hasMore, allInstituteNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -116,14 +109,7 @@ class ListNoticesBloc {
         PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchPlacementNotices(page);
         List<NoticeIntro> allPlacementNotices = paginatedInfo.list;
-        if (!paginatedInfo.hasMore) hasMore = false;
-        if (!lazyLoad) {
-          dynamicNoticeList = allPlacementNotices;
-        } else {
-          dynamicNoticeList.addAll(allPlacementNotices);
-        }
-        _listNoticesSink
-            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+        handleAfterFetch(paginatedInfo.hasMore, allPlacementNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -140,14 +126,7 @@ class ListNoticesBloc {
         PaginatedInfo paginatedInfo = await _listNoticesRepository
             .fetchFilteredNotices(filterResult.endpoint, page);
         List<NoticeIntro> allFilteredNotices = paginatedInfo.list;
-        if (!paginatedInfo.hasMore) hasMore = false;
-        if (!lazyLoad) {
-          dynamicNoticeList = allFilteredNotices;
-        } else {
-          dynamicNoticeList.addAll(allFilteredNotices);
-        }
-        _listNoticesSink
-            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+        handleAfterFetch(paginatedInfo.hasMore, allFilteredNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -156,14 +135,7 @@ class ListNoticesBloc {
         PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchImportantNotices(page);
         List<NoticeIntro> allImportantNotices = paginatedInfo.list;
-        if (!paginatedInfo.hasMore) hasMore = false;
-        if (!lazyLoad) {
-          dynamicNoticeList = allImportantNotices;
-        } else {
-          dynamicNoticeList.addAll(allImportantNotices);
-        }
-        _listNoticesSink
-            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+        handleAfterFetch(paginatedInfo.hasMore, allImportantNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -172,14 +144,7 @@ class ListNoticesBloc {
         PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchExpiredNotices(page);
         List<NoticeIntro> allExpiredNotices = paginatedInfo.list;
-        if (!paginatedInfo.hasMore) hasMore = false;
-        if (!lazyLoad) {
-          dynamicNoticeList = allExpiredNotices;
-        } else {
-          dynamicNoticeList.addAll(allExpiredNotices);
-        }
-        _listNoticesSink
-            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+        handleAfterFetch(paginatedInfo.hasMore, allExpiredNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -188,14 +153,7 @@ class ListNoticesBloc {
         PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchBookmarkedNotices(page);
         List<NoticeIntro> allBookmarkedNotices = paginatedInfo.list;
-        if (!paginatedInfo.hasMore) hasMore = false;
-        if (!lazyLoad) {
-          dynamicNoticeList = allBookmarkedNotices;
-        } else {
-          dynamicNoticeList.addAll(allBookmarkedNotices);
-        }
-        _listNoticesSink
-            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+        handleAfterFetch(paginatedInfo.hasMore, allBookmarkedNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -204,6 +162,17 @@ class ListNoticesBloc {
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
     Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro);
+  }
+
+  void handleAfterFetch(bool doesItHasMore, List<NoticeIntro> list) {
+    if (!doesItHasMore) hasMore = false;
+    if (!lazyLoad) {
+      dynamicNoticeList = list;
+    } else {
+      dynamicNoticeList.addAll(list);
+    }
+    _listNoticesSink
+        .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
   }
 
   void disposeStreams() {
@@ -232,6 +201,10 @@ class ListNoticesBloc {
       isLoading = false;
     }
   }
+
+  // Future fetchInstituteNotices() async {
+
+  // }
 
   Future pushFilters() async {
     Navigator.pushNamed(context, filterRoute).then((value) {
