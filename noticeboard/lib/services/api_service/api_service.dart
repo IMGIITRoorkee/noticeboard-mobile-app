@@ -11,7 +11,7 @@ import '../../models/paginated_info.dart';
 class ApiService {
   AuthService _authService = AuthService();
 
-  Future<List<NoticeIntro>> fetchInstituteNotices(int page) async {
+  Future<PaginatedInfo> fetchInstituteNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
@@ -22,9 +22,14 @@ class ApiService {
       });
       if (allNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allNoticesResponse.body);
+
+        bool hasMore = body['next'] == null ? false : true;
+
         Iterable list = body['results'];
         list = list.where((notice) => notice['banner']['id'] != 82).toList();
-        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+
+        return PaginatedInfo(list: list, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
@@ -33,7 +38,7 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchImportantNotices(int page) async {
+  Future<PaginatedInfo> fetchImportantNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
@@ -44,8 +49,12 @@ class ApiService {
       });
       if (allImportantNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allImportantNoticesResponse.body);
+        bool hasMore = body['next'] == null ? false : true;
+
         Iterable list = body['results'];
-        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        return PaginatedInfo(list: list, hasMore: hasMore);
       } else {
         throw Exception('Failed to load important notices');
       }
@@ -54,7 +63,7 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchExpiredNotices(int page) async {
+  Future<PaginatedInfo> fetchExpiredNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
@@ -65,8 +74,12 @@ class ApiService {
       });
       if (allExpiredNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allExpiredNoticesResponse.body);
+        bool hasMore = body['next'] == null ? false : true;
+
         Iterable list = body['results'];
-        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        return PaginatedInfo(list: list, hasMore: hasMore);
       } else {
         throw Exception('Failed to load expired notices');
       }
@@ -75,7 +88,7 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchBookmarkedNotices(int page) async {
+  Future<PaginatedInfo> fetchBookmarkedNotices(int page) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
@@ -86,8 +99,12 @@ class ApiService {
       });
       if (allBookmarkedNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allBookmarkedNoticesResponse.body);
+        bool hasMore = body['next'] == null ? false : true;
+
         Iterable list = body['results'];
-        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        return PaginatedInfo(list: list, hasMore: hasMore);
       } else {
         throw Exception('Failed to load bookmarked notices');
       }

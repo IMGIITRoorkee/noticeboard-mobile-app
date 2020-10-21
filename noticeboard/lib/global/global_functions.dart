@@ -16,11 +16,12 @@ String bookMarkTextDecider(bool isBookmarked) {
   return 'Unmark Notice';
 }
 
-Container buildShimmerList(BuildContext context) {
+Container buildShimmerList(BuildContext context, int notices) {
   double width = MediaQuery.of(context).size.width;
   return Container(
+    height: 80.0,
     child: ListView.builder(
-        itemCount: 3,
+        itemCount: notices,
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
             baseColor: Colors.grey[400],

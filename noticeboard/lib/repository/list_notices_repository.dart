@@ -16,26 +16,26 @@ class ListNoticesRepository {
     Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro);
   }
 
-  Future<List<NoticeIntro>> fetchInstituteNotices(int page) async {
-    List<NoticeIntro> allInstituteNotices =
+  Future<PaginatedInfo> fetchInstituteNotices(int page) async {
+    PaginatedInfo allInstituteNotices =
         await _apiService.fetchInstituteNotices(page);
     return allInstituteNotices;
   }
 
-  Future<List<NoticeIntro>> fetchImportantNotices(int page) async {
-    List<NoticeIntro> allImportantNotices =
+  Future<PaginatedInfo> fetchImportantNotices(int page) async {
+    PaginatedInfo allImportantNotices =
         await _apiService.fetchImportantNotices(page);
     return allImportantNotices;
   }
 
-  Future<List<NoticeIntro>> fetchExpiredNotices(int page) async {
-    List<NoticeIntro> allExpiredNotices =
+  Future<PaginatedInfo> fetchExpiredNotices(int page) async {
+    PaginatedInfo allExpiredNotices =
         await _apiService.fetchExpiredNotices(page);
     return allExpiredNotices;
   }
 
-  Future<List<NoticeIntro>> fetchBookmarkedNotices(int page) async {
-    List<NoticeIntro> allBookmarkedNotices =
+  Future<PaginatedInfo> fetchBookmarkedNotices(int page) async {
+    PaginatedInfo allBookmarkedNotices =
         await _apiService.fetchBookmarkedNotices(page);
     return allBookmarkedNotices;
   }

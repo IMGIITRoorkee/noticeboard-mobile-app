@@ -97,9 +97,16 @@ class ListNoticesBloc {
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices) {
       _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
       try {
-        List<NoticeIntro> allinstituteNotices =
+        PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchInstituteNotices(page);
-        _listNoticesSink.add(allinstituteNotices);
+        List<NoticeIntro> allInstituteNotices = paginatedInfo.list;
+        if (!paginatedInfo.hasMore) hasMore = false;
+        if (!lazyLoad) {
+          dynamicNoticeList = allInstituteNotices;
+        } else {
+          dynamicNoticeList.addAll(allInstituteNotices);
+        }
+        _listNoticesSink.add(dynamicNoticeList);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -112,7 +119,6 @@ class ListNoticesBloc {
         if (!paginatedInfo.hasMore) hasMore = false;
         if (!lazyLoad) {
           dynamicNoticeList = allPlacementNotices;
-          _listNoticesSink.add(dynamicNoticeList);
         } else {
           dynamicNoticeList.addAll(allPlacementNotices);
         }
@@ -139,25 +145,46 @@ class ListNoticesBloc {
       }
     } else if (dynamicFetch == DynamicFetch.fetchImportantNotices) {
       try {
-        List<NoticeIntro> allImportantNotices =
+        PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchImportantNotices(page);
-        _listNoticesSink.add(allImportantNotices);
+        List<NoticeIntro> allImportantNotices = paginatedInfo.list;
+        if (!paginatedInfo.hasMore) hasMore = false;
+        if (!lazyLoad) {
+          dynamicNoticeList = allImportantNotices;
+        } else {
+          dynamicNoticeList.addAll(allImportantNotices);
+        }
+        _listNoticesSink.add(dynamicNoticeList);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
     } else if (dynamicFetch == DynamicFetch.fetchExpiredNotices) {
       try {
-        List<NoticeIntro> allExpiredNotices =
+        PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchExpiredNotices(page);
-        _listNoticesSink.add(allExpiredNotices);
+        List<NoticeIntro> allExpiredNotices = paginatedInfo.list;
+        if (!paginatedInfo.hasMore) hasMore = false;
+        if (!lazyLoad) {
+          dynamicNoticeList = allExpiredNotices;
+        } else {
+          dynamicNoticeList.addAll(allExpiredNotices);
+        }
+        _listNoticesSink.add(dynamicNoticeList);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
     } else if (dynamicFetch == DynamicFetch.fetchBookmarkedNotices) {
       try {
-        List<NoticeIntro> allBookmarkedNotices =
+        PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchBookmarkedNotices(page);
-        _listNoticesSink.add(allBookmarkedNotices);
+        List<NoticeIntro> allBookmarkedNotices = paginatedInfo.list;
+        if (!paginatedInfo.hasMore) hasMore = false;
+        if (!lazyLoad) {
+          dynamicNoticeList = allBookmarkedNotices;
+        } else {
+          dynamicNoticeList.addAll(allBookmarkedNotices);
+        }
+        _listNoticesSink.add(dynamicNoticeList);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -178,12 +205,12 @@ class ListNoticesBloc {
   }
 
   void refreshNotices() {
+    page = 1;
     lazyLoad = false;
     dynamicFetchNotices();
   }
 
   void loadMore() {
-    print('called');
     if (hasMore) {
       page++;
       lazyLoad = true;
