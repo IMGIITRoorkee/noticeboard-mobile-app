@@ -143,7 +143,7 @@ class _ListNoticesState extends State<ListNotices> {
                 stream: _listNoticesBloc.listNoticesStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    if (snapshot.data.length == 0) return buildNoResults();
+                    if (snapshot.data.list.length == 0) return buildNoResults();
                     return buildNoticesList(snapshot, width, height);
                   } else if (snapshot.hasError) {
                     return buildErrorWidget(snapshot);
@@ -208,12 +208,14 @@ class _ListNoticesState extends State<ListNotices> {
                       color: Colors.black,
                       height: 0.5,
                     ),
-                itemCount: snapshot.data.length + 1,
+                itemCount: snapshot.data.hasMore
+                    ? snapshot.data.list.length + 1
+                    : snapshot.data.list.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == snapshot.data.length) {
+                  if (index == snapshot.data.list.length) {
                     return buildShimmerList(context, 1);
                   }
-                  NoticeIntro noticeIntroObj = snapshot.data[index];
+                  NoticeIntro noticeIntroObj = snapshot.data.list[index];
                   return buildListItem(noticeIntroObj, width, height);
                 }),
           ),

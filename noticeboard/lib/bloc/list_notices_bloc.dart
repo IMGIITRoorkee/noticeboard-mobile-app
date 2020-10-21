@@ -22,11 +22,9 @@ class ListNoticesBloc {
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
   Stream<ListNoticesEvent> get _eventStream => _eventController.stream;
 
-  final _listNoticesController = StreamController<List<NoticeIntro>>();
-  StreamSink<List<NoticeIntro>> get _listNoticesSink =>
-      _listNoticesController.sink;
-  Stream<List<NoticeIntro>> get listNoticesStream =>
-      _listNoticesController.stream;
+  final _listNoticesController = StreamController<PaginatedInfo>();
+  StreamSink<PaginatedInfo> get _listNoticesSink => _listNoticesController.sink;
+  Stream<PaginatedInfo> get listNoticesStream => _listNoticesController.stream;
 
   final _toggleBookmarkController = StreamController<NoticeIntro>();
   StreamSink<NoticeIntro> get toggleBookMarkSink =>
@@ -106,7 +104,8 @@ class ListNoticesBloc {
         } else {
           dynamicNoticeList.addAll(allInstituteNotices);
         }
-        _listNoticesSink.add(dynamicNoticeList);
+        _listNoticesSink
+            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -122,7 +121,8 @@ class ListNoticesBloc {
         } else {
           dynamicNoticeList.addAll(allPlacementNotices);
         }
-        _listNoticesSink.add(dynamicNoticeList);
+        _listNoticesSink
+            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -145,7 +145,8 @@ class ListNoticesBloc {
         } else {
           dynamicNoticeList.addAll(allFilteredNotices);
         }
-        _listNoticesSink.add(dynamicNoticeList);
+        _listNoticesSink
+            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -160,7 +161,8 @@ class ListNoticesBloc {
         } else {
           dynamicNoticeList.addAll(allImportantNotices);
         }
-        _listNoticesSink.add(dynamicNoticeList);
+        _listNoticesSink
+            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -175,7 +177,8 @@ class ListNoticesBloc {
         } else {
           dynamicNoticeList.addAll(allExpiredNotices);
         }
-        _listNoticesSink.add(dynamicNoticeList);
+        _listNoticesSink
+            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -190,7 +193,8 @@ class ListNoticesBloc {
         } else {
           dynamicNoticeList.addAll(allBookmarkedNotices);
         }
-        _listNoticesSink.add(dynamicNoticeList);
+        _listNoticesSink
+            .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -212,6 +216,7 @@ class ListNoticesBloc {
 
   void refreshNotices() {
     page = 1;
+    hasMore = true;
     lazyLoad = false;
     dynamicFetchNotices();
   }
