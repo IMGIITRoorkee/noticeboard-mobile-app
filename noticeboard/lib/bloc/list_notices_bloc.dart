@@ -136,10 +136,16 @@ class ListNoticesBloc {
               DynamicFetch.fetchPlacementNotices)
             filterResult.endpoint += '&banner=82';
         }
-
-        List<NoticeIntro> allFilteredNotices = await _listNoticesRepository
+        PaginatedInfo paginatedInfo = await _listNoticesRepository
             .fetchFilteredNotices(filterResult.endpoint, page);
-        _listNoticesSink.add(allFilteredNotices);
+        List<NoticeIntro> allFilteredNotices = paginatedInfo.list;
+        if (!paginatedInfo.hasMore) hasMore = false;
+        if (!lazyLoad) {
+          dynamicNoticeList = allFilteredNotices;
+        } else {
+          dynamicNoticeList.addAll(allFilteredNotices);
+        }
+        _listNoticesSink.add(dynamicNoticeList);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }

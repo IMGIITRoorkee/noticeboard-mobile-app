@@ -46,9 +46,8 @@ class ListNoticesRepository {
     return allPlacementNotices;
   }
 
-  Future<List<NoticeIntro>> fetchFilteredNotices(
-      String endpoint, int page) async {
-    List<NoticeIntro> filteredNotices =
+  Future<PaginatedInfo> fetchFilteredNotices(String endpoint, int page) async {
+    PaginatedInfo filteredNotices =
         await _apiService.fetchFilteredNotices(endpoint, page);
     return filteredNotices;
   }

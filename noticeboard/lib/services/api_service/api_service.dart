@@ -140,8 +140,7 @@ class ApiService {
     }
   }
 
-  Future<List<NoticeIntro>> fetchFilteredNotices(
-      String endpoint, int page) async {
+  Future<PaginatedInfo> fetchFilteredNotices(String endpoint, int page) async {
     try {
       AccessToken accessTokenObj =
           //     await _authService.fetchAccessTokenFromRefresh();
@@ -152,8 +151,13 @@ class ApiService {
       });
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
+
+        bool hasMore = body['next'] == null ? false : true;
+
         Iterable list = body['results'];
-        return list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+        return PaginatedInfo(list: list, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
