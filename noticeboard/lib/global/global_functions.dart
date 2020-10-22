@@ -94,3 +94,29 @@ void showMyFlushBar(BuildContext context, String message, bool success) {
     flushbarPosition: FlushbarPosition.TOP,
   )..show(context);
 }
+
+Widget buildFilterActive(bool filterActive) {
+  if (filterActive) {
+    return Stack(
+      children: [
+        Icon(
+          Icons.filter_list,
+          color: Colors.black,
+          size: 30.0,
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: CircleAvatar(
+            radius: 6.0,
+            backgroundColor: Colors.red,
+          ),
+        )
+      ],
+    );
+  }
+  return Icon(
+    Icons.filter_list,
+    color: Colors.black,
+    size: 30.0,
+  );
+}

@@ -50,6 +50,10 @@ class ListNoticesBloc {
   StreamSink<bool> get filterVisibilitySink => _filterVisibilityController.sink;
   Stream<bool> get filterVisibilityStream => _filterVisibilityController.stream;
 
+  final _filterActiveController = StreamController<bool>();
+  StreamSink<bool> get _filterActiveSink => _filterActiveController.sink;
+  Stream<bool> get filterActiveStream => _filterActiveController.stream;
+
   ListNoticesRepository _listNoticesRepository = ListNoticesRepository();
 
   ListNoticesBloc() {
@@ -133,6 +137,7 @@ class ListNoticesBloc {
     _markReadController.close();
     _markUnreadController.close();
     _filterVisibilityController.close();
+    _filterActiveController.close();
   }
 
   Future refreshNotices() async {
@@ -235,6 +240,7 @@ class ListNoticesBloc {
     lazyLoad = false;
     isLoading = false;
     toggleVisibility();
+
     if (value != null) {
       filterResult = value;
       dynamicFetch = DynamicFetch.fetchFilterNotices;
@@ -243,6 +249,10 @@ class ListNoticesBloc {
       dynamicFetch = listNoticeMetaData.dynamicFetch;
       dynamicFetchNotices();
     }
+    if (dynamicFetch == DynamicFetch.fetchFilterNotices)
+      _filterActiveSink.add(true);
+    else
+      _filterActiveSink.add(false);
   }
 
   void toggleVisibility() {

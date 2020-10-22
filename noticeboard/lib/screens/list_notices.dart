@@ -74,10 +74,12 @@ class _ListNoticesState extends State<ListNotices> {
               leadingWidth: 55.0,
               actions: [
                 IconButton(
-                  icon: Icon(
-                    Icons.filter_list,
-                    color: Colors.black,
-                  ),
+                  icon: StreamBuilder(
+                      stream: _listNoticesBloc.filterActiveStream,
+                      initialData: false,
+                      builder: (context, snapshot) {
+                        return buildFilterActive(snapshot.data);
+                      }),
                   onPressed: () {
                     _listNoticesBloc.toggleVisibility();
                     // _listNoticesBloc.eventSink
