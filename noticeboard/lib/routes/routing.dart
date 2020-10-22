@@ -8,19 +8,22 @@ import '../screens/list_notices.dart';
 import '../screens/launching.dart';
 import '../models/notice_intro.dart';
 import '../screens/notice_detail.dart';
-import '../screens/filters.dart';
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case launchingRoute:
         return MaterialPageRoute(builder: (context) => Launcher());
+        break;
       case loginRoute:
         return MaterialPageRoute(builder: (context) => Login());
+        break;
       case bottomNavigationRoute:
         return MaterialPageRoute(builder: (context) => MyBottomNavigationBar());
+        break;
       case profileRoute:
         return MaterialPageRoute(builder: (context) => Profile());
+        break;
       case listNoticesRoute:
         ListNoticeMetaData listNoticeMetaData = settings.arguments;
 
@@ -28,14 +31,17 @@ class MyRouter {
             builder: (context) => ListNotices(
                   listNoticeMetaData: listNoticeMetaData,
                 ));
+        break;
       case noticeDetailRoute:
         NoticeIntro noticeIntro = settings.arguments;
         return MaterialPageRoute(
             builder: (context) => NoticeDetail(
                   noticeIntro: noticeIntro,
                 ));
-      case filterRoute:
-        return MaterialPageRoute(builder: (context) => Filters());
+        break;
+
+      default:
+        return MaterialPageRoute(builder: (context) => Login());
     }
   }
 }

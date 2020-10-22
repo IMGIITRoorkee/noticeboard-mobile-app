@@ -6,6 +6,9 @@ import 'package:date_format/date_format.dart';
 import '../global/global_functions.dart';
 
 class Filters extends StatefulWidget {
+  final VoidCallback onCancel;
+  final Function(FilterResult) onApplyFilters;
+  Filters({@required this.onCancel, @required this.onApplyFilters});
   @override
   _FiltersState createState() => _FiltersState();
 }
@@ -32,6 +35,7 @@ class _FiltersState extends State<Filters> {
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text('Select Filter'),
       ),
@@ -327,9 +331,7 @@ class _FiltersState extends State<Filters> {
           Expanded(
             flex: 4,
             child: GestureDetector(
-              onTap: () {
-                _filtersBloc.eventSink.add(FilterEvents.cancelFilter);
-              },
+              onTap: widget.onCancel,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.blue[50],
@@ -347,9 +349,7 @@ class _FiltersState extends State<Filters> {
           Expanded(
             flex: 5,
             child: GestureDetector(
-              onTap: () {
-                _filtersBloc.eventSink.add(FilterEvents.applyFilter);
-              },
+              onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
               child: Container(
                 color: Colors.blue[700],
                 child: Center(

@@ -18,6 +18,7 @@ class ListNoticesBloc {
   List<NoticeIntro> dynamicNoticeList;
   bool hasMore = true;
   bool isLoading = false;
+  bool filterVisibility = false;
 
   final _eventController = StreamController<ListNoticesEvent>();
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
@@ -45,14 +46,16 @@ class ListNoticesBloc {
   StreamSink<NoticeIntro> get markUnreadSink => _markUnreadController.sink;
   Stream<NoticeIntro> get _markUnreadStream => _markUnreadController.stream;
 
+  final _filterVisibilityController = StreamController<bool>();
+  StreamSink<bool> get filterVisibilitySink => _filterVisibilityController.sink;
+  Stream<bool> get filterVisibilityStream => _filterVisibilityController.stream;
+
   ListNoticesRepository _listNoticesRepository = ListNoticesRepository();
 
   ListNoticesBloc() {
     _eventStream.listen((event) async {
       if (event == ListNoticesEvent.pushProfileEvent) {
         _listNoticesRepository.pushProfileScreen(context);
-      } else if (event == ListNoticesEvent.pushFilters) {
-        pushFilters();
       }
     });
 
@@ -129,6 +132,7 @@ class ListNoticesBloc {
     _appBarLabelController.close();
     _markReadController.close();
     _markUnreadController.close();
+    _filterVisibilityController.close();
   }
 
   Future refreshNotices() async {
@@ -225,20 +229,24 @@ class ListNoticesBloc {
     }
   }
 
-  Future pushFilters() async {
-    Navigator.pushNamed(context, filterRoute).then((value) {
-      page = 1;
-      hasMore = true;
-      lazyLoad = false;
-      isLoading = false;
-      if (value != null) {
-        filterResult = value;
-        dynamicFetch = DynamicFetch.fetchFilterNotices;
-        dynamicFetchNotices();
-      } else {
-        dynamicFetch = listNoticeMetaData.dynamicFetch;
-        dynamicFetchNotices();
-      }
-    });
+  void applyFilters(FilterResult value) async {
+    page = 1;
+    hasMore = true;
+    lazyLoad = false;
+    isLoading = false;
+    toggleVisibility();
+    if (value != null) {
+      filterResult = value;
+      dynamicFetch = DynamicFetch.fetchFilterNotices;
+      dynamicFetchNotices();
+    } else {
+      dynamicFetch = listNoticeMetaData.dynamicFetch;
+      dynamicFetchNotices();
+    }
+  }
+
+  void toggleVisibility() {
+    filterVisibility = !filterVisibility;
+    filterVisibilitySink.add(filterVisibility);
   }
 }

@@ -63,11 +63,7 @@ class FiltersBloc {
         pickDateRange();
       else if (event == FilterEvents.resetDateRange)
         resetDateRange();
-      else if (event == FilterEvents.resetGlobalSlug)
-        resetGlobalSlug();
-      else if (event == FilterEvents.cancelFilter)
-        cancelFilters();
-      else if (event == FilterEvents.applyFilter) applyFilter();
+      else if (event == FilterEvents.resetGlobalSlug) resetGlobalSlug();
     });
 
     globalSelectionStream.listen((selection) {
@@ -147,24 +143,20 @@ class FiltersBloc {
     _dateRangeSink.add(dateTimeRange);
   }
 
-  void cancelFilters() {
-    Navigator.pop(context);
-  }
-
-  void applyFilter() {
+  FilterResult applyFilter() {
     if (globalSelection == null && dateTimeRange == null) {
-      Navigator.pop(context);
+      return null;
     } else if (globalSelection == null) {
       String start = formatDate(dateTimeRange.start, [yyyy, '-', mm, '-', dd]);
       String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
       String dateFilterEndpoint =
           'api/noticeboard/date_filter_view/?start=$start&end=$end';
       FilterResult filterResult = FilterResult(endpoint: dateFilterEndpoint);
-      Navigator.pop(context, filterResult);
+      return filterResult;
     } else if (dateTimeRange == null) {
       FilterResult filterResult = FilterResult(
           endpoint: globalSelection.globalSlug, label: globalSelection.display);
-      Navigator.pop(context, filterResult);
+      return filterResult;
     } else {
       String start = formatDate(dateTimeRange.start, [yyyy, '-', mm, '-', dd]);
       String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
@@ -172,7 +164,7 @@ class FiltersBloc {
           'api/noticeboard/date_filter_view/?start=$start&end=$end&${globalSelection.globalSlug.substring(24)}';
       FilterResult filterResult =
           FilterResult(label: globalSelection.display, endpoint: endPoint);
-      Navigator.pop(context, filterResult);
+      return filterResult;
     }
   }
 }

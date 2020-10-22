@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:noticeboard/models/filters_list.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/services/auth/auth_repository.dart';
 import '../enum/list_notices_enum.dart';
 import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
+import 'filters.dart';
 
 class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
@@ -77,8 +79,9 @@ class _ListNoticesState extends State<ListNotices> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    _listNoticesBloc.eventSink
-                        .add(ListNoticesEvent.pushFilters);
+                    _listNoticesBloc.toggleVisibility();
+                    // _listNoticesBloc.eventSink
+                    //     .add(ListNoticesEvent.pushFilters);
                   },
                 )
               ],
@@ -109,49 +112,79 @@ class _ListNoticesState extends State<ListNotices> {
                 child: Center(child: buildProfilePic()),
               ),
             ),
-      body: RefreshIndicator(
-        onRefresh: refreshNotices,
-        child: ListView(
-          children: [
-            !widget.listNoticeMetaData.noFilters
-                ? StreamBuilder(
-                    initialData: widget.listNoticeMetaData.appBarLabel,
-                    stream: _listNoticesBloc.appBarLabelStream,
-                    builder: (context, snapshot) {
-                      return Container(
-                        padding: EdgeInsets.only(
-                            left: 12.0, top: 12.0, bottom: 12.0),
-                        child: Text(
-                          snapshot.data,
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      );
-                    })
-                : Container(),
-            Container(
-              height: !widget.listNoticeMetaData.noFilters
-                  ? height * 0.735
-                  : height * 0.798,
-              width: width,
-              child: StreamBuilder(
-                stream: _listNoticesBloc.listNoticesStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.list.length == 0) return buildNoResults();
-                    return buildNoticesList(snapshot, width, height);
-                  } else if (snapshot.hasError) {
-                    return buildErrorWidget(snapshot);
-                  }
-                  return buildShimmerList(context, 3); //buildLoading();
-                },
-              ),
-            )
-          ],
-        ),
-      ),
+      body: StreamBuilder(
+          stream: _listNoticesBloc.filterVisibilityStream,
+          initialData: false,
+          builder: (context, snapshot) {
+            return Column(
+              children: [
+                Visibility(
+                    visible: snapshot.data,
+                    maintainState: true,
+                    child: Container(
+                        height: height * 0.80,
+                        child: Filters(
+                          onApplyFilters: (FilterResult filterResult) =>
+                              _listNoticesBloc.applyFilters(filterResult),
+                          onCancel: _listNoticesBloc.toggleVisibility,
+                        ))),
+                Visibility(
+                  visible: !snapshot.data,
+                  maintainState: true,
+                  child: Container(
+                    height: height * 0.80,
+                    child: RefreshIndicator(
+                      onRefresh: refreshNotices,
+                      child: ListView(
+                        children: [
+                          !widget.listNoticeMetaData.noFilters
+                              ? StreamBuilder(
+                                  initialData:
+                                      widget.listNoticeMetaData.appBarLabel,
+                                  stream: _listNoticesBloc.appBarLabelStream,
+                                  builder: (context, snapshot) {
+                                    return Container(
+                                      padding: EdgeInsets.only(
+                                          left: 12.0, top: 12.0, bottom: 12.0),
+                                      child: Text(
+                                        snapshot.data,
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    );
+                                  })
+                              : Container(),
+                          Container(
+                            height: !widget.listNoticeMetaData.noFilters
+                                ? height * 0.735
+                                : height * 0.798,
+                            width: width,
+                            child: StreamBuilder(
+                              stream: _listNoticesBloc.listNoticesStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data.list.length == 0)
+                                    return buildNoResults();
+                                  return buildNoticesList(
+                                      snapshot, width, height);
+                                } else if (snapshot.hasError) {
+                                  return buildErrorWidget(snapshot);
+                                }
+                                return buildShimmerList(
+                                    context, 3); //buildLoading();
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
     );
   }
 
