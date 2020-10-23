@@ -59,63 +59,68 @@ class _ListNoticesState extends State<ListNotices> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: widget.listNoticeMetaData.noFilters
-          ? AppBar(
-              title: Text(
-                widget.listNoticeMetaData.appBarLabel,
-                style: TextStyle(color: Colors.black),
-              ),
-              automaticallyImplyLeading: false,
-              elevation: 4,
-              centerTitle: true,
-              backgroundColor: Colors.white,
-            )
-          : AppBar(
-              leadingWidth: 55.0,
-              actions: [
-                IconButton(
-                  icon: StreamBuilder(
-                      stream: _listNoticesBloc.filterActiveStream,
-                      initialData: false,
-                      builder: (context, snapshot) {
-                        return buildFilterActive(snapshot.data);
-                      }),
-                  onPressed: () {
-                    _listNoticesBloc.toggleVisibility();
-                    // _listNoticesBloc.eventSink
-                    //     .add(ListNoticesEvent.pushFilters);
-                  },
-                )
-              ],
-              elevation: 4,
-              centerTitle: true,
-              backgroundColor: Colors.white,
-              title: Container(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(vertical: 6.0),
-                child: TextField(
-                  decoration: new InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {},
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    hintText: 'Search all notices',
-                  ),
-                ),
-              ),
-              automaticallyImplyLeading: false,
-              leading: GestureDetector(
-                onTap: () {
-                  _listNoticesBloc.eventSink
-                      .add(ListNoticesEvent.pushProfileEvent);
-                },
-                child: Center(child: buildProfilePic()),
-              ),
-            ),
+          ? buildNoFiltersAppBar()
+          : buildFiltersAppBar(),
       body: widget.listNoticeMetaData.noFilters
           ? buildListNoticesBox(height, width)
           : buildAdvanceNoticesBox(height, width),
+    );
+  }
+
+  AppBar buildFiltersAppBar() {
+    return AppBar(
+      leadingWidth: 55.0,
+      actions: [
+        IconButton(
+          icon: StreamBuilder(
+              stream: _listNoticesBloc.filterActiveStream,
+              initialData: false,
+              builder: (context, snapshot) {
+                return buildFilterActive(snapshot.data);
+              }),
+          onPressed: () {
+            _listNoticesBloc.toggleVisibility();
+          },
+        )
+      ],
+      elevation: 4,
+      centerTitle: true,
+      backgroundColor: Colors.white,
+      title: Container(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(vertical: 6.0),
+        child: TextField(
+          decoration: new InputDecoration(
+            suffixIcon: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
+            filled: true,
+            fillColor: Colors.grey[300],
+            hintText: 'Search all notices',
+          ),
+        ),
+      ),
+      automaticallyImplyLeading: false,
+      leading: GestureDetector(
+        onTap: () {
+          _listNoticesBloc.eventSink.add(ListNoticesEvent.pushProfileEvent);
+        },
+        child: Center(child: buildProfilePic()),
+      ),
+    );
+  }
+
+  AppBar buildNoFiltersAppBar() {
+    return AppBar(
+      title: Text(
+        widget.listNoticeMetaData.appBarLabel,
+        style: TextStyle(color: Colors.black),
+      ),
+      automaticallyImplyLeading: false,
+      elevation: 4,
+      centerTitle: true,
+      backgroundColor: Colors.white,
     );
   }
 

@@ -34,10 +34,6 @@ class ListNoticesBloc {
   Stream<NoticeIntro> get _toggleBookMarkStream =>
       _toggleBookmarkController.stream;
 
-  final _appBarLabelController = StreamController<String>();
-  StreamSink<String> get _appBarLabelSink => _appBarLabelController.sink;
-  Stream<String> get appBarLabelStream => _appBarLabelController.stream;
-
   final _markReadController = StreamController<NoticeIntro>();
   StreamSink<NoticeIntro> get markReadSink => _markReadController.sink;
   Stream<NoticeIntro> get _markReadStream => _markReadController.stream;
@@ -45,6 +41,10 @@ class ListNoticesBloc {
   final _markUnreadController = StreamController<NoticeIntro>();
   StreamSink<NoticeIntro> get markUnreadSink => _markUnreadController.sink;
   Stream<NoticeIntro> get _markUnreadStream => _markUnreadController.stream;
+
+  final _appBarLabelController = StreamController<String>();
+  StreamSink<String> get _appBarLabelSink => _appBarLabelController.sink;
+  Stream<String> get appBarLabelStream => _appBarLabelController.stream;
 
   final _filterVisibilityController = StreamController<bool>();
   StreamSink<bool> get filterVisibilitySink => _filterVisibilityController.sink;
