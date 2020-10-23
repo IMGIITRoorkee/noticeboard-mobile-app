@@ -19,7 +19,6 @@ class ListNotices extends StatefulWidget {
 }
 
 class _ListNoticesState extends State<ListNotices> {
-  // final ScrollController _sc = new ScrollController();
   final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
   final AuthRepository _authRepository = AuthRepository();
 
@@ -114,79 +113,85 @@ class _ListNoticesState extends State<ListNotices> {
                 child: Center(child: buildProfilePic()),
               ),
             ),
-      body: StreamBuilder(
-          stream: _listNoticesBloc.filterVisibilityStream,
-          initialData: false,
-          builder: (context, snapshot) {
-            return Column(
-              children: [
-                Visibility(
-                    visible: snapshot.data,
-                    maintainState: true,
-                    child: Container(
-                        height: height * 0.80,
-                        child: Filters(
-                          onApplyFilters: (FilterResult filterResult) =>
-                              _listNoticesBloc.applyFilters(filterResult),
-                          onCancel: _listNoticesBloc.toggleVisibility,
-                        ))),
-                Visibility(
-                  visible: !snapshot.data,
+      body: widget.listNoticeMetaData.noFilters
+          ? buildListNoticesBox(height, width)
+          : buildAdvanceNoticesBox(height, width),
+    );
+  }
+
+  StreamBuilder<bool> buildAdvanceNoticesBox(double height, double width) {
+    return StreamBuilder(
+        stream: _listNoticesBloc.filterVisibilityStream,
+        initialData: false,
+        builder: (context, snapshot) {
+          return Column(
+            children: [
+              Visibility(
+                  visible: snapshot.data,
                   maintainState: true,
                   child: Container(
-                    height: height * 0.80,
-                    child: RefreshIndicator(
-                      onRefresh: refreshNotices,
-                      child: ListView(
-                        children: [
-                          !widget.listNoticeMetaData.noFilters
-                              ? StreamBuilder(
-                                  initialData:
-                                      widget.listNoticeMetaData.appBarLabel,
-                                  stream: _listNoticesBloc.appBarLabelStream,
-                                  builder: (context, snapshot) {
-                                    return Container(
-                                      padding: EdgeInsets.only(
-                                          left: 12.0, top: 12.0, bottom: 12.0),
-                                      child: Text(
-                                        snapshot.data,
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    );
-                                  })
-                              : Container(),
-                          Container(
-                            height: !widget.listNoticeMetaData.noFilters
-                                ? height * 0.735
-                                : height * 0.798,
-                            width: width,
-                            child: StreamBuilder(
-                              stream: _listNoticesBloc.listNoticesStream,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  if (snapshot.data.list.length == 0)
-                                    return buildNoResults();
-                                  return buildNoticesList(
-                                      snapshot, width, height);
-                                } else if (snapshot.hasError) {
-                                  return buildErrorWidget(snapshot);
-                                }
-                                return buildShimmerList(
-                                    context, 3); //buildLoading();
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      height: height * 0.80,
+                      child: Filters(
+                        onApplyFilters: (FilterResult filterResult) =>
+                            _listNoticesBloc.applyFilters(filterResult),
+                        onCancel: _listNoticesBloc.toggleVisibility,
+                      ))),
+              Visibility(
+                visible: !snapshot.data,
+                maintainState: true,
+                child: Container(
+                  height: height * 0.80,
+                  child: buildListNoticesBox(height, width),
                 ),
-              ],
-            );
-          }),
+              ),
+            ],
+          );
+        });
+  }
+
+  RefreshIndicator buildListNoticesBox(double height, double width) {
+    return RefreshIndicator(
+      onRefresh: refreshNotices,
+      child: ListView(
+        children: [
+          !widget.listNoticeMetaData.noFilters
+              ? StreamBuilder(
+                  initialData: widget.listNoticeMetaData.appBarLabel,
+                  stream: _listNoticesBloc.appBarLabelStream,
+                  builder: (context, snapshot) {
+                    return Container(
+                      padding:
+                          EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                      child: Text(
+                        snapshot.data,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  })
+              : Container(),
+          Container(
+            height: !widget.listNoticeMetaData.noFilters
+                ? height * 0.735
+                : height * 0.798,
+            width: width,
+            child: StreamBuilder(
+              stream: _listNoticesBloc.listNoticesStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.list.length == 0) return buildNoResults();
+                  return buildNoticesList(snapshot, width, height);
+                } else if (snapshot.hasError) {
+                  return buildErrorWidget(snapshot);
+                }
+                return buildShimmerList(context, 3); //buildLoading();
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 

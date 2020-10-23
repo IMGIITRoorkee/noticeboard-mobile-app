@@ -39,9 +39,6 @@ class MyRouter {
                   noticeIntro: noticeIntro,
                 ));
         break;
-
-      default:
-        return MaterialPageRoute(builder: (context) => Login());
     }
   }
 }
