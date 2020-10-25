@@ -9,12 +9,12 @@ Icon bookMarkIconDecider(bool isBookmarked) {
     return Icon(
       Icons.bookmark_border,
       color: HexColor('#F8C384'),
-      size: 30.0,
+      size: 25.0,
     );
   return Icon(
     Icons.bookmark,
     color: HexColor('#F8C384'),
-    size: 30.0,
+    size: 25.0,
   );
 }
 
@@ -126,7 +126,7 @@ Widget buildFilterActive(bool filterActive) {
         children: [
           Icon(
             Icons.filter_list,
-            color: Colors.blue[700],
+            color: HexColor('#5288da'),
             size: 30.0,
           ),
           Align(
@@ -142,7 +142,7 @@ Widget buildFilterActive(bool filterActive) {
   }
   return Icon(
     Icons.filter_list,
-    color: Colors.blue[700],
+    color: HexColor('#5288da'),
     size: 30.0,
   );
 }

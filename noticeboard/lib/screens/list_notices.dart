@@ -10,6 +10,7 @@ import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'filters.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
@@ -74,7 +75,7 @@ class _ListNoticesState extends State<ListNotices> {
         IconButton(
             icon: Icon(
               Icons.search,
-              color: Colors.blue[700],
+              color: HexColor('#5288da'),
               size: 30.0,
             ),
             onPressed: () {}),
@@ -93,7 +94,10 @@ class _ListNoticesState extends State<ListNotices> {
       backgroundColor: Colors.white,
       title: Text(
         'Noticeboard',
-        style: TextStyle(color: Colors.blue[700]),
+        style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: HexColor('#5288da')),
       ),
       automaticallyImplyLeading: false,
       leading: GestureDetector(
@@ -160,13 +164,13 @@ class _ListNoticesState extends State<ListNotices> {
                   builder: (context, snapshot) {
                     return Container(
                       padding: EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 12.0, bottom: 12.0),
+                          left: 19.0, right: 19.0, top: 15.0, bottom: 15.0),
                       child: Text(
                         snapshot.data,
                         style: TextStyle(
                             fontSize: 18.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.w700),
                       ),
                     );
                   })
@@ -265,8 +269,8 @@ class _ListNoticesState extends State<ListNotices> {
       width: width,
       child: Padding(
         padding: !isTop
-            ? EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0)
-            : EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0),
+            ? EdgeInsets.only(left: 19.0, right: 19.0, top: 16.0)
+            : EdgeInsets.only(left: 19.0, right: 19.0, top: 5.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -324,8 +328,9 @@ class _ListNoticesState extends State<ListNotices> {
                           noticeIntroObj.department,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.bold),
+                              fontSize: 14.0,
+                              color: HexColor('#444444'),
+                              fontWeight: FontWeight.w700),
                         )),
                     SizedBox(
                       height: 10.0,
@@ -333,11 +338,14 @@ class _ListNoticesState extends State<ListNotices> {
                     Container(
                       width: width,
                       child: Text(noticeIntroObj.dateCreated,
-                          style: TextStyle(color: Colors.grey[600]),
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: HexColor('#444444'),
+                              fontWeight: FontWeight.w400),
                           overflow: TextOverflow.ellipsis),
                     ),
                     SizedBox(
-                      height: 10.0,
+                      height: 16.0,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,7 +354,9 @@ class _ListNoticesState extends State<ListNotices> {
                           child: Container(
                               width: width,
                               child: Text(noticeIntroObj.title,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700),
                                   softWrap: false,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis)),
@@ -362,12 +372,12 @@ class _ListNoticesState extends State<ListNotices> {
                                     noticeIntroObj.starred)))
                       ],
                     ),
-                    SizedBox(height: 15.0),
+                    SizedBox(height: 16.0),
                     Center(
                       child: Container(
                         width: width * 0.95,
-                        color: Colors.black,
-                        height: 0.3,
+                        color: HexColor('#C4C4C4'),
+                        height: 1,
                       ),
                     )
                   ],

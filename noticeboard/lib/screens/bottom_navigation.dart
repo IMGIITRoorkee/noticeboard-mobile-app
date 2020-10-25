@@ -3,6 +3,7 @@ import '../enum/dynamic_fetch_enum.dart';
 import '../screens/list_notices.dart';
 import '../models/notice_intro.dart';
 import '../bloc/bottom_navigator_bloc.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.blue[700],
+              backgroundColor: HexColor('#5288da'),
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                     icon: Icon(
@@ -64,6 +65,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
               fixedColor: Colors.white,
               onTap: onItemTapped,
               iconSize: 25.0,
+              unselectedLabelStyle:
+                  TextStyle(color: HexColor('#ffffff'), fontSize: 12.0),
             ),
           );
         });
