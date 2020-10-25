@@ -69,8 +69,15 @@ class _ListNoticesState extends State<ListNotices> {
 
   AppBar buildFiltersAppBar() {
     return AppBar(
-      leadingWidth: 55.0,
+      elevation: 0,
       actions: [
+        IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.blue[700],
+              size: 30.0,
+            ),
+            onPressed: () {}),
         IconButton(
           icon: StreamBuilder(
               stream: _listNoticesBloc.filterActiveStream,
@@ -83,23 +90,10 @@ class _ListNoticesState extends State<ListNotices> {
           },
         )
       ],
-      elevation: 4,
-      centerTitle: true,
       backgroundColor: Colors.white,
-      title: Container(
-        height: 50.0,
-        padding: EdgeInsets.symmetric(vertical: 6.0),
-        child: TextField(
-          decoration: new InputDecoration(
-            suffixIcon: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
-            ),
-            filled: true,
-            fillColor: Colors.grey[300],
-            hintText: 'Search all notices',
-          ),
-        ),
+      title: Text(
+        'Noticeboard',
+        style: TextStyle(color: Colors.blue[700]),
       ),
       automaticallyImplyLeading: false,
       leading: GestureDetector(
@@ -118,9 +112,9 @@ class _ListNoticesState extends State<ListNotices> {
         style: TextStyle(color: Colors.black),
       ),
       automaticallyImplyLeading: false,
-      elevation: 4,
       centerTitle: true,
       backgroundColor: Colors.white,
+      elevation: 0,
     );
   }
 
@@ -135,7 +129,7 @@ class _ListNoticesState extends State<ListNotices> {
                   visible: snapshot.data,
                   maintainState: true,
                   child: Container(
-                      height: height * 0.80,
+                      height: height * 0.801,
                       child: Filters(
                         onApplyFilters: (FilterResult filterResult) =>
                             _listNoticesBloc.applyFilters(filterResult),
@@ -145,7 +139,7 @@ class _ListNoticesState extends State<ListNotices> {
                 visible: !snapshot.data,
                 maintainState: true,
                 child: Container(
-                  height: height * 0.80,
+                  height: height * 0.801,
                   child: buildListNoticesBox(height, width),
                 ),
               ),
@@ -165,8 +159,8 @@ class _ListNoticesState extends State<ListNotices> {
                   stream: _listNoticesBloc.appBarLabelStream,
                   builder: (context, snapshot) {
                     return Container(
-                      padding:
-                          EdgeInsets.only(left: 12.0, top: 12.0, bottom: 12.0),
+                      padding: EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 12.0, bottom: 12.0),
                       child: Text(
                         snapshot.data,
                         style: TextStyle(
@@ -243,21 +237,20 @@ class _ListNoticesState extends State<ListNotices> {
         child: NotificationListener<ScrollNotification>(
           onNotification: _handleScrollNotification,
           child: CupertinoScrollbar(
-            child: ListView.separated(
-                separatorBuilder: (context, index) => Container(
-                      width: width,
-                      color: Colors.black,
-                      height: 0.5,
-                    ),
+            child: ListView.builder(
                 itemCount: snapshot.data.hasMore
                     ? snapshot.data.list.length + 1
                     : snapshot.data.list.length,
                 itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    NoticeIntro noticeIntroObj = snapshot.data.list[0];
+                    return buildListItem(noticeIntroObj, width, height, true);
+                  }
                   if (index == snapshot.data.list.length) {
                     return buildShimmerList(context, 1);
                   }
                   NoticeIntro noticeIntroObj = snapshot.data.list[index];
-                  return buildListItem(noticeIntroObj, width, height);
+                  return buildListItem(noticeIntroObj, width, height, false);
                 }),
           ),
         ),
@@ -266,12 +259,14 @@ class _ListNoticesState extends State<ListNotices> {
   }
 
   Container buildListItem(
-      NoticeIntro noticeIntroObj, double width, double height) {
+      NoticeIntro noticeIntroObj, double width, double height, bool isTop) {
     return Container(
-      color: !noticeIntroObj.read ? Colors.white : Colors.grey[400],
+      color: !noticeIntroObj.read ? Colors.white : Colors.grey[300],
       width: width,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+        padding: !isTop
+            ? EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0)
+            : EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -328,45 +323,60 @@ class _ListNoticesState extends State<ListNotices> {
                         child: Text(
                           noticeIntroObj.department,
                           overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.bold),
                         )),
                     SizedBox(
-                      height: 5.0,
+                      height: 10.0,
                     ),
                     Container(
                       width: width,
                       child: Text(noticeIntroObj.dateCreated,
+                          style: TextStyle(color: Colors.grey[600]),
                           overflow: TextOverflow.ellipsis),
                     ),
                     SizedBox(
-                      height: 5.0,
+                      height: 10.0,
                     ),
-                    Container(
-                        width: width,
-                        child: Text(noticeIntroObj.title,
-                            overflow: TextOverflow.ellipsis))
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Container(
+                              width: width,
+                              child: Text(noticeIntroObj.title,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  softWrap: false,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis)),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  _listNoticesBloc.toggleBookMarkSink
+                                      .add(noticeIntroObj);
+                                },
+                                child: bookMarkIconDecider(
+                                    noticeIntroObj.starred)))
+                      ],
+                    ),
+                    SizedBox(height: 15.0),
+                    Center(
+                      child: Container(
+                        width: width * 0.95,
+                        color: Colors.black,
+                        height: 0.3,
+                      ),
+                    )
                   ],
                 ),
               ),
             ),
-            // Padding(
-            //     padding: const EdgeInsets.only(left: 10.0),
-            //     child: GestureDetector(
-            //         onTap: () {
-            //           _listNoticesBloc.noticeObjSink.add(noticeIntroObj);
-            //         },
-            //         child: bookMarkIconDecider(noticeIntroObj.starred)))
           ],
         ),
       ),
     );
   }
-
-  Center buildNoResults() {
-    return Center(
-      child: Text('No Notices'),
-    );
-  }
-
-  Center buildErrorWidget(AsyncSnapshot snapshot) =>
-      Center(child: Text(snapshot.error));
 }

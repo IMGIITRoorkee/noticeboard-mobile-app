@@ -35,9 +35,21 @@ class _FiltersState extends State<Filters> {
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 25.0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.clear,
+            color: Colors.black,
+          ),
+          onPressed: widget.onCancel,
+        ),
+        elevation: 0,
         automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text('Select Filter'),
+        title: Text('Select Filters',
+            style: TextStyle(
+              color: Colors.black,
+            )),
       ),
       body: Container(
         width: _width,
@@ -329,25 +341,6 @@ class _FiltersState extends State<Filters> {
       child: Row(
         children: [
           Expanded(
-            flex: 4,
-            child: GestureDetector(
-              onTap: widget.onCancel,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  border:
-                      Border(top: BorderSide(color: Colors.black, width: 0.5)),
-                ),
-                child: Center(
-                  child: Text('Cancel',
-                      style:
-                          TextStyle(color: Colors.blue[700], fontSize: 17.0)),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 5,
             child: GestureDetector(
               onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
               child: Container(

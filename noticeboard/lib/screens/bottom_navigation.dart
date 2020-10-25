@@ -23,21 +23,6 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             appBarLabel: 'Placement and Internships',
             dynamicFetch: DynamicFetch.fetchPlacementNotices,
             noFilters: false)),
-    ListNotices(
-        listNoticeMetaData: ListNoticeMetaData(
-            appBarLabel: 'Important Notices',
-            dynamicFetch: DynamicFetch.fetchImportantNotices,
-            noFilters: true)),
-    ListNotices(
-        listNoticeMetaData: ListNoticeMetaData(
-            appBarLabel: 'Bookmarked Notices',
-            dynamicFetch: DynamicFetch.fetchBookmarkedNotices,
-            noFilters: true)),
-    ListNotices(
-        listNoticeMetaData: ListNoticeMetaData(
-            appBarLabel: 'Expired Notices',
-            dynamicFetch: DynamicFetch.fetchExpiredNotices,
-            noFilters: true))
   ];
 
   @override
@@ -59,42 +44,26 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.blue[700],
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.account_balance,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
-                    label: 'Institute'),
+                    label: 'Institute notices'),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.school,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                     label: 'Placement and Internships'),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.stars,
-                      color: Colors.black,
-                    ),
-                    label: 'Important'),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.bookmarks,
-                      color: Colors.black,
-                    ),
-                    label: 'Bookmarked'),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.history,
-                      color: Colors.black,
-                    ),
-                    label: 'Expired')
               ],
+              unselectedItemColor: Colors.white,
               currentIndex: snapshot.data,
-              fixedColor: Colors.deepPurple,
+              fixedColor: Colors.white,
               onTap: onItemTapped,
+              iconSize: 25.0,
             ),
           );
         });

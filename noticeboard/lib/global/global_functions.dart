@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 Icon bookMarkIconDecider(bool isBookmarked) {
   if (!isBookmarked)
     return Icon(
       Icons.bookmark_border,
+      color: HexColor('#F8C384'),
+      size: 30.0,
     );
   return Icon(
     Icons.bookmark,
+    color: HexColor('#F8C384'),
+    size: 30.0,
   );
 }
 
@@ -95,28 +100,58 @@ void showMyFlushBar(BuildContext context, String message, bool success) {
   )..show(context);
 }
 
+Container buildSearchBar() {
+  return Container(
+    height: 50.0,
+    padding: EdgeInsets.symmetric(vertical: 6.0),
+    child: TextField(
+      decoration: new InputDecoration(
+        suffixIcon: IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {},
+        ),
+        filled: true,
+        fillColor: Colors.grey[300],
+        hintText: 'Search all notices',
+      ),
+    ),
+  );
+}
+
 Widget buildFilterActive(bool filterActive) {
   if (filterActive) {
-    return Stack(
-      children: [
-        Icon(
-          Icons.filter_list,
-          color: Colors.black,
-          size: 30.0,
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: CircleAvatar(
-            radius: 6.0,
-            backgroundColor: Colors.red,
+    return Container(
+      margin: EdgeInsets.only(top: 4.0),
+      child: Stack(
+        children: [
+          Icon(
+            Icons.filter_list,
+            color: Colors.blue[700],
+            size: 30.0,
           ),
-        )
-      ],
+          Align(
+            alignment: Alignment.topRight,
+            child: CircleAvatar(
+              radius: 6.0,
+              backgroundColor: Colors.red,
+            ),
+          )
+        ],
+      ),
     );
   }
   return Icon(
     Icons.filter_list,
-    color: Colors.black,
+    color: Colors.blue[700],
     size: 30.0,
   );
 }
+
+Center buildNoResults() {
+  return Center(
+    child: Text('No Notices'),
+  );
+}
+
+Center buildErrorWidget(AsyncSnapshot snapshot) =>
+    Center(child: Text(snapshot.error));
