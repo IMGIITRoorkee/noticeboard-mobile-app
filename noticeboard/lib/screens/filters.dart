@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:noticeboard/enum/filter_enum.dart';
 import 'package:noticeboard/models/filters_list.dart';
 import '../bloc/filters_bloc.dart';
@@ -34,22 +35,41 @@ class _FiltersState extends State<Filters> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 25.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.clear,
-            color: Colors.black,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.clear),
+                color: Colors.black,
+                onPressed: widget.onCancel,
+              ),
+              Expanded(
+                child: Text('Select Filters',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.0)),
+              ),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      _filtersBloc.eventSink.add(FilterEvents.resetGlobalSlug);
+                    },
+                    child: Text(
+                      'Clear all',
+                      style: TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w400,
+                          color: HexColor('#5288da')),
+                    ),
+                  ))
+            ],
           ),
-          onPressed: widget.onCancel,
         ),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Text('Select Filters',
-            style: TextStyle(
-              color: Colors.black,
-            )),
       ),
       body: Container(
         width: _width,
@@ -92,8 +112,7 @@ class _FiltersState extends State<Filters> {
           builder: (context, globalSelectionStream) {
             return Container(
               color: Colors.white,
-              padding: EdgeInsets.only(
-                  top: 12.0, bottom: 5.0, left: 10.0, right: 10.0),
+              padding: EdgeInsets.only(top: 6.0, bottom: 5.0, right: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -112,7 +131,7 @@ class _FiltersState extends State<Filters> {
                               display: category.mainDisplay);
                           _filtersBloc.globalSelectionSink.add(selection);
                         },
-                        activeColor: Colors.blue,
+                        activeColor: HexColor('#5288da'),
                       ),
                       Expanded(
                         child: Text(
@@ -125,8 +144,8 @@ class _FiltersState extends State<Filters> {
                   ),
                   Divider(
                     color: Colors.black,
-                    height: 15.0,
-                    thickness: 1.0,
+                    height: 10.0,
+                    thickness: 0.2,
                   ),
                   Expanded(
                     child: Container(
@@ -153,7 +172,7 @@ class _FiltersState extends State<Filters> {
                                       _filtersBloc.globalSelectionSink
                                           .add(selection);
                                     },
-                                    activeColor: Colors.blue,
+                                    activeColor: HexColor('#5288da'),
                                   ),
                                   Expanded(
                                     child: Text(
@@ -165,6 +184,7 @@ class _FiltersState extends State<Filters> {
                                 ],
                               ),
                           separatorBuilder: (context, index) => Divider(
+                                thickness: 0.2,
                                 height: 7.0,
                                 color: Colors.black,
                               ),
@@ -182,7 +202,7 @@ class _FiltersState extends State<Filters> {
     return Expanded(
       flex: 4,
       child: Container(
-        color: Colors.blue[50],
+        color: HexColor('#edf4ff'),
         child: StreamBuilder(
             initialData: 0,
             stream: _filtersBloc.indexStream,
@@ -192,31 +212,18 @@ class _FiltersState extends State<Filters> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 23.0),
+                        left: 16.0, right: 16.0, top: 23.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Categories'),
-                        GestureDetector(
-                          onTap: () {
-                            _filtersBloc.eventSink
-                                .add(FilterEvents.resetGlobalSlug);
-                          },
-                          child: Text(
-                            'Reset',
-                            style: TextStyle(color: Colors.blue[900]),
-                          ),
-                        )
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 40.0,
-                      thickness: 1.0,
-                    ),
+                  Divider(
+                    color: Colors.black,
+                    height: 24.0,
+                    thickness: 0.2,
                   ),
                   buildCategoryItem(
                       width: width,
@@ -238,16 +245,13 @@ class _FiltersState extends State<Filters> {
                       index: 3,
                       selectedIndex: categoryIndexStream.data,
                       categoryName: 'Departments'),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 30.0,
-                      thickness: 1.0,
-                    ),
+                  Divider(
+                    color: Colors.black,
+                    height: 24.0,
+                    thickness: 0.2,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: StreamBuilder(
                         stream: _filtersBloc.dateRangeStream,
                         builder: (context, snapshot) {
@@ -311,8 +315,8 @@ class _FiltersState extends State<Filters> {
         },
         child: Container(
           width: width,
-          color: selectedIndex == index ? Colors.white : Colors.blue[50],
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+          color: selectedIndex == index ? Colors.white : HexColor('#edf4ff'),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: StreamBuilder<Object>(
               stream: _filtersBloc.selectedCatStream,
               builder: (context, snapshot) {
@@ -325,7 +329,7 @@ class _FiltersState extends State<Filters> {
                       ),
                       CircleAvatar(
                         radius: 5.0,
-                        backgroundColor: Colors.blue[500],
+                        backgroundColor: HexColor('#5288da'),
                       )
                     ],
                   );
@@ -337,18 +341,25 @@ class _FiltersState extends State<Filters> {
 
   Container buildButtons() {
     return Container(
-      height: 50.0,
+      height: 48.0,
       child: Row(
         children: [
           Expanded(
             child: GestureDetector(
               onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
               child: Container(
-                color: Colors.blue[700],
-                child: Center(
-                  child: Text(
-                    'Apply',
-                    style: TextStyle(color: Colors.white, fontSize: 17.0),
+                color: HexColor('#5288da'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 160.0, vertical: 15.0),
+                  child: Center(
+                    child: Text(
+                      'Apply',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ),
                 ),
               ),

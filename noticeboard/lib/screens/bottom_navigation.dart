@@ -67,6 +67,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
               iconSize: 25.0,
               unselectedLabelStyle:
                   TextStyle(color: HexColor('#ffffff'), fontSize: 12.0),
+              selectedLabelStyle:
+                  TextStyle(color: HexColor('#ffffff'), fontSize: 12.0),
             ),
           );
         });

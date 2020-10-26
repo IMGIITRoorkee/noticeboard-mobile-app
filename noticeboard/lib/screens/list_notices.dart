@@ -265,7 +265,7 @@ class _ListNoticesState extends State<ListNotices> {
   Container buildListItem(
       NoticeIntro noticeIntroObj, double width, double height, bool isTop) {
     return Container(
-      color: !noticeIntroObj.read ? Colors.white : Colors.grey[300],
+      color: !noticeIntroObj.read ? Colors.white : HexColor('#f2f2f2'),
       width: width,
       child: Padding(
         padding: !isTop
