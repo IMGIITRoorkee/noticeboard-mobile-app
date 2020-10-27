@@ -176,8 +176,38 @@ class _ListNoticesState extends State<ListNotices> {
                   })
               : Container(),
           Container(
+            padding: EdgeInsets.symmetric(horizontal: 19.0, vertical: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Important Notices',
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w700,
+                      color: HexColor('#444444')),
+                ),
+                StreamBuilder(
+                    initialData: '...',
+                    stream: _listNoticesBloc.unreadCountStream,
+                    builder: (context, snapshot) {
+                      return Container(
+                          padding: EdgeInsets.all(5.0),
+                          color: HexColor('#d62727'),
+                          child: Text(
+                            snapshot.data + ' Unread',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12.0),
+                          ));
+                    })
+              ],
+            ),
+          ),
+          Container(
             height: !widget.listNoticeMetaData.noFilters
-                ? height * 0.735
+                ? height * 0.661
                 : height * 0.798,
             width: width,
             child: StreamBuilder(
@@ -262,63 +292,60 @@ class _ListNoticesState extends State<ListNotices> {
     );
   }
 
-  Container buildListItem(
+  FocusedMenuHolder buildListItem(
       NoticeIntro noticeIntroObj, double width, double height, bool isTop) {
-    return Container(
-      color: !noticeIntroObj.read ? Colors.white : HexColor('#f2f2f2'),
-      width: width,
-      child: Padding(
-        padding: !isTop
-            ? EdgeInsets.only(left: 19.0, right: 19.0, top: 16.0)
-            : EdgeInsets.only(left: 19.0, right: 19.0, top: 5.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              //pushNoticeDetail(noticeIntroObj);
-              child: FocusedMenuHolder(
-                onPressed: () {
-                  pushNoticeDetail(noticeIntroObj);
-                },
-                menuWidth: MediaQuery.of(context).size.width * 0.50,
-                blurSize: 5.0,
-                menuItemExtent: 45,
-                menuBoxDecoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
-                duration: Duration(milliseconds: 100),
-                animateMenuItems: true,
-                blurBackgroundColor: Colors.black54,
-                menuOffset:
-                    10.0, // Offset value to show menuItem from the selected item
-                bottomOffsetHeight:
-                    80.0, // Offset height to consider, for showing the menu item ( for example bottom navigation bar), so that the popup menu will be shown on top of selected item.
-                menuItems: <FocusedMenuItem>[
-                  // Add Each FocusedMenuItem  for Menu Options
-                  FocusedMenuItem(
-                      title: Text(bookMarkTextDecider(noticeIntroObj.starred)),
-                      trailingIcon: bookMarkIconDecider(noticeIntroObj.starred),
-                      onPressed: () {
-                        _listNoticesBloc.toggleBookMarkSink.add(noticeIntroObj);
-                        HapticFeedback.lightImpact();
-                      }),
+    return FocusedMenuHolder(
+      onPressed: () {
+        pushNoticeDetail(noticeIntroObj);
+      },
+      menuWidth: MediaQuery.of(context).size.width * 0.50,
+      blurSize: 5.0,
+      menuItemExtent: 45,
+      menuBoxDecoration: BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.all(Radius.circular(15.0))),
+      duration: Duration(milliseconds: 100),
+      animateMenuItems: true,
+      blurBackgroundColor: Colors.black54,
+      menuOffset: 10.0,
+      bottomOffsetHeight: 80.0,
+      menuItems: <FocusedMenuItem>[
+        // Add Each FocusedMenuItem  for Menu Options
+        FocusedMenuItem(
+            title: Text(bookMarkTextDecider(noticeIntroObj.starred)),
+            trailingIcon: bookMarkIconDecider(noticeIntroObj.starred),
+            onPressed: () {
+              _listNoticesBloc.toggleBookMarkSink.add(noticeIntroObj);
+              HapticFeedback.lightImpact();
+            }),
 
-                  !noticeIntroObj.read
-                      ? FocusedMenuItem(
-                          title: Text("Mark as Read"),
-                          trailingIcon: Icon(Icons.visibility),
-                          onPressed: () {
-                            _listNoticesBloc.markReadSink.add(noticeIntroObj);
-                            HapticFeedback.lightImpact();
-                          })
-                      : FocusedMenuItem(
-                          title: Text("Mark as unread"),
-                          trailingIcon: Icon(Icons.visibility_off),
-                          onPressed: () {
-                            _listNoticesBloc.markUnreadSink.add(noticeIntroObj);
-                            HapticFeedback.lightImpact();
-                          }),
-                ],
+        !noticeIntroObj.read
+            ? FocusedMenuItem(
+                title: Text("Mark as Read"),
+                trailingIcon: Icon(Icons.visibility),
+                onPressed: () {
+                  _listNoticesBloc.markReadSink.add(noticeIntroObj);
+                  HapticFeedback.lightImpact();
+                })
+            : FocusedMenuItem(
+                title: Text("Mark as unread"),
+                trailingIcon: Icon(Icons.visibility_off),
+                onPressed: () {
+                  _listNoticesBloc.markUnreadSink.add(noticeIntroObj);
+                  HapticFeedback.lightImpact();
+                }),
+      ],
+      child: Container(
+        color: !noticeIntroObj.read ? Colors.white : HexColor('#f2f2f2'),
+        width: width,
+        child: Padding(
+          padding: !isTop
+              ? EdgeInsets.only(left: 19.0, right: 19.0, top: 16.0)
+              : EdgeInsets.only(left: 19.0, right: 19.0, top: 5.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -383,8 +410,8 @@ class _ListNoticesState extends State<ListNotices> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

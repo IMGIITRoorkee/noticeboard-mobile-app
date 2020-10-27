@@ -54,6 +54,10 @@ class ListNoticesBloc {
   StreamSink<bool> get _filterActiveSink => _filterActiveController.sink;
   Stream<bool> get filterActiveStream => _filterActiveController.stream;
 
+  final _unreadCountController = StreamController<String>();
+  StreamSink<String> get _unreadCountSink => _unreadCountController.sink;
+  Stream<String> get unreadCountStream => _unreadCountController.stream;
+
   ListNoticesRepository _listNoticesRepository = ListNoticesRepository();
 
   ListNoticesBloc() {
@@ -100,6 +104,7 @@ class ListNoticesBloc {
   }
 
   Future dynamicFetchNotices() async {
+    updateUnreadCount();
     if (dynamicFetch == DynamicFetch.fetchInstituteNotices)
       await fetchInstituteNotices();
     else if (dynamicFetch == DynamicFetch.fetchPlacementNotices)
@@ -138,6 +143,7 @@ class ListNoticesBloc {
     _markUnreadController.close();
     _filterVisibilityController.close();
     _filterActiveController.close();
+    _unreadCountController.close();
   }
 
   Future refreshNotices() async {
@@ -258,5 +264,10 @@ class ListNoticesBloc {
   void toggleVisibility() {
     filterVisibility = !filterVisibility;
     filterVisibilitySink.add(filterVisibility);
+  }
+
+  void updateUnreadCount() async {
+    String unreadCount = await _listNoticesRepository.importantUnreadCount();
+    _unreadCountSink.add(unreadCount);
   }
 }

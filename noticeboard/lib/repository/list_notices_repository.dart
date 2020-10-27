@@ -76,4 +76,9 @@ class ListNoticesRepository {
       await _apiService.markReadUnreadNotice(obj);
     } catch (e) {}
   }
+
+  Future<String> importantUnreadCount() async {
+    String unreadCount = await _apiService.fetchImpUnreadCount();
+    return unreadCount;
+  }
 }

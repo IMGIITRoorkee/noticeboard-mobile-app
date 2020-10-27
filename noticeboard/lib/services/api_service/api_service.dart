@@ -244,4 +244,24 @@ class ApiService {
       throw Exception(e.toString());
     }
   }
+
+  Future<String> fetchImpUnreadCount() async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
+      final http.Response allNoticesResponse = await http
+          .get(BASE_URL + ALL_NOTICES + '1', headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
+      if (allNoticesResponse.statusCode == 200) {
+        final body = jsonDecode(allNoticesResponse.body);
+        return body['importantUnreadCount'].toString();
+      } else {
+        throw Exception('Failed to load unread count');
+      }
+    } catch (e) {
+      throw Exception('Failed to load unread count');
+    }
+  }
 }
