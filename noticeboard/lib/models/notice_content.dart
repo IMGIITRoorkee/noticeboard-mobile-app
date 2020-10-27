@@ -4,7 +4,7 @@ class NoticeContent {
 
   static String htmlCorrector(String incorrectHTML) {
     String correctHTML = incorrectHTML.replaceAll(
-        "src=\"/media/", "src=\"https://internet.channeli.in/media/");
+        "/media/noticeboard", "https://internet.channeli.in/media/noticeboard");
     return correctHTML;
   }
 

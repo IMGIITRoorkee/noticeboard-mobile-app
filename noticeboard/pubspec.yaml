@@ -30,15 +30,13 @@ dependencies:
   flutter_secure_storage: ^3.3.4
   http: ^0.12.2
   date_format: ^1.0.9
-  flutter_html: ^1.0.2
   share: ^0.6.5+2
-  diagonal_scrollview: ^0.2.0
   focused_menu: ^1.0.1
-  url_launcher: ^5.7.5
   shimmer: ^1.1.2
   flutter_spinkit: ^4.1.2
   flushbar: ^1.10.4
   hexcolor: ^1.0.6
+  flutter_webview_plugin: ^0.3.11
 
 dev_dependencies:
   flutter_test:

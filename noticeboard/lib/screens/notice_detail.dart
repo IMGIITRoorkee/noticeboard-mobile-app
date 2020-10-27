@@ -3,9 +3,7 @@ import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
 import '../global/global_functions.dart';
-import 'package:diagonal_scrollview/diagonal_scrollview.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 class NoticeDetail extends StatefulWidget {
   final NoticeIntro noticeIntro;
@@ -20,7 +18,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
   _NoticeDetailState({this.noticeIntro});
 
   NoticeContentBloc _noticeContentBloc = NoticeContentBloc();
-  final String prefix = 'https://internet.channeli.in/';
+
   @override
   void initState() {
     _noticeContentBloc.context = context;
@@ -83,21 +81,11 @@ class _NoticeDetailState extends State<NoticeDetail> {
   Container buildContent(AsyncSnapshot snapshot) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      child: DiagonalScrollView(
-        enableZoom: true,
-        child: Html(
-          data: snapshot.data.content,
-          onLinkTap: (link) {
-            if (link.startsWith('/')) {
-              String channeliLink = prefix;
-              channeliLink += link;
-              launchURL(channeliLink);
-            } else {
-              launchURL(link);
-            }
-          },
-        ),
-      ),
+      child: WebviewScaffold(
+          allowFileURLs: true,
+          withZoom: true,
+          url: Uri.dataFromString(snapshot.data.content, mimeType: 'text/html')
+              .toString()),
     );
   }
 
@@ -166,11 +154,5 @@ class _NoticeDetailState extends State<NoticeDetail> {
         ),
       ),
     );
-  }
-
-  launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {}
   }
 }
