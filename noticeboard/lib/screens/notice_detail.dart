@@ -82,7 +82,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: WebviewScaffold(
-          allowFileURLs: true,
+          displayZoomControls: true,
           withZoom: true,
           url: Uri.dataFromString(snapshot.data.content, mimeType: 'text/html')
               .toString()),
