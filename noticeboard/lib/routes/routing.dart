@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/screens/bottom_navigation.dart';
 import 'package:noticeboard/screens/profile.dart';
+import 'package:noticeboard/screens/search_notices.dart';
 import './routing_constants.dart';
 import '../screens/login.dart';
 import '../screens/list_notices.dart';
 import '../screens/launching.dart';
 import '../models/notice_intro.dart';
 import '../screens/notice_detail.dart';
+import '../screens/search.dart';
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -38,6 +40,8 @@ class MyRouter {
             builder: (context) => NoticeDetail(
                   noticeIntro: noticeIntro,
                 ));
+      case searchRoute:
+        return MaterialPageRoute(builder: (context) => Search());
         break;
     }
   }

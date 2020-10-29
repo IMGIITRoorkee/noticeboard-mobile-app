@@ -270,4 +270,8 @@ class ListNoticesBloc {
     String unreadCount = await _listNoticesRepository.importantUnreadCount();
     _unreadCountSink.add(unreadCount);
   }
+
+  void pushSearch() {
+    Navigator.pushNamed(context, searchRoute);
+  }
 }
