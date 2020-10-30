@@ -3,7 +3,7 @@ import '../enum/dynamic_fetch_enum.dart';
 import '../screens/list_notices.dart';
 import '../models/notice_intro.dart';
 import '../bloc/bottom_navigator_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
+import '../styles/bottom_nav_constants.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
   @override
@@ -26,6 +26,10 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             noFilters: false)),
   ];
 
+  void onItemTapped(int index) {
+    _bottomNavigatorBloc.indexSink.add(index);
+  }
+
   @override
   void dispose() {
     _bottomNavigatorBloc.disposeStreams();
@@ -45,36 +49,20 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: HexColor('#5288da'),
+              backgroundColor: globalBlueColor,
               items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.account_balance,
-                      color: Colors.white,
-                    ),
-                    label: 'Institute notices'),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.school,
-                      color: Colors.white,
-                    ),
-                    label: 'Placement and Internships'),
+                instituteNoticesBottomItem,
+                placementInternshipBottomItem,
               ],
-              unselectedItemColor: Colors.white,
+              unselectedItemColor: globalWhiteColor,
               currentIndex: snapshot.data,
-              fixedColor: Colors.white,
+              fixedColor: globalWhiteColor,
               onTap: onItemTapped,
               iconSize: 25.0,
-              unselectedLabelStyle:
-                  TextStyle(color: HexColor('#ffffff'), fontSize: 12.0),
-              selectedLabelStyle:
-                  TextStyle(color: HexColor('#ffffff'), fontSize: 12.0),
+              unselectedLabelStyle: fixedBottomItemTextStyle,
+              selectedLabelStyle: fixedBottomItemTextStyle,
             ),
           );
         });
-  }
-
-  void onItemTapped(int index) {
-    _bottomNavigatorBloc.indexSink.add(index);
   }
 }
