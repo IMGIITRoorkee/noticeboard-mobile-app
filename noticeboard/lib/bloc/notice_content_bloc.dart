@@ -42,7 +42,8 @@ class NoticeContentBloc {
             await noticeContentRepository.readNotice(obj);
           }
         } catch (e) {
-          _contentSink.addError(e.message.toString());
+          if (!_noticeContentController.isClosed)
+            _contentSink.addError(e.message.toString());
         }
       } else if (event == NoticeContentEvents.toggleStar) {
         if (starred) {
