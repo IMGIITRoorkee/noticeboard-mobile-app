@@ -78,7 +78,9 @@ class _ListNoticesState extends State<ListNotices> {
               color: HexColor('#5288da'),
               size: 30.0,
             ),
-            onPressed: () {}),
+            onPressed: () {
+              _listNoticesBloc.pushSearch();
+            }),
         IconButton(
           icon: StreamBuilder(
               stream: _listNoticesBloc.filterActiveStream,

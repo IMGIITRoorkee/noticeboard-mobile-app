@@ -33,7 +33,7 @@ class SearchBloc {
     _queryStream.listen((query) {
       searchQuery = query;
       print(searchQuery);
-      if (searchQuery == null) {
+      if (searchQuery == '') {
         disableClear();
       } else {
         enableClear();
