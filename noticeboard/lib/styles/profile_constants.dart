@@ -1,11 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:noticeboard/global/global_functions.dart';
 
-TextStyle blackSuperBoldMediumSize =
+var globalWhiteColor = Colors.white;
+
+TextStyle blackSuperBoldMediumSizeText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0);
 
-TextStyle lightGreySmallSize =
+TextStyle lightGreySmallSizeText =
     TextStyle(color: HexColor('#999999'), fontSize: 12.0);
 
-TextStyle boldMediumGreyMediumSize = TextStyle(
+TextStyle boldMediumGreyMediumSizeText = TextStyle(
     fontWeight: FontWeight.w400, color: HexColor('#5288da'), fontSize: 16.0);
+
+SizedBox sizedBox(double height) {
+  return SizedBox(
+    height: height,
+  );
+}
+
+Icon screenPopIcon = Icon(Icons.clear, color: Colors.black);
+
+Icon bookmarkIcon = Icon(
+  Icons.collections_bookmark,
+  color: HexColor('#5288da'),
+);
+Icon feedbackIcon = Icon(
+  Icons.feedback,
+  color: HexColor('#5288da'),
+);
+Icon notificationSettingsIcon = Icon(
+  Icons.settings,
+  color: HexColor('#5288da'),
+);
+Icon logoutIcon = Icon(
+  Icons.exit_to_app,
+  color: HexColor('#5288da'),
+);
+
+Container divider(double width) {
+  return Container(
+    color: HexColor('#5288da'),
+    width: width,
+    height: 2.0,
+  );
+}
+
+Center inProgress = Center(
+  child: spinner(),
+);
+
+Center errorFetchingProfile(String text) {
+  return Center(
+    child: Text(text),
+  );
+}
+
+Container noOverFlowTextContainer(double width, String text, TextStyle style) {
+  return Container(
+    width: width,
+    child: Center(
+      child: Text(
+        text,
+        style: style,
+        overflow: TextOverflow.fade,
+        maxLines: 1,
+        softWrap: false,
+      ),
+    ),
+  );
+}

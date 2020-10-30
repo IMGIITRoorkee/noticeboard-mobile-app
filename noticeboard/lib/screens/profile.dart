@@ -3,8 +3,6 @@ import '../styles/profile_constants.dart';
 import '../bloc/profile_bloc.dart';
 import '../enum/profile_enum.dart';
 import '../services/auth/auth_repository.dart';
-import '../global/global_functions.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -36,12 +34,12 @@ class _ProfileState extends State<Profile> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.clear, color: Colors.black),
+            icon: screenPopIcon,
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: globalWhiteColor,
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -67,118 +65,47 @@ class _ProfileState extends State<Profile> {
                                       placeholder: 'assets/images/user1.jpg',
                                       image: snapshot.data.picUrl),
                                 ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Container(
-                                  width: _width,
-                                  child: Center(
-                                    child: Text(
-                                      snapshot.data.fullName,
-                                      style: blackSuperBoldMediumSize,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Container(
-                                  width: _width,
-                                  child: Center(
-                                    child: Text(
-                                      snapshot.data.degreeName,
-                                      style: lightGreySmallSize,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.fade,
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
-                                Text(
-                                  snapshot.data.currentYear,
-                                  style: lightGreySmallSize,
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
-                                Container(
-                                  width: _width,
-                                  child: Center(
-                                    child: Text(
-                                      snapshot.data.branchName,
-                                      style: lightGreySmallSize,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ),
+                                sizedBox(10.0),
+                                noOverFlowTextContainer(
+                                    _width,
+                                    snapshot.data.fullName,
+                                    blackSuperBoldMediumSizeText),
+                                sizedBox(10.0),
+                                noOverFlowTextContainer(
+                                    _width,
+                                    snapshot.data.degreeName,
+                                    lightGreySmallSizeText),
+                                sizedBox(5.0),
+                                noOverFlowTextContainer(
+                                    _width,
+                                    snapshot.data.currentYear,
+                                    lightGreySmallSizeText),
+                                sizedBox(5.0),
+                                noOverFlowTextContainer(
+                                    _width,
+                                    snapshot.data.branchName,
+                                    lightGreySmallSizeText)
                               ],
                             );
                           } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text(snapshot.error),
-                            );
+                            return errorFetchingProfile(snapshot.error);
                           }
-                          return Center(
-                            child: spinner(),
-                          );
+                          return inProgress;
                         }),
                   ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
+                  sizedBox(40.0),
                   buildMenuItem(
-                      Icon(
-                        Icons.collections_bookmark,
-                        color: HexColor('#5288da'),
-                      ),
-                      'Bookmarks',
-                      ProfileEvents.logoutEvent),
-                  SizedBox(
-                    height: 17.0,
-                  ),
-                  Container(
-                    color: HexColor('#5288da'),
-                    width: _width,
-                    height: 2.0,
-                  ),
-                  SizedBox(
-                    height: 17.0,
-                  ),
+                      bookmarkIcon, 'Bookmarks', ProfileEvents.logoutEvent),
+                  sizedBox(17.0),
+                  divider(_width),
+                  sizedBox(17.0),
                   buildMenuItem(
-                      Icon(
-                        Icons.feedback,
-                        color: HexColor('#5288da'),
-                      ),
-                      'Feedback',
-                      ProfileEvents.logoutEvent),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  buildMenuItem(
-                      Icon(
-                        Icons.settings,
-                        color: HexColor('#5288da'),
-                      ),
-                      'Notification settings',
-                      ProfileEvents.logoutEvent),
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  buildMenuItem(
-                      Icon(
-                        Icons.exit_to_app,
-                        color: HexColor('#5288da'),
-                      ),
-                      'Logout',
-                      ProfileEvents.logoutEvent)
+                      feedbackIcon, 'Feedback', ProfileEvents.logoutEvent),
+                  sizedBox(12.0),
+                  buildMenuItem(notificationSettingsIcon,
+                      'Notification settings', ProfileEvents.logoutEvent),
+                  sizedBox(15.0),
+                  buildMenuItem(logoutIcon, 'Logout', ProfileEvents.logoutEvent)
                 ],
               ),
             ),
@@ -194,12 +121,10 @@ class _ProfileState extends State<Profile> {
       child: Row(
         children: [
           icon,
-          SizedBox(
-            width: 15.0,
-          ),
+          sizedBox(15.0),
           Text(
             text,
-            style: boldMediumGreyMediumSize,
+            style: boldMediumGreyMediumSizeText,
           )
         ],
       ),
