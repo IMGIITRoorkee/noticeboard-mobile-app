@@ -4,6 +4,7 @@ import '../bloc/profile_bloc.dart';
 import '../enum/profile_enum.dart';
 import '../services/auth/auth_repository.dart';
 import '../global/global_functions.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -32,13 +33,20 @@ class _ProfileState extends State<Profile> {
     final double _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.grey[400],
+          leading: IconButton(
+            icon: Icon(Icons.clear, color: Colors.black),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
         body: SingleChildScrollView(
           child: Center(
             child: Container(
-              margin: EdgeInsets.only(top: 20.0),
               width: _width * 0.84,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,7 +137,7 @@ class _ProfileState extends State<Profile> {
                   buildMenuItem(
                       Icon(
                         Icons.collections_bookmark,
-                        color: Colors.grey[600],
+                        color: HexColor('#5288da'),
                       ),
                       'Bookmarks',
                       ProfileEvents.logoutEvent),
@@ -137,7 +145,7 @@ class _ProfileState extends State<Profile> {
                     height: 17.0,
                   ),
                   Container(
-                    color: Colors.grey[400],
+                    color: HexColor('#5288da'),
                     width: _width,
                     height: 2.0,
                   ),
@@ -147,7 +155,7 @@ class _ProfileState extends State<Profile> {
                   buildMenuItem(
                       Icon(
                         Icons.feedback,
-                        color: Colors.grey[600],
+                        color: HexColor('#5288da'),
                       ),
                       'Feedback',
                       ProfileEvents.logoutEvent),
@@ -157,7 +165,7 @@ class _ProfileState extends State<Profile> {
                   buildMenuItem(
                       Icon(
                         Icons.settings,
-                        color: Colors.grey[600],
+                        color: HexColor('#5288da'),
                       ),
                       'Notification settings',
                       ProfileEvents.logoutEvent),
@@ -167,7 +175,7 @@ class _ProfileState extends State<Profile> {
                   buildMenuItem(
                       Icon(
                         Icons.exit_to_app,
-                        color: Colors.grey[600],
+                        color: HexColor('#5288da'),
                       ),
                       'Logout',
                       ProfileEvents.logoutEvent)

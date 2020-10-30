@@ -37,6 +37,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(65),
@@ -63,9 +64,7 @@ class _SearchState extends State<Search> {
                                   Icons.clear,
                                   color: HexColor('#5288da'),
                                 ),
-                                onPressed: () {
-                                  clearSearch();
-                                },
+                                onPressed: clearSearch,
                               );
                             }
                             return Icon(
