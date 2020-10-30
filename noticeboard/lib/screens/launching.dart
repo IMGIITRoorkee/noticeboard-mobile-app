@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noticeboard/styles/launching_constants.dart';
 import '../services/auth/auth_repository.dart';
 import '../global/global_functions.dart';
 import '../styles/login_constants.dart';
@@ -14,13 +15,13 @@ class _LauncherState extends State<Launcher> {
   @override
   void initState() {
     _authRepository.checkIfAlreadySignedIn(context);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
+    final double _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -31,21 +32,10 @@ class _LauncherState extends State<Launcher> {
             SizedBox(
               height: _width * 0.5,
             ),
-            Container(
-              width: _width * 0.60,
-              height: _width * 0.60,
-              child: FittedBox(
-                child: Image.asset('assets/images/splash_logo.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
-            SizedBox(
-              height: _width * 0.5,
-            ),
+            mainLaunchingLogo(_width, _height),
+            sizedBox(_width * 0.5),
             spinner(),
-            SizedBox(
-              height: _width * 0.1,
-            ),
+            sizedBox(_width * 0.1),
             lotsOfLove(context, _width)
           ],
         ),
