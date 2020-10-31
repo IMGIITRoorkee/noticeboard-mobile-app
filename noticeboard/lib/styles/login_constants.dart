@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 
+Icon visibilityOnIcon = Icon(Icons.visibility);
+Icon visibilityOffIcon = Icon(Icons.visibility_off);
+
+Text loginHeading = Text(
+  "Log In",
+  style: TextStyle(fontSize: 17.0, color: Colors.white),
+);
+
 const InputDecoration usernameDecoration =
     InputDecoration(labelText: 'Username', prefixIcon: Icon(Icons.person));
+SizedBox sizedBox(double height) {
+  return SizedBox(
+    height: height,
+  );
+}
 
 Widget containsBranding(BuildContext context, double _width, double _height) {
   return Container(

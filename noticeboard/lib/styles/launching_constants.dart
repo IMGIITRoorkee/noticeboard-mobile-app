@@ -3,12 +3,6 @@ import 'package:flutter/material.dart';
 TextStyle launchingTextStyle =
     TextStyle(color: Colors.blue, fontSize: 25.0, fontWeight: FontWeight.bold);
 
-SizedBox sizedBox(double height) {
-  return SizedBox(
-    height: height,
-  );
-}
-
 Container mainLaunchingLogo(double width, double height) {
   return Container(
     width: width * 0.60,

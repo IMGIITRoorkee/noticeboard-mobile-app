@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noticeboard/styles/launching_constants.dart';
 import '../services/auth/auth_repository.dart';
 import '../global/global_functions.dart';
+import '../styles/launching_constants.dart';
 import '../styles/login_constants.dart';
 
 class Launcher extends StatefulWidget {

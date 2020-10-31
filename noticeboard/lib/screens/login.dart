@@ -47,22 +47,16 @@ class _LoginState extends State<Login> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           containsBranding(context, _width, _height),
-                          SizedBox(
-                            height: 20.0,
-                          ),
+                          sizedBox(20.0),
                           buildUsernameContainer(_width),
-                          SizedBox(
-                            height: 10.0,
-                          ),
+                          sizedBox(10.0),
                           StreamBuilder(
                               initialData: true,
                               stream: _loginBloc.showPasswordStream,
                               builder: (context, snapshot) {
                                 return buildPasswordContainer(_width, snapshot);
                               }),
-                          SizedBox(
-                            height: _height * 0.04,
-                          ),
+                          sizedBox(_height * 0.04),
                           StreamBuilder(
                             initialData: false,
                             stream: _loginBloc.allowedStream,
@@ -73,9 +67,7 @@ class _LoginState extends State<Login> {
                                 return buildLoginDisabledBtn(_width);
                             },
                           ),
-                          SizedBox(
-                            height: _height * 0.02,
-                          ),
+                          sizedBox(_height * 0.02),
                           buildContactImgContainer(_width),
                         ],
                       ),
@@ -124,10 +116,7 @@ class _LoginState extends State<Login> {
         minWidth: width * 0.60,
         child: RaisedButton(
           color: Colors.blue[300],
-          child: Text(
-            "Log In",
-            style: TextStyle(fontSize: 17.0, color: Colors.white),
-          ),
+          child: loginHeading,
           onPressed: () {
             _loginBloc.eventSink.add(LoginEvents.loginEvent);
           },
@@ -156,7 +145,7 @@ class _LoginState extends State<Login> {
           onPressed: () {
             _loginBloc.eventSink.add(LoginEvents.togglePasswordView);
           },
-          icon: !toHide ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+          icon: !toHide ? visibilityOnIcon : visibilityOffIcon,
         ));
   }
 }
