@@ -1,5 +1,4 @@
 import 'package:noticeboard/enum/notice_content_enum.dart';
-import 'package:noticeboard/styles/bottom_nav_constants.dart';
 import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
@@ -92,7 +91,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
 
   Container buildNoticeIntro(double _width) {
     return Container(
-      color: globalLightBlue,
+      color: globalLightBlueColor,
       width: _width,
       child: Padding(
         padding: const EdgeInsets.all(10.0),

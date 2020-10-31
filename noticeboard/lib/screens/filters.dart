@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:noticeboard/enum/filter_enum.dart';
 import 'package:noticeboard/models/filters_list.dart';
 import '../bloc/filters_bloc.dart';
 import 'package:date_format/date_format.dart';
-import '../global/global_functions.dart';
+import '../styles/filter_consts.dart';
 
 class Filters extends StatefulWidget {
   final VoidCallback onCancel;
@@ -47,26 +46,16 @@ class _FiltersState extends State<Filters> {
                 onPressed: widget.onCancel,
               ),
               Expanded(
-                child: Text('Select Filters',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.0)),
+                child: selectFiltersHeading,
               ),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: GestureDetector(
-                    onTap: () {
-                      _filtersBloc.eventSink.add(FilterEvents.resetGlobalSlug);
-                    },
-                    child: Text(
-                      'Clear all',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w400,
-                          color: HexColor('#5288da')),
-                    ),
-                  ))
+                      onTap: () {
+                        _filtersBloc.eventSink
+                            .add(FilterEvents.resetGlobalSlug);
+                      },
+                      child: clearAllHeading))
             ],
           ),
         ),
@@ -111,7 +100,7 @@ class _FiltersState extends State<Filters> {
           stream: _filtersBloc.globalSelectionStream,
           builder: (context, globalSelectionStream) {
             return Container(
-              color: Colors.white,
+              color: globalWhiteColor,
               padding: EdgeInsets.only(top: 6.0, bottom: 5.0, right: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +120,7 @@ class _FiltersState extends State<Filters> {
                               display: category.mainDisplay);
                           _filtersBloc.globalSelectionSink.add(selection);
                         },
-                        activeColor: HexColor('#5288da'),
+                        activeColor: globalBlueColor,
                       ),
                       Expanded(
                         child: Text(
@@ -142,11 +131,7 @@ class _FiltersState extends State<Filters> {
                       )
                     ],
                   ),
-                  Divider(
-                    color: Colors.black,
-                    height: 10.0,
-                    thickness: 0.2,
-                  ),
+                  mainFilterDivider,
                   Expanded(
                     child: Container(
                       child: ListView.separated(
@@ -172,7 +157,7 @@ class _FiltersState extends State<Filters> {
                                       _filtersBloc.globalSelectionSink
                                           .add(selection);
                                     },
-                                    activeColor: HexColor('#5288da'),
+                                    activeColor: globalBlueColor,
                                   ),
                                   Expanded(
                                     child: Text(
@@ -183,11 +168,7 @@ class _FiltersState extends State<Filters> {
                                   )
                                 ],
                               ),
-                          separatorBuilder: (context, index) => Divider(
-                                thickness: 0.2,
-                                height: 7.0,
-                                color: Colors.black,
-                              ),
+                          separatorBuilder: (context, index) => filterDivider,
                           itemCount: category.bannerList.length),
                     ),
                   )
@@ -202,7 +183,7 @@ class _FiltersState extends State<Filters> {
     return Expanded(
       flex: 4,
       child: Container(
-        color: HexColor('#edf4ff'),
+        color: globalLightBlueColor,
         child: StreamBuilder(
             initialData: 0,
             stream: _filtersBloc.indexStream,
@@ -220,11 +201,7 @@ class _FiltersState extends State<Filters> {
                       ],
                     ),
                   ),
-                  Divider(
-                    color: Colors.black,
-                    height: 24.0,
-                    thickness: 0.2,
-                  ),
+                  categoryDivider,
                   buildCategoryItem(
                       width: width,
                       index: 0,
@@ -245,11 +222,7 @@ class _FiltersState extends State<Filters> {
                       index: 3,
                       selectedIndex: categoryIndexStream.data,
                       categoryName: 'Departments'),
-                  Divider(
-                    color: Colors.black,
-                    height: 24.0,
-                    thickness: 0.2,
-                  ),
+                  categoryDivider,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: StreamBuilder(
@@ -261,12 +234,7 @@ class _FiltersState extends State<Filters> {
                                 _filtersBloc.eventSink
                                     .add(FilterEvents.pickDateRange);
                               },
-                              child: Text(
-                                'Date',
-                                style: TextStyle(
-                                    color: Colors.blue[900],
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: dateHeading,
                             );
                           } else {
                             String start = formatDate(
@@ -278,12 +246,10 @@ class _FiltersState extends State<Filters> {
                               children: [
                                 Text(
                                   start,
-                                  style: TextStyle(color: Colors.blue[900]),
+                                  style: dateTxtStyle,
                                 ),
-                                Text('|',
-                                    style: TextStyle(color: Colors.blue[900])),
-                                Text(end,
-                                    style: TextStyle(color: Colors.blue[900])),
+                                Text('|', style: dateTxtStyle),
+                                Text(end, style: dateTxtStyle),
                                 SizedBox(
                                   height: 10.0,
                                 ),
@@ -292,9 +258,7 @@ class _FiltersState extends State<Filters> {
                                       _filtersBloc.eventSink
                                           .add(FilterEvents.resetDateRange);
                                     },
-                                    child: Text('Reset Date filter',
-                                        style:
-                                            TextStyle(color: Colors.grey[500])))
+                                    child: resetDate)
                               ],
                             );
                           }
@@ -315,7 +279,8 @@ class _FiltersState extends State<Filters> {
         },
         child: Container(
           width: width,
-          color: selectedIndex == index ? Colors.white : HexColor('#edf4ff'),
+          color:
+              selectedIndex == index ? globalWhiteColor : globalLightBlueColor,
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: StreamBuilder<Object>(
               stream: _filtersBloc.selectedCatStream,
@@ -327,10 +292,7 @@ class _FiltersState extends State<Filters> {
                       SizedBox(
                         width: 10.0,
                       ),
-                      CircleAvatar(
-                        radius: 5.0,
-                        backgroundColor: HexColor('#5288da'),
-                      )
+                      selectedCategoryIndicator
                     ],
                   );
                 }
@@ -347,38 +309,11 @@ class _FiltersState extends State<Filters> {
           Expanded(
             child: GestureDetector(
               onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
-              child: Container(
-                color: HexColor('#5288da'),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 160.0, vertical: 15.0),
-                  child: Center(
-                    child: Text(
-                      'Apply',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                ),
-              ),
+              child: buildApplyContainer(),
             ),
           )
         ],
       ),
-    );
-  }
-
-  Center buildErrorFetchingFilters(AsyncSnapshot snapshot) {
-    return Center(
-      child: Text(snapshot.error),
-    );
-  }
-
-  Center buildLoadingFilters() {
-    return Center(
-      child: spinner(),
     );
   }
 }

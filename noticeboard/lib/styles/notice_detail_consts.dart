@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../global/global_functions.dart';
 
-var globalLightBlue = Colors.blue[200];
+var globalLightBlueColor = HexColor('#edf4ff');
 var globalWhiteColor = Colors.white;
-var globalBlue = HexColor('#5288da');
+var globalBlueColor = HexColor('#5288da');
 
 Icon shareIcon = Icon(
   Icons.share,
