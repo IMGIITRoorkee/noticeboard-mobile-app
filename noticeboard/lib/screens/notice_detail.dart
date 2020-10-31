@@ -1,9 +1,11 @@
 import 'package:noticeboard/enum/notice_content_enum.dart';
+import 'package:noticeboard/styles/bottom_nav_constants.dart';
 import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
 import '../global/global_functions.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import '../styles/notice_detail_consts.dart';
 
 class NoticeDetail extends StatefulWidget {
   final NoticeIntro noticeIntro;
@@ -40,13 +42,12 @@ class _NoticeDetailState extends State<NoticeDetail> {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[700],
+        backgroundColor: globalBlueColor,
         title: Text(
           widget.noticeIntro.department,
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      backgroundColor: Colors.white,
       body: Container(
         width: _width,
         height: _height * 0.88,
@@ -89,17 +90,9 @@ class _NoticeDetailState extends State<NoticeDetail> {
     );
   }
 
-  Container buildLoadingWidget() => Container(child: spinner());
-
-  Container buildErrorWidget(AsyncSnapshot snapshot) {
-    return Container(
-      child: Text(snapshot.error),
-    );
-  }
-
   Container buildNoticeIntro(double _width) {
     return Container(
-      color: Colors.blue[200],
+      color: globalLightBlue,
       width: _width,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -112,9 +105,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
                 )
               ],
             ),
-            SizedBox(
-              height: 5.0,
-            ),
+            sizedBox(5.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -141,10 +132,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
                         _noticeContentBloc.eventSink
                             .add(NoticeContentEvents.shareNotice);
                       },
-                      child: Icon(
-                        Icons.share,
-                        size: 30.0,
-                      ),
+                      child: shareIcon,
                     )
                   ],
                 )

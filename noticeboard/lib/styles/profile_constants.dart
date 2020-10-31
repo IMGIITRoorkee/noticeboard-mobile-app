@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:noticeboard/global/global_functions.dart';
 
 var globalWhiteColor = Colors.white;
+var globalBlue = HexColor('#5288da');
 
 TextStyle blackSuperBoldMediumSizeText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0);
@@ -23,19 +24,19 @@ Icon screenPopIcon = Icon(Icons.clear, color: Colors.black);
 
 Icon bookmarkIcon = Icon(
   Icons.collections_bookmark,
-  color: HexColor('#5288da'),
+  color: globalBlue,
 );
 Icon feedbackIcon = Icon(
   Icons.feedback,
-  color: HexColor('#5288da'),
+  color: globalBlue,
 );
 Icon notificationSettingsIcon = Icon(
   Icons.settings,
-  color: HexColor('#5288da'),
+  color: globalBlue,
 );
 Icon logoutIcon = Icon(
   Icons.exit_to_app,
-  color: HexColor('#5288da'),
+  color: globalBlue,
 );
 
 Container divider(double width) {
