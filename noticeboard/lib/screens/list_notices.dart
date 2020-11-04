@@ -10,7 +10,7 @@ import '../bloc/list_notices_bloc.dart';
 import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'filters.dart';
-import 'package:hexcolor/hexcolor.dart';
+import '../styles/list_notices_consts.dart';
 
 class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
@@ -51,6 +51,7 @@ class _ListNoticesState extends State<ListNotices> {
     if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
       _listNoticesBloc.loadMore();
     }
+    return false;
   }
 
   @override
@@ -73,11 +74,7 @@ class _ListNoticesState extends State<ListNotices> {
       elevation: 0,
       actions: [
         IconButton(
-            icon: Icon(
-              Icons.search,
-              color: HexColor('#5288da'),
-              size: 30.0,
-            ),
+            icon: searchIcon,
             onPressed: () {
               _listNoticesBloc.pushSearch();
             }),
@@ -93,14 +90,8 @@ class _ListNoticesState extends State<ListNotices> {
           },
         )
       ],
-      backgroundColor: Colors.white,
-      title: Text(
-        'Noticeboard',
-        style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: HexColor('#5288da')),
-      ),
+      backgroundColor: globalWhiteColor,
+      title: appHeading,
       automaticallyImplyLeading: false,
       leading: GestureDetector(
         onTap: () {
@@ -169,10 +160,7 @@ class _ListNoticesState extends State<ListNotices> {
                           left: 19.0, right: 19.0, top: 15.0, bottom: 15.0),
                       child: Text(
                         snapshot.data,
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700),
+                        style: appLabelTxtStyle,
                       ),
                     );
                   })
@@ -182,27 +170,16 @@ class _ListNoticesState extends State<ListNotices> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Important Notices',
-                  style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w700,
-                      color: HexColor('#444444')),
-                ),
+                impNoticesHeading,
                 StreamBuilder(
                     initialData: '...',
                     stream: _listNoticesBloc.unreadCountStream,
                     builder: (context, snapshot) {
                       return Container(
                           padding: EdgeInsets.all(5.0),
-                          color: HexColor('#d62727'),
-                          child: Text(
-                            snapshot.data + ' Unread',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12.0),
-                          ));
+                          color: noticeCardColor,
+                          child: Text(snapshot.data + ' Unread',
+                              style: unreadTxtStyle));
                     })
               ],
             ),
@@ -255,15 +232,6 @@ class _ListNoticesState extends State<ListNotices> {
         });
   }
 
-  Padding buildNoPic() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10.0, top: 4.0, bottom: 4.0),
-      child: Container(
-        child: Image.asset('assets/images/user1.jpg'),
-      ),
-    );
-  }
-
   Container buildNoticesList(
       AsyncSnapshot snapshot, double width, double height) {
     return Container(
@@ -303,9 +271,7 @@ class _ListNoticesState extends State<ListNotices> {
       menuWidth: MediaQuery.of(context).size.width * 0.50,
       blurSize: 5.0,
       menuItemExtent: 45,
-      menuBoxDecoration: BoxDecoration(
-          color: Colors.grey,
-          borderRadius: BorderRadius.all(Radius.circular(15.0))),
+      menuBoxDecoration: contextMenuDecoration,
       duration: Duration(milliseconds: 100),
       animateMenuItems: true,
       blurBackgroundColor: Colors.black54,
@@ -337,83 +303,78 @@ class _ListNoticesState extends State<ListNotices> {
                   HapticFeedback.lightImpact();
                 }),
       ],
-      child: Container(
-        color: !noticeIntroObj.read ? Colors.white : HexColor('#f2f2f2'),
-        width: width,
-        child: Padding(
-          padding: !isTop
-              ? EdgeInsets.only(left: 19.0, right: 19.0, top: 16.0)
-              : EdgeInsets.only(left: 19.0, right: 19.0, top: 5.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: width,
-                        child: Text(
-                          noticeIntroObj.department,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: HexColor('#444444'),
-                              fontWeight: FontWeight.w700),
-                        )),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Container(
-                      width: width,
-                      child: Text(noticeIntroObj.dateCreated,
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              color: HexColor('#444444'),
-                              fontWeight: FontWeight.w400),
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Container(
-                              width: width,
-                              child: Text(noticeIntroObj.title,
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w700),
-                                  softWrap: false,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis)),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: GestureDetector(
-                                onTap: () {
-                                  _listNoticesBloc.toggleBookMarkSink
-                                      .add(noticeIntroObj);
-                                },
-                                child: bookMarkIconDecider(
-                                    noticeIntroObj.starred)))
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
-                    Center(
-                      child: Container(
-                        width: width * 0.95,
-                        color: HexColor('#C4C4C4'),
-                        height: 1,
+      child: buildNoticeIntroContainer(noticeIntroObj, width, isTop),
+    );
+  }
+
+  Container buildNoticeIntroContainer(
+      NoticeIntro noticeIntroObj, double width, bool isTop) {
+    return Container(
+      color: !noticeIntroObj.read ? globalWhiteColor : noticeReadColor,
+      width: width,
+      child: Padding(
+        padding: !isTop
+            ? EdgeInsets.only(left: 19.0, right: 19.0, top: 16.0)
+            : EdgeInsets.only(left: 19.0, right: 19.0, top: 5.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: width,
+                    child: Text(noticeIntroObj.department,
+                        overflow: TextOverflow.ellipsis,
+                        style: departmentTxtStyle),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    width: width,
+                    child: Text(noticeIntroObj.dateCreated,
+                        style: dateTxtStyle, overflow: TextOverflow.ellipsis),
+                  ),
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                            width: width,
+                            child: Text(noticeIntroObj.title,
+                                style: noticeTitleTxtStyle,
+                                softWrap: false,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis)),
                       ),
-                    )
-                  ],
-                ),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: GestureDetector(
+                              onTap: () {
+                                _listNoticesBloc.toggleBookMarkSink
+                                    .add(noticeIntroObj);
+                              },
+                              child:
+                                  bookMarkIconDecider(noticeIntroObj.starred)))
+                    ],
+                  ),
+                  SizedBox(height: 16.0),
+                  Center(
+                    child: Container(
+                      width: width * 0.95,
+                      color: noticeInroGapContainerColor,
+                      height: 1,
+                    ),
+                  )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
