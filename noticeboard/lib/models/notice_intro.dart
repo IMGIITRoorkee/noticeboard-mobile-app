@@ -42,8 +42,10 @@ class ListNoticeMetaData {
   final String appBarLabel;
   final DynamicFetch dynamicFetch;
   final bool noFilters;
+  final bool isSearch;
   ListNoticeMetaData(
       {@required this.appBarLabel,
       @required this.dynamicFetch,
-      @required this.noFilters});
+      @required this.noFilters,
+      @required this.isSearch});
 }

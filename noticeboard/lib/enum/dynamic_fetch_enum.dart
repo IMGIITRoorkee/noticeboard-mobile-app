@@ -4,5 +4,6 @@ enum DynamicFetch {
   fetchPlacementNotices,
   fetchImportantNotices,
   fetchExpiredNotices,
-  fetchBookmarkedNotices
+  fetchBookmarkedNotices,
+  fetchSearchResults
 }

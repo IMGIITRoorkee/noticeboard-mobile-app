@@ -17,13 +17,15 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       listNoticeMetaData: ListNoticeMetaData(
           appBarLabel: 'Institute Notices',
           dynamicFetch: DynamicFetch.fetchInstituteNotices,
-          noFilters: false),
+          noFilters: false,
+          isSearch: false),
     ),
     ListNotices(
         listNoticeMetaData: ListNoticeMetaData(
             appBarLabel: 'Placement and Internships',
             dynamicFetch: DynamicFetch.fetchPlacementNotices,
-            noFilters: false)),
+            noFilters: false,
+            isSearch: false)),
   ];
 
   void onItemTapped(int index) {

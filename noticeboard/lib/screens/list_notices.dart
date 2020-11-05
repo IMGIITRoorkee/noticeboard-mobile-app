@@ -11,6 +11,7 @@ import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'filters.dart';
 import '../styles/list_notices_consts.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class ListNotices extends StatefulWidget {
   final ListNoticeMetaData listNoticeMetaData;
@@ -22,11 +23,14 @@ class ListNotices extends StatefulWidget {
 class _ListNoticesState extends State<ListNotices> {
   final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
   final AuthRepository _authRepository = AuthRepository();
+  TextEditingController _controller; // search
 
   @override
   void initState() {
+    _controller = TextEditingController(); // search
     _listNoticesBloc.context = context;
     _listNoticesBloc.listNoticeMetaData = widget.listNoticeMetaData;
+    _controller.addListener(_handleQueryChanges);
     _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
     _listNoticesBloc.dynamicFetchNotices();
     super.initState();
@@ -37,9 +41,18 @@ class _ListNoticesState extends State<ListNotices> {
     await Future.delayed(Duration(seconds: 1));
   }
 
+  _handleQueryChanges() {
+    _listNoticesBloc.querySink.add(_controller.text);
+  }
+
+  void clearSearch() {
+    _controller.clear();
+  }
+
   @override
   void dispose() {
     _listNoticesBloc.disposeStreams();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -62,10 +75,81 @@ class _ListNoticesState extends State<ListNotices> {
       backgroundColor: Colors.white,
       appBar: widget.listNoticeMetaData.noFilters
           ? buildNoFiltersAppBar()
-          : buildFiltersAppBar(),
+          : widget.listNoticeMetaData.isSearch
+              ? buildSearchBar(context)
+              : buildFiltersAppBar(),
       body: widget.listNoticeMetaData.noFilters
           ? buildListNoticesBox(height, width)
-          : buildAdvanceNoticesBox(height, width),
+          : widget.listNoticeMetaData.isSearch
+              ? Container()
+              : buildAdvanceNoticesBox(height, width),
+    );
+  }
+
+  PreferredSize buildSearchBar(BuildContext context) {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(65),
+      child: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.black54,
+                blurRadius: 2.0,
+                offset: Offset(0.0, 0.30))
+          ], color: Colors.white),
+          padding:
+              EdgeInsets.only(left: 10.0, right: 20.0, top: 10.0, bottom: 10.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  onSubmitted: (String val) {
+                    _listNoticesBloc.dynamicFetchNotices();
+                  },
+                  controller: _controller,
+                  keyboardType: TextInputType.name,
+                  decoration: new InputDecoration(
+                    border: InputBorder.none,
+                    suffixIcon: StreamBuilder<Object>(
+                        stream: _listNoticesBloc.isSearchingStream,
+                        initialData: false,
+                        builder: (context, snapshot) {
+                          if (snapshot.data) {
+                            return IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: HexColor('#5288da'),
+                              ),
+                              onPressed: clearSearch,
+                            );
+                          }
+                          return Icon(
+                            Icons.search,
+                            color: HexColor('#5288da'),
+                          );
+                        }),
+                    filled: true,
+                    fillColor: HexColor('#edf4ff'),
+                    hintText: 'Search all notices',
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              GestureDetector(
+                  child: Text(
+                    'Close',
+                    style:
+                        TextStyle(fontSize: 14.0, color: HexColor('#5288da')),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  })
+            ],
+          ),
+        ),
+      ),
     );
   }
 

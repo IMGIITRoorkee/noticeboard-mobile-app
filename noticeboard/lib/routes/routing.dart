@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/screens/bottom_navigation.dart';
 import 'package:noticeboard/screens/profile.dart';
-import 'package:noticeboard/screens/search_notices.dart';
 import './routing_constants.dart';
 import '../screens/login.dart';
 import '../screens/list_notices.dart';
@@ -39,9 +38,6 @@ class MyRouter {
             builder: (context) => NoticeDetail(
                   noticeIntro: noticeIntro,
                 ));
-      case searchRoute:
-        return MaterialPageRoute(builder: (context) => Search());
-        break;
     }
   }
 }

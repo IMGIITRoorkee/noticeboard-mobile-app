@@ -20,6 +20,9 @@ class ListNoticesBloc {
   bool isLoading = false;
   bool filterVisibility = false;
 
+  String searchQuery; // search
+  bool isSearching = false; // search
+
   final _eventController = StreamController<ListNoticesEvent>();
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
   Stream<ListNoticesEvent> get _eventStream => _eventController.stream;
@@ -58,9 +61,26 @@ class ListNoticesBloc {
   StreamSink<String> get _unreadCountSink => _unreadCountController.sink;
   Stream<String> get unreadCountStream => _unreadCountController.stream;
 
+  final _isSearchingController = StreamController<bool>(); // search
+  StreamSink<bool> get _isSearchingSink => _isSearchingController.sink;
+  Stream<bool> get isSearchingStream => _isSearchingController.stream;
+
+  final _queryController = StreamController<String>(); // search
+  StreamSink<String> get querySink => _queryController.sink;
+  Stream<String> get _queryStream => _queryController.stream;
+
   ListNoticesRepository _listNoticesRepository = ListNoticesRepository();
 
   ListNoticesBloc() {
+    _queryStream.listen((query) {
+      searchQuery = query;
+
+      if (searchQuery == '') {
+        disableClear();
+      } else {
+        enableClear();
+      }
+    });
     _eventStream.listen((event) async {
       if (event == ListNoticesEvent.pushProfileEvent) {
         _listNoticesRepository.pushProfileScreen(context);
@@ -105,7 +125,9 @@ class ListNoticesBloc {
 
   Future dynamicFetchNotices() async {
     updateUnreadCount();
-    if (dynamicFetch == DynamicFetch.fetchInstituteNotices)
+    if (dynamicFetch == DynamicFetch.fetchSearchResults)
+      await fetchAllSearch();
+    else if (dynamicFetch == DynamicFetch.fetchInstituteNotices)
       await fetchInstituteNotices();
     else if (dynamicFetch == DynamicFetch.fetchPlacementNotices)
       await fetchPlacementNotices();
@@ -144,6 +166,8 @@ class ListNoticesBloc {
     _filterVisibilityController.close();
     _filterActiveController.close();
     _unreadCountController.close();
+    _isSearchingController.close();
+    _queryController.close();
   }
 
   Future refreshNotices() async {
@@ -161,6 +185,12 @@ class ListNoticesBloc {
       lazyLoad = true;
       await dynamicFetchNotices();
       isLoading = false;
+    }
+  }
+
+  Future fetchAllSearch() async {
+    if (searchQuery != '') {
+      print(searchQuery);
     }
   }
 
@@ -272,6 +302,22 @@ class ListNoticesBloc {
   }
 
   void pushSearch() {
-    Navigator.pushNamed(context, searchRoute);
+    ListNoticeMetaData listNoticeMetaData = ListNoticeMetaData(
+        appBarLabel: '',
+        dynamicFetch: DynamicFetch.fetchSearchResults,
+        noFilters: false,
+        isSearch: true);
+    Navigator.pushNamed(context, listNoticesRoute,
+        arguments: listNoticeMetaData);
+  }
+
+  void enableClear() {
+    isSearching = true;
+    _isSearchingSink.add(isSearching);
+  }
+
+  void disableClear() {
+    isSearching = false;
+    _isSearchingSink.add(isSearching);
   }
 }
