@@ -124,7 +124,8 @@ class ListNoticesBloc {
   }
 
   Future dynamicFetchNotices() async {
-    updateUnreadCount();
+    if (!listNoticeMetaData.isSearch && !listNoticeMetaData.noFilters)
+      updateUnreadCount();
     if (dynamicFetch == DynamicFetch.fetchSearchResults)
       await fetchAllSearch();
     else if (dynamicFetch == DynamicFetch.fetchInstituteNotices)

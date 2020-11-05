@@ -290,6 +290,7 @@ class _ListNoticesState extends State<ListNotices> {
                 } else if (snapshot.hasError) {
                   return buildErrorWidget(snapshot);
                 }
+                if (widget.listNoticeMetaData.isSearch) return Container();
                 return buildShimmerList(context, 3); //buildLoading();
               },
             ),
