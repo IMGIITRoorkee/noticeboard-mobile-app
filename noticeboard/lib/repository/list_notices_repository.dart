@@ -81,4 +81,10 @@ class ListNoticesRepository {
     String unreadCount = await _apiService.fetchImpUnreadCount();
     return unreadCount;
   }
+
+  Future<PaginatedInfo> fetchAllSearchResults(int page, String keyword) async {
+    PaginatedInfo allSearchNotices =
+        await _apiService.fetchSearchResultsAll(page, keyword);
+    return allSearchNotices;
+  }
 }

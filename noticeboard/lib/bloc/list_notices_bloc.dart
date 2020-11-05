@@ -20,7 +20,7 @@ class ListNoticesBloc {
   bool isLoading = false;
   bool filterVisibility = false;
 
-  String searchQuery; // search
+  String searchQuery = ''; // search
   bool isSearching = false; // search
 
   final _eventController = StreamController<ListNoticesEvent>();
@@ -156,6 +156,14 @@ class ListNoticesBloc {
         .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
   }
 
+  Future searchHandler() async {
+    page = 1;
+    hasMore = true;
+    lazyLoad = false;
+    isLoading = false;
+    await fetchAllSearch();
+  }
+
   void disposeStreams() {
     _eventController.close();
     _listNoticesController.close();
@@ -190,7 +198,14 @@ class ListNoticesBloc {
 
   Future fetchAllSearch() async {
     if (searchQuery != '') {
-      print(searchQuery);
+      try {
+        PaginatedInfo paginatedInfo = await _listNoticesRepository
+            .fetchAllSearchResults(page, searchQuery);
+        List<NoticeIntro> allSearchResults = paginatedInfo.list;
+        handleAfterFetch(paginatedInfo.hasMore, allSearchResults);
+      } catch (e) {
+        _listNoticesSink.addError(e.message.toString());
+      }
     }
   }
 

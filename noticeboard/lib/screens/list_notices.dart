@@ -81,7 +81,7 @@ class _ListNoticesState extends State<ListNotices> {
       body: widget.listNoticeMetaData.noFilters
           ? buildListNoticesBox(height, width)
           : widget.listNoticeMetaData.isSearch
-              ? Container()
+              ? buildListNoticesBox(height, width)
               : buildAdvanceNoticesBox(height, width),
     );
   }
@@ -91,6 +91,7 @@ class _ListNoticesState extends State<ListNotices> {
       preferredSize: Size.fromHeight(65),
       child: SafeArea(
         child: Container(
+          margin: EdgeInsets.only(bottom: 5.0),
           decoration: BoxDecoration(boxShadow: <BoxShadow>[
             BoxShadow(
                 color: Colors.black54,
@@ -104,7 +105,8 @@ class _ListNoticesState extends State<ListNotices> {
               Expanded(
                 child: TextField(
                   onSubmitted: (String val) {
-                    _listNoticesBloc.dynamicFetchNotices();
+                    print('called');
+                    _listNoticesBloc.searchHandler();
                   },
                   controller: _controller,
                   keyboardType: TextInputType.name,
@@ -234,7 +236,8 @@ class _ListNoticesState extends State<ListNotices> {
       onRefresh: refreshNotices,
       child: ListView(
         children: [
-          !widget.listNoticeMetaData.noFilters
+          !widget.listNoticeMetaData.noFilters &&
+                  !widget.listNoticeMetaData.isSearch
               ? StreamBuilder(
                   initialData: widget.listNoticeMetaData.appBarLabel,
                   stream: _listNoticesBloc.appBarLabelStream,
@@ -249,29 +252,34 @@ class _ListNoticesState extends State<ListNotices> {
                     );
                   })
               : Container(),
+          !widget.listNoticeMetaData.noFilters &&
+                  !widget.listNoticeMetaData.isSearch
+              ? Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 19.0, vertical: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      impNoticesHeading,
+                      StreamBuilder(
+                          initialData: '...',
+                          stream: _listNoticesBloc.unreadCountStream,
+                          builder: (context, snapshot) {
+                            return Container(
+                                padding: EdgeInsets.all(5.0),
+                                color: noticeCardColor,
+                                child: Text(snapshot.data + ' Unread',
+                                    style: unreadTxtStyle));
+                          })
+                    ],
+                  ),
+                )
+              : Container(),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 19.0, vertical: 15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                impNoticesHeading,
-                StreamBuilder(
-                    initialData: '...',
-                    stream: _listNoticesBloc.unreadCountStream,
-                    builder: (context, snapshot) {
-                      return Container(
-                          padding: EdgeInsets.all(5.0),
-                          color: noticeCardColor,
-                          child: Text(snapshot.data + ' Unread',
-                              style: unreadTxtStyle));
-                    })
-              ],
-            ),
-          ),
-          Container(
-            height: !widget.listNoticeMetaData.noFilters
+            height: !widget.listNoticeMetaData.noFilters &&
+                    !widget.listNoticeMetaData.isSearch
                 ? height * 0.661
-                : height * 0.798,
+                : height * 0.85,
             width: width,
             child: StreamBuilder(
               stream: _listNoticesBloc.listNoticesStream,
