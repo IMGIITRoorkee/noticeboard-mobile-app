@@ -147,6 +147,34 @@ Widget buildFilterActive(bool filterActive) {
   );
 }
 
+Widget buildSearchFilterActive(bool filterActive) {
+  if (filterActive) {
+    return Container(
+      child: Stack(
+        children: [
+          Icon(
+            Icons.filter_list,
+            color: HexColor('#5288da'),
+            size: 30.0,
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: CircleAvatar(
+              radius: 6.0,
+              backgroundColor: Colors.red,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+  return Icon(
+    Icons.filter_list,
+    color: HexColor('#5288da'),
+    size: 30.0,
+  );
+}
+
 Center buildNoResults() {
   return Center(
     child: Text('No Notices'),

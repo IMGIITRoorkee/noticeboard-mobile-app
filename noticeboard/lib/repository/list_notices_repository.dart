@@ -52,6 +52,13 @@ class ListNoticesRepository {
     return filteredNotices;
   }
 
+  Future<PaginatedInfo> fetchSearchFilteredNotices(
+      String endpoint, int page, String keyword) async {
+    PaginatedInfo searchFilteredNotices =
+        await _apiService.fetchSearchFilteredResults(endpoint, page, keyword);
+    return searchFilteredNotices;
+  }
+
   Future bookmarkNotice(var obj, BuildContext context) async {
     try {
       await _apiService.markUnmarkNotice(obj);

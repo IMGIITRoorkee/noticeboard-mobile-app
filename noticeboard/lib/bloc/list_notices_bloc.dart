@@ -128,6 +128,8 @@ class ListNoticesBloc {
       updateUnreadCount();
     if (dynamicFetch == DynamicFetch.fetchSearchResults)
       await fetchAllSearch();
+    else if (dynamicFetch == DynamicFetch.fetchSearchFilteredResults)
+      await fetchFilteredSearch();
     else if (dynamicFetch == DynamicFetch.fetchInstituteNotices)
       await fetchInstituteNotices();
     else if (dynamicFetch == DynamicFetch.fetchPlacementNotices)
@@ -157,12 +159,12 @@ class ListNoticesBloc {
         .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
   }
 
-  Future searchHandler() async {
+  void searchHandler() async {
     page = 1;
     hasMore = true;
     lazyLoad = false;
     isLoading = false;
-    await fetchAllSearch();
+    dynamicFetchNotices();
   }
 
   void disposeStreams() {
@@ -204,6 +206,20 @@ class ListNoticesBloc {
             .fetchAllSearchResults(page, searchQuery);
         List<NoticeIntro> allSearchResults = paginatedInfo.list;
         handleAfterFetch(paginatedInfo.hasMore, allSearchResults);
+      } catch (e) {
+        _listNoticesSink.addError(e.message.toString());
+      }
+    }
+  }
+
+  Future fetchFilteredSearch() async {
+    if (searchQuery != '') {
+      try {
+        PaginatedInfo paginatedInfo =
+            await _listNoticesRepository.fetchSearchFilteredNotices(
+                filterResult.endpoint, page, searchQuery);
+        List<NoticeIntro> allSearchFilteredNotices = paginatedInfo.list;
+        handleAfterFetch(paginatedInfo.hasMore, allSearchFilteredNotices);
       } catch (e) {
         _listNoticesSink.addError(e.message.toString());
       }
@@ -284,6 +300,26 @@ class ListNoticesBloc {
     } catch (e) {
       _listNoticesSink.addError(e.message.toString());
     }
+  }
+
+  void applySearchFilters(FilterResult value) async {
+    page = 1;
+    hasMore = true;
+    lazyLoad = false;
+    isLoading = false;
+    toggleVisibility();
+    if (value != null) {
+      filterResult = value;
+      dynamicFetch = DynamicFetch.fetchSearchFilteredResults;
+      dynamicFetchNotices();
+    } else {
+      dynamicFetch = listNoticeMetaData.dynamicFetch;
+      dynamicFetchNotices();
+    }
+    if (dynamicFetch == DynamicFetch.fetchSearchFilteredResults)
+      _filterActiveSink.add(true);
+    else
+      _filterActiveSink.add(false);
   }
 
   void applyFilters(FilterResult value) async {

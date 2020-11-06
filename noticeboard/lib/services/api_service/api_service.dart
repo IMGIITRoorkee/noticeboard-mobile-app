@@ -66,6 +66,38 @@ class ApiService {
     }
   }
 
+  Future<PaginatedInfo> fetchSearchFilteredResults(
+      String endpoint, int page, String keyword) async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await _authService.fetchAccessToken();
+      final http.Response allSearchFilteredResponse = await http.get(
+          BASE_URL +
+              endpoint +
+              '&page=${page.toString()}' +
+              '&keyword=$keyword',
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+          });
+      if (allSearchFilteredResponse.statusCode == 200) {
+        final body = jsonDecode(allSearchFilteredResponse.body);
+
+        bool hasMore = body['next'] == null ? false : true;
+
+        Iterable list = body['results'];
+        //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
+        list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
+
+        return PaginatedInfo(list: list, hasMore: hasMore);
+      } else {
+        throw Exception('Failed to load search filtered results');
+      }
+    } catch (e) {
+      throw Exception('Failed to load search filtered results');
+    }
+  }
+
   Future<PaginatedInfo> fetchImportantNotices(int page) async {
     try {
       AccessToken accessTokenObj =

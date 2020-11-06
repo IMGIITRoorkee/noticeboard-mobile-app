@@ -72,6 +72,7 @@ class _ListNoticesState extends State<ListNotices> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: widget.listNoticeMetaData.noFilters
           ? buildNoFiltersAppBar()
@@ -80,9 +81,7 @@ class _ListNoticesState extends State<ListNotices> {
               : buildFiltersAppBar(),
       body: widget.listNoticeMetaData.noFilters
           ? buildListNoticesBox(height, width)
-          : widget.listNoticeMetaData.isSearch
-              ? buildListNoticesBox(height, width)
-              : buildAdvanceNoticesBox(height, width),
+          : buildAdvanceNoticesBox(height, width),
     );
   }
 
@@ -98,14 +97,21 @@ class _ListNoticesState extends State<ListNotices> {
                 blurRadius: 2.0,
                 offset: Offset(0.0, 0.30))
           ], color: Colors.white),
-          padding:
-              EdgeInsets.only(left: 10.0, right: 20.0, top: 10.0, bottom: 10.0),
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
               Expanded(
                 child: TextField(
                   onSubmitted: (String val) {
-                    print('called');
                     _listNoticesBloc.searchHandler();
                   },
                   controller: _controller,
@@ -139,15 +145,17 @@ class _ListNoticesState extends State<ListNotices> {
               SizedBox(
                 width: 10.0,
               ),
-              GestureDetector(
-                  child: Text(
-                    'Close',
-                    style:
-                        TextStyle(fontSize: 14.0, color: HexColor('#5288da')),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  })
+              IconButton(
+                icon: StreamBuilder(
+                    stream: _listNoticesBloc.filterActiveStream,
+                    initialData: false,
+                    builder: (context, snapshot) {
+                      return buildSearchFilterActive(snapshot.data);
+                    }),
+                onPressed: () {
+                  _listNoticesBloc.toggleVisibility();
+                },
+              )
             ],
           ),
         ),
@@ -212,17 +220,26 @@ class _ListNoticesState extends State<ListNotices> {
                   visible: snapshot.data,
                   maintainState: true,
                   child: Container(
-                      height: height * 0.801,
+                      height: !widget.listNoticeMetaData.noFilters &&
+                              !widget.listNoticeMetaData.isSearch
+                          ? height * 0.801
+                          : height * 0.85,
                       child: Filters(
-                        onApplyFilters: (FilterResult filterResult) =>
-                            _listNoticesBloc.applyFilters(filterResult),
+                        onApplyFilters: !widget.listNoticeMetaData.isSearch
+                            ? (FilterResult filterResult) =>
+                                _listNoticesBloc.applyFilters(filterResult)
+                            : (FilterResult filterResult) => _listNoticesBloc
+                                .applySearchFilters(filterResult),
                         onCancel: _listNoticesBloc.toggleVisibility,
                       ))),
               Visibility(
                 visible: !snapshot.data,
                 maintainState: true,
                 child: Container(
-                  height: height * 0.801,
+                  height: !widget.listNoticeMetaData.noFilters &&
+                          !widget.listNoticeMetaData.isSearch
+                      ? height * 0.801
+                      : height * 0.85,
                   child: buildListNoticesBox(height, width),
                 ),
               ),
