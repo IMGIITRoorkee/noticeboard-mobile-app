@@ -271,29 +271,39 @@ class _ListNoticesState extends State<ListNotices> {
               : Container(),
           !widget.listNoticeMetaData.noFilters &&
                   !widget.listNoticeMetaData.isSearch
-              ? Container(
-                  margin: EdgeInsets.symmetric(horizontal: 19.0),
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      impNoticesHeading,
-                      StreamBuilder(
-                          stream: _listNoticesBloc.unreadCountStream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data == '0') return Container();
-                              return Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  color: noticeCardColor,
-                                  child: Text(snapshot.data + ' Unread',
-                                      style: unreadTxtStyle));
-                            }
-                            return Container();
-                          })
-                    ],
-                  ),
-                )
+              ? StreamBuilder(
+                  stream: _listNoticesBloc.unreadCountStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data == '0') return Container();
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 19.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                impNoticesHeading,
+                                Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    color: noticeCardColor,
+                                    child: Text(snapshot.data + ' Unread',
+                                        style: unreadTxtStyle))
+                              ],
+                            ),
+                            SizedBox(height: 20.0),
+                            Container(
+                              width: width * 0.95,
+                              color: noticeInroGapContainerColor,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  })
               : Container(),
           Container(
             height: !widget.listNoticeMetaData.noFilters &&
@@ -356,6 +366,7 @@ class _ListNoticesState extends State<ListNotices> {
       AsyncSnapshot snapshot, double width, double height) {
     return Container(
       width: width,
+      height: height,
       child: RefreshIndicator(
         onRefresh: refreshNotices,
         child: NotificationListener<ScrollNotification>(

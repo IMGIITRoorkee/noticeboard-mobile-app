@@ -62,7 +62,6 @@ class _FiltersState extends State<Filters> {
       ),
       body: Container(
         width: _width,
-        height: _height * 0.9,
         child: StreamBuilder(
           stream: _filtersBloc.categoryStream,
           builder: (context, snapshot) {
