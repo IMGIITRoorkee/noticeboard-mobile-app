@@ -31,7 +31,7 @@ Container buildShimmerList(BuildContext context, int notices) {
         itemCount: notices,
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
-            baseColor: Colors.grey[400],
+            baseColor: Colors.grey[300],
             highlightColor: Colors.grey[200],
             child: Padding(
               padding:

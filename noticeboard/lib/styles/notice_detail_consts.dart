@@ -8,7 +8,7 @@ var globalBlueColor = HexColor('#5288da');
 
 Icon shareIcon = Icon(
   Icons.share,
-  size: 30.0,
+  size: 25.0,
 );
 
 Container buildErrorContainer(AsyncSnapshot snapshot) {

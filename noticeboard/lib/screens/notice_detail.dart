@@ -41,10 +41,13 @@ class _NoticeDetailState extends State<NoticeDetail> {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 30.0,
         backgroundColor: globalBlueColor,
+        centerTitle: false,
         title: Text(
           widget.noticeIntro.department,
           overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
         ),
       ),
       body: Container(
