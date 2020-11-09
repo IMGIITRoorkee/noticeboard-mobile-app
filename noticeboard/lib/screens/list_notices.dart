@@ -272,21 +272,24 @@ class _ListNoticesState extends State<ListNotices> {
           !widget.listNoticeMetaData.noFilters &&
                   !widget.listNoticeMetaData.isSearch
               ? Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 19.0, vertical: 15.0),
+                  margin: EdgeInsets.symmetric(horizontal: 19.0),
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       impNoticesHeading,
                       StreamBuilder(
-                          initialData: '...',
                           stream: _listNoticesBloc.unreadCountStream,
                           builder: (context, snapshot) {
-                            return Container(
-                                padding: EdgeInsets.all(5.0),
-                                color: noticeCardColor,
-                                child: Text(snapshot.data + ' Unread',
-                                    style: unreadTxtStyle));
+                            if (snapshot.hasData) {
+                              if (snapshot.data == '0') return Container();
+                              return Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  color: noticeCardColor,
+                                  child: Text(snapshot.data + ' Unread',
+                                      style: unreadTxtStyle));
+                            }
+                            return Container();
                           })
                     ],
                   ),
