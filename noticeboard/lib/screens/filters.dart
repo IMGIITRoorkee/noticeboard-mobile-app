@@ -33,10 +33,10 @@ class _FiltersState extends State<Filters> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
-        child: Container(
+    return Container(
+      height: _height * 0.801,
+      child: Column(children: [
+        Container(
           color: Colors.white,
           child: Row(
             children: [
@@ -59,22 +59,24 @@ class _FiltersState extends State<Filters> {
             ],
           ),
         ),
-      ),
-      body: Container(
-        width: _width,
-        child: StreamBuilder(
-          stream: _filtersBloc.categoryStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              Category category = snapshot.data;
-              return buildFilters(_width, _height, category);
-            } else if (snapshot.hasError) {
-              return buildErrorFetchingFilters(snapshot);
-            }
-            return buildLoadingFilters();
-          },
+        Expanded(
+          child: Container(
+            width: _width,
+            child: StreamBuilder(
+              stream: _filtersBloc.categoryStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  Category category = snapshot.data;
+                  return buildFilters(_width, _height, category);
+                } else if (snapshot.hasError) {
+                  return buildErrorFetchingFilters(snapshot);
+                }
+                return buildLoadingFilters();
+              },
+            ),
+          ),
         ),
-      ),
+      ]),
     );
   }
 
