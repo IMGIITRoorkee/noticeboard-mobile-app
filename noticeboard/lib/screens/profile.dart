@@ -61,9 +61,17 @@ class _ProfileState extends State<Profile> {
                                 Container(
                                   width: 100.0,
                                   height: 100.0,
-                                  child: FadeInImage.assetNetwork(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    child: FadeInImage.assetNetwork(
                                       placeholder: 'assets/images/user1.jpg',
-                                      image: snapshot.data.picUrl),
+                                      image: snapshot.data.picUrl,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
                                 ),
                                 sizedBox(10.0),
                                 noOverFlowTextContainer(
@@ -121,7 +129,9 @@ class _ProfileState extends State<Profile> {
       child: Row(
         children: [
           icon,
-          sizedBox(15.0),
+          SizedBox(
+            width: 15.0,
+          ),
           Text(
             text,
             style: boldMediumGreyMediumSizeText,
