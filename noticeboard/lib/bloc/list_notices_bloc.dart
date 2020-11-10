@@ -112,21 +112,31 @@ class ListNoticesBloc {
 
     _toggleBookMarkStream.listen((object) async {
       if (object.starred) {
+        object.starred = false;
+        updateUi(object);
         var obj = {
           "keyword": "unstar",
           "notices": [object.id]
         };
-        await _listNoticesRepository.unbookmarkNotice(obj, context);
-        object.starred = false;
-        updateUi(object);
+        try {
+          await _listNoticesRepository.unbookmarkNotice(obj, context);
+        } catch (e) {
+          object.starred = true;
+          updateUi(object);
+        }
       } else {
+        object.starred = true;
+        updateUi(object);
         var obj = {
           "keyword": "star",
           "notices": [object.id]
         };
-        await _listNoticesRepository.bookmarkNotice(obj, context);
-        object.starred = true;
-        updateUi(object);
+        try {
+          await _listNoticesRepository.bookmarkNotice(obj, context);
+        } catch (e) {
+          object.starred = false;
+          updateUi(object);
+        }
       }
     });
   }

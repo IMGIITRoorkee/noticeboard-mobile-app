@@ -70,6 +70,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
   Expanded buildNoticeContent(double width) {
     return Expanded(
       child: Container(
+        color: Colors.white,
         width: width,
         child: Center(
           child: StreamBuilder(

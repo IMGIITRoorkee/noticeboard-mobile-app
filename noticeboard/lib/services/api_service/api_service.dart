@@ -260,7 +260,7 @@ class ApiService {
         throw Exception('Failure');
       }
     } catch (e) {
-      //throw Exception('Failure');
+      throw Exception('Failure');
     }
   }
 

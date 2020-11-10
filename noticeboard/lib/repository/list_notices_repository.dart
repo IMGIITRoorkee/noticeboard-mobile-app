@@ -60,22 +60,11 @@ class ListNoticesRepository {
   }
 
   Future bookmarkNotice(var obj, BuildContext context) async {
-    try {
-      await _apiService.markUnmarkNotice(obj);
-
-      //    showMyFlushBar(context, 'Notice marked', true);
-    } catch (e) {
-      //    showMyFlushBar(context, 'Failure marking', false);
-    }
+    await _apiService.markUnmarkNotice(obj);
   }
 
   Future unbookmarkNotice(var obj, BuildContext context) async {
-    try {
-      await _apiService.markUnmarkNotice(obj);
-      //   showMyFlushBar(context, 'Notice unmarked', true);
-    } catch (e) {
-      //  showMyFlushBar(context, 'Failure unmarking', false);
-    }
+    await _apiService.markUnmarkNotice(obj);
   }
 
   Future markReadUnreadNotice(var obj) async {
