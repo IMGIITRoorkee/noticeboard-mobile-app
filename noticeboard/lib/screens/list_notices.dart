@@ -454,34 +454,30 @@ class _ListNoticesState extends State<ListNotices> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: width,
-                    child: Text(noticeIntroObj.department,
-                        overflow: TextOverflow.ellipsis,
-                        style: departmentTxtStyle),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Container(
-                    width: width,
-                    child: Text(noticeIntroObj.dateCreated,
-                        style: dateTxtStyle, overflow: TextOverflow.ellipsis),
-                  ),
-                  SizedBox(
-                    height: 16.0,
-                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Container(
-                            width: width,
-                            child: Text(noticeIntroObj.title,
-                                style: noticeTitleTxtStyle,
-                                softWrap: false,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: width,
+                              child: Text(noticeIntroObj.department,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: departmentTxtStyle),
+                            ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Container(
+                              width: width,
+                              child: Text(noticeIntroObj.dateCreated,
+                                  style: dateTxtStyle,
+                                  overflow: TextOverflow.ellipsis),
+                            )
+                          ],
+                        ),
                       ),
                       Padding(
                           padding: const EdgeInsets.only(left: 10.0),
@@ -494,6 +490,16 @@ class _ListNoticesState extends State<ListNotices> {
                                   bookMarkIconDecider(noticeIntroObj.starred)))
                     ],
                   ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                      width: width,
+                      child: Text(noticeIntroObj.title,
+                          style: noticeTitleTxtStyle,
+                          softWrap: false,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis)),
                   SizedBox(height: 16.0),
                   Center(
                     child: Container(
