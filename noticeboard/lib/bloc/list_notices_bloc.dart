@@ -92,8 +92,11 @@ class ListNoticesBloc {
         "keyword": "read",
         "notices": [object.id]
       };
+
       await _listNoticesRepository.markReadUnreadNotice(obj);
-      refreshNotices();
+
+      object.read = true;
+      updateUi(object);
     });
 
     _markUnreadStream.listen((object) async {
@@ -102,7 +105,9 @@ class ListNoticesBloc {
         "notices": [object.id]
       };
       await _listNoticesRepository.markReadUnreadNotice(obj);
-      refreshNotices();
+
+      object.read = false;
+      updateUi(object);
     });
 
     _toggleBookMarkStream.listen((object) async {
@@ -112,14 +117,17 @@ class ListNoticesBloc {
           "notices": [object.id]
         };
         await _listNoticesRepository.unbookmarkNotice(obj, context);
+        object.starred = false;
+        updateUi(object);
       } else {
         var obj = {
           "keyword": "star",
           "notices": [object.id]
         };
         await _listNoticesRepository.bookmarkNotice(obj, context);
+        object.starred = true;
+        updateUi(object);
       }
-      refreshNotices();
     });
   }
 
@@ -145,7 +153,9 @@ class ListNoticesBloc {
   }
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
-    Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro);
+    if (!noticeIntro.read) markReadSink.add(noticeIntro);
+    Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro)
+        .then((value) => updateUi(value));
   }
 
   void handleAfterFetch(bool doesItHasMore, List<NoticeIntro> list) {
@@ -371,5 +381,12 @@ class ListNoticesBloc {
   void disableClear() {
     isSearching = false;
     _isSearchingSink.add(isSearching);
+  }
+
+  void updateUi(NoticeIntro object) {
+    dynamicNoticeList[dynamicNoticeList
+        .indexWhere((noticeIntro) => noticeIntro.id == object.id)] = object;
+    _listNoticesSink
+        .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
   }
 }

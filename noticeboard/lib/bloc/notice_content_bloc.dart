@@ -34,13 +34,6 @@ class NoticeContentBloc {
           NoticeContent noticeContent =
               await noticeContentRepository.fetchNoticeContent(noticeIntro.id);
           _contentSink.add(noticeContent);
-          if (!noticeIntro.read) {
-            var obj = {
-              "keyword": "read",
-              "notices": [noticeIntro.id]
-            };
-            await noticeContentRepository.readNotice(obj);
-          }
         } catch (e) {
           if (!_noticeContentController.isClosed)
             _contentSink.addError(e.message.toString());
@@ -55,9 +48,10 @@ class NoticeContentBloc {
             await noticeContentRepository.unbookmarkNotice(obj);
             starred = !starred;
             _starSink.add(starred);
-            showMyFlushBar(context, 'Notice unmarked', true);
+            noticeIntro.starred = false;
+            //  showMyFlushBar(context, 'Notice unmarked', true);
           } catch (e) {
-            showMyFlushBar(context, 'Failure unmarking', false);
+            //  showMyFlushBar(context, 'Failure unmarking', false);
           }
         } else {
           var obj = {
@@ -68,9 +62,10 @@ class NoticeContentBloc {
             await noticeContentRepository.bookmarkNotice(obj);
             starred = !starred;
             _starSink.add(starred);
-            showMyFlushBar(context, 'Notice marked', true);
+            noticeIntro.starred = true;
+            //  showMyFlushBar(context, 'Notice marked', true);
           } catch (e) {
-            showMyFlushBar(context, 'Failure marking', false);
+            // showMyFlushBar(context, 'Failure marking', false);
           }
         }
       } else if (event == NoticeContentEvents.shareNotice) {

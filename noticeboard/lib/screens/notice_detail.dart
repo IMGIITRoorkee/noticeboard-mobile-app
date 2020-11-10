@@ -51,11 +51,17 @@ class _NoticeDetailState extends State<NoticeDetail> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
         ),
       ),
-      body: Container(
-        width: _width,
-        height: _height * 0.88,
-        child: Column(
-          children: [buildNoticeIntro(_width), buildNoticeContent(_width)],
+      body: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, _noticeContentBloc.noticeIntro);
+          return false;
+        },
+        child: Container(
+          width: _width,
+          height: _height * 0.88,
+          child: Column(
+            children: [buildNoticeIntro(_width), buildNoticeContent(_width)],
+          ),
         ),
       ),
     );

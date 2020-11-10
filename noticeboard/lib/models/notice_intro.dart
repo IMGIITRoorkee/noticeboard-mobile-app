@@ -7,8 +7,8 @@ class NoticeIntro {
   final String title;
   final String dateCreated;
   final String department;
-  final bool read;
-  final bool starred;
+  bool read;
+  bool starred;
 
   NoticeIntro({
     this.id,
