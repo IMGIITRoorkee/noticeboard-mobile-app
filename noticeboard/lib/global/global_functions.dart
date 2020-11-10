@@ -68,10 +68,11 @@ Container buildShimmerList(BuildContext context, int notices) {
   );
 }
 
-SpinKitFadingCube spinner() {
-  return SpinKitFadingCube(
+SpinKitChasingDots spinner() {
+  return SpinKitChasingDots(
+    duration: Duration(milliseconds: 1000),
     color: Colors.blue[900],
-    size: 40.0,
+    size: 35.0,
   );
 }
 
@@ -177,9 +178,15 @@ Widget buildSearchFilterActive(bool filterActive) {
 
 Center buildNoResults() {
   return Center(
-    child: Text('No Notices'),
+    child: Container(
+        width: 250.0,
+        height: 250.0,
+        child: Image.asset('assets/images/no_notices.png')),
   );
 }
 
-Center buildErrorWidget(AsyncSnapshot snapshot) =>
-    Center(child: Text(snapshot.error));
+Center buildErrorWidget(AsyncSnapshot snapshot) => Center(
+    child: Container(
+        width: 250.0,
+        height: 250.0,
+        child: Image.asset('assets/images/error.png')));

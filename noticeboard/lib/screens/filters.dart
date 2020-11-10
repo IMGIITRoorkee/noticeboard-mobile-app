@@ -34,7 +34,6 @@ class _FiltersState extends State<Filters> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Container(
-      height: _height * 0.801,
       child: Column(children: [
         Container(
           color: Colors.white,
