@@ -88,26 +88,34 @@ class ListNoticesBloc {
     });
 
     _markReadStream.listen((object) async {
+      object.read = true;
+      updateUi(object);
       var obj = {
         "keyword": "read",
         "notices": [object.id]
       };
-
-      await _listNoticesRepository.markReadUnreadNotice(obj);
-
-      object.read = true;
-      updateUi(object);
+      try {
+        await _listNoticesRepository.markReadUnreadNotice(obj);
+      } catch (e) {
+        object.read = false;
+        updateUi(object);
+      }
     });
 
     _markUnreadStream.listen((object) async {
+      object.read = false;
+      updateUi(object);
       var obj = {
         "keyword": "unread",
         "notices": [object.id]
       };
-      await _listNoticesRepository.markReadUnreadNotice(obj);
 
-      object.read = false;
-      updateUi(object);
+      try {
+        await _listNoticesRepository.markReadUnreadNotice(obj);
+      } catch (e) {
+        object.read = true;
+        updateUi(object);
+      }
     });
 
     _toggleBookMarkStream.listen((object) async {
