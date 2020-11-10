@@ -93,7 +93,7 @@ class ListNoticesBloc {
         "notices": [object.id]
       };
       await _listNoticesRepository.markReadUnreadNotice(obj);
-      dynamicFetchNotices();
+      refreshNotices();
     });
 
     _markUnreadStream.listen((object) async {
@@ -102,7 +102,7 @@ class ListNoticesBloc {
         "notices": [object.id]
       };
       await _listNoticesRepository.markReadUnreadNotice(obj);
-      dynamicFetchNotices();
+      refreshNotices();
     });
 
     _toggleBookMarkStream.listen((object) async {
@@ -119,7 +119,7 @@ class ListNoticesBloc {
         };
         await _listNoticesRepository.bookmarkNotice(obj, context);
       }
-      dynamicFetchNotices();
+      refreshNotices();
     });
   }
 
@@ -186,7 +186,7 @@ class ListNoticesBloc {
     hasMore = true;
     lazyLoad = false;
     isLoading = false;
-    dynamicFetchNotices();
+    await dynamicFetchNotices();
   }
 
   Future loadMore() async {

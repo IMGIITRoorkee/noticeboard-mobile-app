@@ -79,9 +79,14 @@ class _ListNoticesState extends State<ListNotices> {
           : widget.listNoticeMetaData.isSearch
               ? buildSearchBar(context)
               : buildFiltersAppBar(),
-      body: widget.listNoticeMetaData.noFilters
-          ? buildListNoticesBox(height, width)
-          : buildAdvanceNoticesBox(height, width),
+      body: RefreshIndicator(
+        onRefresh: refreshNotices,
+        child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: widget.listNoticeMetaData.noFilters
+                ? buildListNoticesBox(height, width)
+                : buildAdvanceNoticesBox(height, width)),
+      ),
     );
   }
 
@@ -103,7 +108,7 @@ class _ListNoticesState extends State<ListNotices> {
             children: [
               IconButton(
                   icon: Icon(
-                    Icons.clear,
+                    Icons.arrow_back,
                     color: Colors.black,
                   ),
                   onPressed: () {
@@ -245,88 +250,83 @@ class _ListNoticesState extends State<ListNotices> {
         });
   }
 
-  RefreshIndicator buildListNoticesBox(double height, double width) {
-    return RefreshIndicator(
-      onRefresh: refreshNotices,
-      child: Container(
-        height: height * 0.801,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            !widget.listNoticeMetaData.noFilters &&
-                    !widget.listNoticeMetaData.isSearch
-                ? StreamBuilder(
-                    initialData: widget.listNoticeMetaData.appBarLabel,
-                    stream: _listNoticesBloc.appBarLabelStream,
-                    builder: (context, snapshot) {
-                      return Container(
-                        padding: EdgeInsets.only(
-                            left: 19.0, right: 19.0, top: 15.0, bottom: 15.0),
-                        child: Text(
-                          snapshot.data,
-                          style: appLabelTxtStyle,
-                        ),
-                      );
-                    })
-                : Container(),
-            !widget.listNoticeMetaData.noFilters &&
-                    !widget.listNoticeMetaData.isSearch
-                ? StreamBuilder(
-                    stream: _listNoticesBloc.unreadCountStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data == '0') return Container();
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 19.0),
-                          padding: EdgeInsets.symmetric(vertical: 15.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  impNoticesHeading,
-                                  Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      color: noticeCardColor,
-                                      child: Text(snapshot.data + ' Unread',
-                                          style: unreadTxtStyle))
-                                ],
-                              ),
-                              SizedBox(height: 20.0),
-                              Container(
-                                width: width * 0.95,
-                                color: noticeInroGapContainerColor,
-                                height: 1,
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                      return Container();
-                    })
-                : Container(),
-            Expanded(
-              child: Container(
-                width: width,
-                child: StreamBuilder(
-                  stream: _listNoticesBloc.listNoticesStream,
+  Container buildListNoticesBox(double height, double width) {
+    return Container(
+      height: height * 0.801,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          !widget.listNoticeMetaData.noFilters &&
+                  !widget.listNoticeMetaData.isSearch
+              ? StreamBuilder(
+                  initialData: widget.listNoticeMetaData.appBarLabel,
+                  stream: _listNoticesBloc.appBarLabelStream,
+                  builder: (context, snapshot) {
+                    return Container(
+                      padding: EdgeInsets.only(
+                          left: 19.0, right: 19.0, top: 15.0, bottom: 15.0),
+                      child: Text(
+                        snapshot.data,
+                        style: appLabelTxtStyle,
+                      ),
+                    );
+                  })
+              : Container(),
+          !widget.listNoticeMetaData.noFilters &&
+                  !widget.listNoticeMetaData.isSearch
+              ? StreamBuilder(
+                  stream: _listNoticesBloc.unreadCountStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data.list.length == 0)
-                        return buildNoResults();
-                      return buildNoticesList(snapshot, width, height);
-                    } else if (snapshot.hasError) {
-                      return buildErrorWidget(snapshot);
+                      if (snapshot.data == '0') return Container();
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 19.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                impNoticesHeading,
+                                Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    color: noticeCardColor,
+                                    child: Text(snapshot.data + ' Unread',
+                                        style: unreadTxtStyle))
+                              ],
+                            ),
+                            SizedBox(height: 20.0),
+                            Container(
+                              width: width * 0.95,
+                              color: noticeInroGapContainerColor,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                      );
                     }
-                    if (widget.listNoticeMetaData.isSearch) return Container();
-                    return buildShimmerList(context, 3); //buildLoading();
-                  },
-                ),
+                    return Container();
+                  })
+              : Container(),
+          Expanded(
+            child: Container(
+              width: width,
+              child: StreamBuilder(
+                stream: _listNoticesBloc.listNoticesStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.list.length == 0) return buildNoResults();
+                    return buildNoticesList(snapshot, width, height);
+                  } else if (snapshot.hasError) {
+                    return buildErrorWidget(snapshot);
+                  }
+                  if (widget.listNoticeMetaData.isSearch) return Container();
+                  return buildShimmerList(context, 3); //buildLoading();
+                },
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

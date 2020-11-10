@@ -41,6 +41,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         leadingWidth: 30.0,
         backgroundColor: globalBlueColor,
         centerTitle: false,
@@ -97,13 +98,16 @@ class _NoticeDetailState extends State<NoticeDetail> {
       color: globalLightBlueColor,
       width: _width,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
         child: Column(
           children: [
             Row(
               children: [
                 Expanded(
-                  child: Text(widget.noticeIntro.title),
+                  child: Text(
+                    widget.noticeIntro.title,
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
                 )
               ],
             ),
