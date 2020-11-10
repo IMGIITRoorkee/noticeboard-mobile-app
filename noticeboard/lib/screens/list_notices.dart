@@ -215,14 +215,20 @@ class _ListNoticesState extends State<ListNotices> {
         initialData: false,
         builder: (context, snapshot) {
           return Container(
-            height: height * 0.801,
+            height: !widget.listNoticeMetaData.noFilters &&
+                    !widget.listNoticeMetaData.isSearch
+                ? height * 0.801
+                : height * 0.85,
             child: Column(
               children: [
                 Visibility(
                     visible: snapshot.data,
                     maintainState: true,
                     child: Container(
-                      height: height * 0.801,
+                      height: !widget.listNoticeMetaData.noFilters &&
+                              !widget.listNoticeMetaData.isSearch
+                          ? height * 0.801
+                          : height * 0.85,
                       child: Filters(
                         onApplyFilters: !widget.listNoticeMetaData.isSearch
                             ? (FilterResult filterResult) =>
@@ -236,7 +242,10 @@ class _ListNoticesState extends State<ListNotices> {
                   visible: !snapshot.data,
                   maintainState: true,
                   child: Container(
-                      height: height * 0.801,
+                      height: !widget.listNoticeMetaData.noFilters &&
+                              !widget.listNoticeMetaData.isSearch
+                          ? height * 0.801
+                          : height * 0.85,
                       child: buildListNoticesBox(height, width)),
                 ),
               ],
@@ -247,7 +256,10 @@ class _ListNoticesState extends State<ListNotices> {
 
   Container buildListNoticesBox(double height, double width) {
     return Container(
-      height: height * 0.801,
+      height: !widget.listNoticeMetaData.noFilters &&
+              !widget.listNoticeMetaData.isSearch
+          ? height * 0.801
+          : height * 0.85,
       child: RefreshIndicator(
         onRefresh: refreshNotices,
         child: Stack(children: [
@@ -321,7 +333,8 @@ class _ListNoticesState extends State<ListNotices> {
                       } else if (snapshot.hasError) {
                         return buildErrorWidget(snapshot);
                       }
-                      if (widget.listNoticeMetaData.isSearch)
+                      if (widget.listNoticeMetaData.isSearch &&
+                          _listNoticesBloc.searchQuery == '')
                         return Container();
                       return buildShimmerList(context, 3); //buildLoading();
                     },
