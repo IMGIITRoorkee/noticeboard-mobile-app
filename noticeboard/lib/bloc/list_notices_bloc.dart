@@ -236,7 +236,8 @@ class ListNoticesBloc {
         List<NoticeIntro> allSearchResults = paginatedInfo.list;
         handleAfterFetch(paginatedInfo.hasMore, allSearchResults);
       } catch (e) {
-        _listNoticesSink.addError(e.message.toString());
+        if (!_listNoticesController.isClosed)
+          _listNoticesSink.addError(e.message.toString());
       }
     }
   }
@@ -250,7 +251,8 @@ class ListNoticesBloc {
         List<NoticeIntro> allSearchFilteredNotices = paginatedInfo.list;
         handleAfterFetch(paginatedInfo.hasMore, allSearchFilteredNotices);
       } catch (e) {
-        _listNoticesSink.addError(e.message.toString());
+        if (!_listNoticesController.isClosed)
+          _listNoticesSink.addError(e.message.toString());
       }
     }
   }
@@ -263,7 +265,8 @@ class ListNoticesBloc {
       List<NoticeIntro> allInstituteNotices = paginatedInfo.list;
       handleAfterFetch(paginatedInfo.hasMore, allInstituteNotices);
     } catch (e) {
-      _listNoticesSink.addError(e.message.toString());
+      if (!_listNoticesController.isClosed)
+        _listNoticesSink.addError(e.message.toString());
     }
   }
 
@@ -275,7 +278,8 @@ class ListNoticesBloc {
       List<NoticeIntro> allPlacementNotices = paginatedInfo.list;
       handleAfterFetch(paginatedInfo.hasMore, allPlacementNotices);
     } catch (e) {
-      _listNoticesSink.addError(e.message.toString());
+      if (!_listNoticesController.isClosed)
+        _listNoticesSink.addError(e.message.toString());
     }
   }
 
@@ -294,7 +298,8 @@ class ListNoticesBloc {
       List<NoticeIntro> allFilteredNotices = paginatedInfo.list;
       handleAfterFetch(paginatedInfo.hasMore, allFilteredNotices);
     } catch (e) {
-      _listNoticesSink.addError(e.message.toString());
+      if (!_listNoticesController.isClosed)
+        _listNoticesSink.addError(e.message.toString());
     }
   }
 
@@ -305,7 +310,8 @@ class ListNoticesBloc {
       List<NoticeIntro> allImportantNotices = paginatedInfo.list;
       handleAfterFetch(paginatedInfo.hasMore, allImportantNotices);
     } catch (e) {
-      _listNoticesSink.addError(e.message.toString());
+      if (!_listNoticesController.isClosed)
+        _listNoticesSink.addError(e.message.toString());
     }
   }
 
@@ -316,7 +322,8 @@ class ListNoticesBloc {
       List<NoticeIntro> allExpiredNotices = paginatedInfo.list;
       handleAfterFetch(paginatedInfo.hasMore, allExpiredNotices);
     } catch (e) {
-      _listNoticesSink.addError(e.message.toString());
+      if (!_listNoticesController.isClosed)
+        _listNoticesSink.addError(e.message.toString());
     }
   }
 
@@ -327,7 +334,8 @@ class ListNoticesBloc {
       List<NoticeIntro> allBookmarkedNotices = paginatedInfo.list;
       handleAfterFetch(paginatedInfo.hasMore, allBookmarkedNotices);
     } catch (e) {
-      _listNoticesSink.addError(e.message.toString());
+      if (!_listNoticesController.isClosed)
+        _listNoticesSink.addError(e.message.toString());
     }
   }
 

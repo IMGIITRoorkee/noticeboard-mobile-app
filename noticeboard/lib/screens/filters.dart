@@ -194,7 +194,7 @@ class _FiltersState extends State<Filters> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 16.0, right: 16.0, top: 23.0),
+                        left: 16.0, right: 16.0, top: 25.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
