@@ -217,10 +217,15 @@ class _FiltersState extends State<Filters> {
                       width: width,
                       index: 2,
                       selectedIndex: categoryIndexStream.data,
-                      categoryName: 'Centres'),
+                      categoryName: 'Campus Groups'),
                   buildCategoryItem(
                       width: width,
                       index: 3,
+                      selectedIndex: categoryIndexStream.data,
+                      categoryName: 'Centres'),
+                  buildCategoryItem(
+                      width: width,
+                      index: 4,
                       selectedIndex: categoryIndexStream.data,
                       categoryName: 'Departments'),
                   categoryDivider,

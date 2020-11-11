@@ -91,10 +91,12 @@ class FiltersBloc {
         _selectedCatSink.add(0);
       } else if (globalSelection.globalDisplayName == 'Bhawans') {
         _selectedCatSink.add(1);
-      } else if (globalSelection.globalDisplayName == 'Centres') {
+      } else if (globalSelection.globalDisplayName == 'Campus Groups') {
         _selectedCatSink.add(2);
-      } else if (globalSelection.globalDisplayName == 'Departments') {
+      } else if (globalSelection.globalDisplayName == 'Centres') {
         _selectedCatSink.add(3);
+      } else if (globalSelection.globalDisplayName == 'Departments') {
+        _selectedCatSink.add(4);
       }
     }
   }
@@ -115,6 +117,10 @@ class FiltersBloc {
         break;
       case 3:
         category = categories[3];
+        _categorySink.add(category);
+        break;
+      case 4:
+        category = categories[4];
         _categorySink.add(category);
         break;
       default:
