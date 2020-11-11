@@ -125,6 +125,7 @@ class _ProfileState extends State<Profile> {
 
   GestureDetector buildMenuItem(Icon icon, String text, ProfileEvents event) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         _profileBloc.eventSink.add(event);
       },

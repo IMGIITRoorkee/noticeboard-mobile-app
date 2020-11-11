@@ -488,11 +488,27 @@ class _ListNoticesState extends State<ListNotices> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: width,
-                              child: Text(noticeIntroObj.department,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: departmentTxtStyle),
+                            Row(
+                              children: [
+                                noticeIntroObj.starred
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          Icons.double_arrow,
+                                          color: noticeCardColor,
+                                        ),
+                                      )
+                                    : Container(),
+                                Expanded(
+                                  child: Container(
+                                    width: width,
+                                    child: Text(noticeIntroObj.department,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: departmentTxtStyle),
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(
                               height: 5.0,
