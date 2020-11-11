@@ -382,6 +382,16 @@ class ListNoticesBloc {
     _unreadCountSink.add(unreadCount);
   }
 
+  void pushImportantNotices() {
+    ListNoticeMetaData impListNoticeMetaData = ListNoticeMetaData(
+        appBarLabel: 'Important Notices',
+        dynamicFetch: DynamicFetch.fetchImportantNotices,
+        noFilters: true,
+        isSearch: false);
+    Navigator.pushNamed(context, listNoticesRoute,
+        arguments: impListNoticeMetaData);
+  }
+
   void pushSearch() {
     ListNoticeMetaData listNoticeMetaData = ListNoticeMetaData(
         appBarLabel: '',

@@ -20,7 +20,11 @@ SizedBox sizedBox(double height) {
   );
 }
 
-Icon screenPopIcon = Icon(Icons.clear, color: Colors.black);
+Icon screenPopIcon = Icon(
+  Icons.keyboard_arrow_left,
+  color: Colors.black,
+  size: 35.0,
+);
 
 Icon bookmarkIcon = Icon(
   Icons.collections_bookmark,

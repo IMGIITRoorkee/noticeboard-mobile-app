@@ -20,7 +20,7 @@ Divider filterDivider = Divider(
 
 Divider categoryDivider = Divider(
   color: Colors.black,
-  height: 24.0,
+  height: 20.0,
   thickness: 0.2,
 );
 
@@ -54,12 +54,6 @@ TextStyle dateTxtStyle = TextStyle(color: globalBlueColor);
 
 TextStyle applyBtnTxtStyle =
     TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.w400);
-
-Center buildErrorFetchingFilters(AsyncSnapshot snapshot) {
-  return Center(
-    child: Text(snapshot.error),
-  );
-}
 
 Container buildApplyContainer() {
   return Container(

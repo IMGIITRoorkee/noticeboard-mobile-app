@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:noticeboard/enum/dynamic_fetch_enum.dart';
 import 'package:noticeboard/enum/filter_enum.dart';
+import 'package:noticeboard/models/notice_intro.dart';
+import 'package:noticeboard/routes/routing_constants.dart';
 import '../repository/filters_repository.dart';
 import '../models/filters_list.dart';
 import 'package:flutter/material.dart';
@@ -141,6 +144,26 @@ class FiltersBloc {
   void resetDateRange() {
     dateTimeRange = null;
     _dateRangeSink.add(dateTimeRange);
+  }
+
+  void pushImportantNotices() {
+    ListNoticeMetaData impListNoticeMetaData = ListNoticeMetaData(
+        appBarLabel: 'Important Notices',
+        dynamicFetch: DynamicFetch.fetchImportantNotices,
+        noFilters: true,
+        isSearch: false);
+    Navigator.pushNamed(context, listNoticesRoute,
+        arguments: impListNoticeMetaData);
+  }
+
+  void pushExpiredNotices() {
+    ListNoticeMetaData expiredListNoticeMetaData = ListNoticeMetaData(
+        appBarLabel: 'Expired Notices',
+        dynamicFetch: DynamicFetch.fetchExpiredNotices,
+        noFilters: true,
+        isSearch: false);
+    Navigator.pushNamed(context, listNoticesRoute,
+        arguments: expiredListNoticeMetaData);
   }
 
   FilterResult applyFilter() {

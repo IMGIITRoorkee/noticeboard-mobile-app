@@ -3,7 +3,6 @@ import 'package:noticeboard/models/paginated_info.dart';
 import '../routes/routing_constants.dart';
 import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
-import '../global/global_functions.dart';
 
 class ListNoticesRepository {
   ApiService _apiService = ApiService();

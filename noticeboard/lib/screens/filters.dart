@@ -4,6 +4,7 @@ import 'package:noticeboard/models/filters_list.dart';
 import '../bloc/filters_bloc.dart';
 import 'package:date_format/date_format.dart';
 import '../styles/filter_consts.dart';
+import '../global/global_functions.dart';
 
 class Filters extends StatefulWidget {
   final VoidCallback onCancel;
@@ -68,7 +69,7 @@ class _FiltersState extends State<Filters> {
                   Category category = snapshot.data;
                   return buildFilters(_width, _height, category);
                 } else if (snapshot.hasError) {
-                  return buildErrorFetchingFilters(snapshot);
+                  return buildErrorWidget(snapshot);
                 }
                 return buildLoadingFilters();
               },
@@ -223,6 +224,23 @@ class _FiltersState extends State<Filters> {
                       selectedIndex: categoryIndexStream.data,
                       categoryName: 'Departments'),
                   categoryDivider,
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: _filtersBloc.pushImportantNotices,
+                    child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 15.0),
+                        child: Text('Important')),
+                  ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: _filtersBloc.pushExpiredNotices,
+                    child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 15.0),
+                        child: Text('Expired')),
+                  ),
+                  categoryDivider,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: StreamBuilder(
@@ -281,7 +299,7 @@ class _FiltersState extends State<Filters> {
           width: width,
           color:
               selectedIndex == index ? globalWhiteColor : globalLightBlueColor,
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
           child: StreamBuilder<Object>(
               stream: _filtersBloc.selectedCatStream,
               builder: (context, snapshot) {

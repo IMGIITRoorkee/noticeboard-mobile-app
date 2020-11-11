@@ -5,7 +5,6 @@ import '../models/notice_content.dart';
 import '../models/notice_intro.dart';
 import '../repository/notice_content_repository.dart';
 import 'package:share/share.dart';
-import '../global/global_functions.dart';
 
 class NoticeContentBloc {
   BuildContext context;

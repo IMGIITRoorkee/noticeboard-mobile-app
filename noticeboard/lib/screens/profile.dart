@@ -103,16 +103,18 @@ class _ProfileState extends State<Profile> {
                   ),
                   sizedBox(40.0),
                   buildMenuItem(
-                      bookmarkIcon, 'Bookmarks', ProfileEvents.logoutEvent),
-                  sizedBox(17.0),
+                      bookmarkIcon, 'Bookmarks', ProfileEvents.bookmarksEvent),
+                  sizedBox(20.0),
                   divider(_width),
-                  sizedBox(17.0),
+                  sizedBox(20.0),
                   buildMenuItem(
-                      feedbackIcon, 'Feedback', ProfileEvents.logoutEvent),
-                  sizedBox(12.0),
-                  buildMenuItem(notificationSettingsIcon,
-                      'Notification settings', ProfileEvents.logoutEvent),
-                  sizedBox(15.0),
+                      feedbackIcon, 'Feedback', ProfileEvents.feedbackEvent),
+                  sizedBox(20.0),
+                  buildMenuItem(
+                      notificationSettingsIcon,
+                      'Notification settings',
+                      ProfileEvents.notificationSettingsEvent),
+                  sizedBox(20.0),
                   buildMenuItem(logoutIcon, 'Logout', ProfileEvents.logoutEvent)
                 ],
               ),

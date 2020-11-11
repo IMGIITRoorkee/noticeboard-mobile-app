@@ -198,12 +198,22 @@ class _ListNoticesState extends State<ListNotices> {
 
   AppBar buildNoFiltersAppBar() {
     return AppBar(
-      title: Text(
-        widget.listNoticeMetaData.appBarLabel,
-        style: TextStyle(color: Colors.black),
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: Icon(
+          Icons.keyboard_arrow_left,
+          color: Colors.black,
+          size: 35.0,
+        ),
       ),
-      automaticallyImplyLeading: false,
-      centerTitle: true,
+      leadingWidth: 40.0,
+      title: Text(widget.listNoticeMetaData.appBarLabel,
+          style: TextStyle(
+              color: globalBlueColor,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w700)),
       backgroundColor: Colors.white,
       elevation: 0,
     );
@@ -290,30 +300,33 @@ class _ListNoticesState extends State<ListNotices> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           if (snapshot.data == '0') return Container();
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 19.0),
-                            padding: EdgeInsets.symmetric(vertical: 15.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    impNoticesHeading,
-                                    Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        color: noticeCardColor,
-                                        child: Text(snapshot.data + ' Unread',
-                                            style: unreadTxtStyle))
-                                  ],
-                                ),
-                                SizedBox(height: 20.0),
-                                Container(
-                                  width: width * 0.95,
-                                  color: noticeInroGapContainerColor,
-                                  height: 1,
-                                )
-                              ],
+                          return GestureDetector(
+                            onTap: _listNoticesBloc.pushImportantNotices,
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 19.0),
+                              padding: EdgeInsets.symmetric(vertical: 15.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      impNoticesHeading,
+                                      Container(
+                                          padding: EdgeInsets.all(5.0),
+                                          color: noticeCardColor,
+                                          child: Text(snapshot.data + ' Unread',
+                                              style: unreadTxtStyle))
+                                    ],
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Container(
+                                    width: width * 0.95,
+                                    color: noticeInroGapContainerColor,
+                                    height: 1,
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         }
