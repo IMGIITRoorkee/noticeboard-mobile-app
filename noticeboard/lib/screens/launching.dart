@@ -15,7 +15,7 @@ class _LauncherState extends State<Launcher> {
 
   @override
   void initState() {
-    _authRepository.checkIfAlreadySignedIn(context);
+    //_authRepository.checkIfAlreadySignedIn(context);
     super.initState();
   }
 
@@ -26,19 +26,26 @@ class _LauncherState extends State<Launcher> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: _width * 0.5,
-            ),
-            mainLaunchingLogo(_width, _height),
-            sizedBox(_width * 0.5),
-            spinner(),
-            sizedBox(_width * 0.1),
-            lotsOfLove(context, _width)
-          ],
+      body: SafeArea(
+        child: Container(
+          color: Colors.white,
+          width: _width,
+          height: _height,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Positioned.fill(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: mainLaunchingLogo(_width, _height))),
+              Positioned(left: 0, right: 0, bottom: 80, child: spinner()),
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 10,
+                  child: lotsOfLove(context, _width))
+            ],
+          ),
         ),
       ),
     );

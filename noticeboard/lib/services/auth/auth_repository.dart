@@ -41,7 +41,7 @@ class AuthRepository {
 
       return userProfileObj;
     } catch (e) {
-      showMyFlushBar(context, 'Failure fetching profile', false);
+      //showMyFlushBar(context, 'Failure fetching profile', false);
       return null;
     }
   }

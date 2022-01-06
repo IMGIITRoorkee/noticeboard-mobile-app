@@ -91,7 +91,6 @@ class LoginBloc {
         await _authRepository.signInWithUsernamePassword(
             username: _username, password: _password, context: context);
       } catch (e) {
-        showMyFlushBar(context, 'Invalid Credentials', false);
         _progressSink.add(LoginState.initLogin);
       }
     }

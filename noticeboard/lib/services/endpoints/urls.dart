@@ -1,5 +1,4 @@
-const String BASE_URL =
-    'https://internet.channeli.in/'; //'http://192.168.1.3:60000/';
+const String BASE_URL = 'https://channeli.in/'; //'http://192.168.1.3:60000/';
 const String EP_REFRESH_TOKEN = 'token_auth/obtain_pair/';
 const String EP_ACCESS_TOKEN = 'token_auth/refresh/';
 const String EP_WHO_AM_I = 'kernel/who_am_i/';

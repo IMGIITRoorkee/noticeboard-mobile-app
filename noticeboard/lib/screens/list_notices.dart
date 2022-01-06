@@ -399,23 +399,21 @@ class _ListNoticesState extends State<ListNotices> {
       width: width,
       child: NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
-        child: CupertinoScrollbar(
-          child: ListView.builder(
-              itemCount: snapshot.data.hasMore
-                  ? snapshot.data.list.length + 1
-                  : snapshot.data.list.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  NoticeIntro noticeIntroObj = snapshot.data.list[0];
-                  return buildListItem(noticeIntroObj, width, height, true);
-                }
-                if (index == snapshot.data.list.length) {
-                  return buildShimmerList(context, 1);
-                }
-                NoticeIntro noticeIntroObj = snapshot.data.list[index];
-                return buildListItem(noticeIntroObj, width, height, false);
-              }),
-        ),
+        child: ListView.builder(
+            itemCount: snapshot.data.hasMore
+                ? snapshot.data.list.length + 1
+                : snapshot.data.list.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                NoticeIntro noticeIntroObj = snapshot.data.list[0];
+                return buildListItem(noticeIntroObj, width, height, true);
+              }
+              if (index == snapshot.data.list.length) {
+                return buildShimmerList(context, 1);
+              }
+              NoticeIntro noticeIntroObj = snapshot.data.list[index];
+              return buildListItem(noticeIntroObj, width, height, false);
+            }),
       ),
     );
   }

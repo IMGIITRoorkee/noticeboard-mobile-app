@@ -9,6 +9,6 @@ class ProfileRepository {
     await _authRepository.logout();
     Navigator.pop(context);
     Navigator.pushReplacementNamed(context, loginRoute);
-    showMyFlushBar(context, 'Logout successful', true);
+    //showMyFlushBar(context, 'Logout successful', true);
   }
 }
