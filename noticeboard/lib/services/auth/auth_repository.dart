@@ -41,7 +41,9 @@ class AuthRepository {
 
       return userProfileObj;
     } catch (e) {
-      //showMyFlushBar(context, 'Failure fetching profile', false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Problem fetching profile"),
+      ));
       return null;
     }
   }

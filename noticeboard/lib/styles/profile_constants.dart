@@ -3,7 +3,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:noticeboard/global/global_functions.dart';
 
 var globalWhiteColor = Colors.white;
-var globalBlue = HexColor('#5288da');
 
 TextStyle blackSuperBoldMediumSizeText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0);
@@ -19,12 +18,6 @@ SizedBox sizedBox(double height) {
     height: height,
   );
 }
-
-Icon screenPopIcon = Icon(
-  Icons.keyboard_arrow_left,
-  color: Colors.black,
-  size: 35.0,
-);
 
 Icon bookmarkIcon = Icon(
   Icons.collections_bookmark,

@@ -45,14 +45,16 @@ Widget containsBranding(BuildContext context, double _width, double _height) {
 
 Container buildContactImgContainer(double _width) {
   return Container(
-    width: _width * 0.60,
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Expanded(
-            child: Text(
+        Text(
           "Having trouble signing in?",
           style: TextStyle(fontSize: 12.0),
-        )),
+        ),
+        SizedBox(
+          width: 5,
+        ),
         Text(
           "Contact IMG",
           overflow: TextOverflow.fade,

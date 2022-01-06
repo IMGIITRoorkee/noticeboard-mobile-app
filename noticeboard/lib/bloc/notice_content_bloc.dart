@@ -48,9 +48,10 @@ class NoticeContentBloc {
             starred = !starred;
             _starSink.add(starred);
             noticeIntro.starred = false;
-            //  showMyFlushBar(context, 'Notice unmarked', true);
           } catch (e) {
-            //  showMyFlushBar(context, 'Failure unmarking', false);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Error unmarking"),
+            ));
           }
         } else {
           var obj = {
@@ -62,9 +63,10 @@ class NoticeContentBloc {
             starred = !starred;
             _starSink.add(starred);
             noticeIntro.starred = true;
-            //  showMyFlushBar(context, 'Notice marked', true);
           } catch (e) {
-            // showMyFlushBar(context, 'Failure marking', false);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Error bookmarking"),
+            ));
           }
         }
       } else if (event == NoticeContentEvents.shareNotice) {

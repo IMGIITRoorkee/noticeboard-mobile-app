@@ -82,14 +82,14 @@ class _FiltersState extends State<Filters> {
 
   Column buildFilters(double width, double height, Category category) {
     return Column(
-      children: [buildFilterList(width, category), buildButtons()],
+      children: [buildFilterList(width, category, height), buildButtons()],
     );
   }
 
-  Expanded buildFilterList(double width, Category category) {
+  Expanded buildFilterList(double width, Category category, double height) {
     return Expanded(
       child: Row(
-        children: [buildCategoryList(width), buildCategory(category)],
+        children: [buildCategoryList(width, height), buildCategory(category)],
       ),
     );
   }
@@ -180,116 +180,122 @@ class _FiltersState extends State<Filters> {
     );
   }
 
-  Expanded buildCategoryList(double width) {
+  Expanded buildCategoryList(double width, double height) {
     return Expanded(
       flex: 4,
-      child: Container(
-        color: globalLightBlueColor,
-        child: StreamBuilder(
-            initialData: 0,
-            stream: _filtersBloc.indexStream,
-            builder: (context, categoryIndexStream) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16.0, right: 16.0, top: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Categories'),
-                      ],
-                    ),
-                  ),
-                  categoryDivider,
-                  buildCategoryItem(
-                      width: width,
-                      index: 0,
-                      selectedIndex: categoryIndexStream.data,
-                      categoryName: 'Authorities'),
-                  buildCategoryItem(
-                      width: width,
-                      index: 1,
-                      selectedIndex: categoryIndexStream.data,
-                      categoryName: 'Bhawans'),
-                  buildCategoryItem(
-                      width: width,
-                      index: 2,
-                      selectedIndex: categoryIndexStream.data,
-                      categoryName: 'Campus Groups'),
-                  buildCategoryItem(
-                      width: width,
-                      index: 3,
-                      selectedIndex: categoryIndexStream.data,
-                      categoryName: 'Centres'),
-                  buildCategoryItem(
-                      width: width,
-                      index: 4,
-                      selectedIndex: categoryIndexStream.data,
-                      categoryName: 'Departments'),
-                  categoryDivider,
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: _filtersBloc.pushImportantNotices,
-                    child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 15.0),
-                        child: Text('Important')),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: _filtersBloc.pushExpiredNotices,
-                    child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 15.0),
-                        child: Text('Expired')),
-                  ),
-                  categoryDivider,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: StreamBuilder(
-                        stream: _filtersBloc.dateRangeStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.data == null) {
-                            return GestureDetector(
-                              onTap: () {
-                                _filtersBloc.eventSink
-                                    .add(FilterEvents.pickDateRange);
-                              },
-                              child: dateHeading,
-                            );
-                          } else {
-                            String start = formatDate(
-                                snapshot.data.start, [yyyy, '-', mm, '-', dd]);
-                            String end = formatDate(
-                                snapshot.data.end, [yyyy, '-', mm, '-', dd]);
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  start,
-                                  style: dateTxtStyle,
-                                ),
-                                Text('|', style: dateTxtStyle),
-                                Text(end, style: dateTxtStyle),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                GestureDetector(
-                                    onTap: () {
-                                      _filtersBloc.eventSink
-                                          .add(FilterEvents.resetDateRange);
-                                    },
-                                    child: resetDate)
-                              ],
-                            );
-                          }
-                        }),
-                  )
-                ],
-              );
-            }),
+      child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height * 0.8),
+          child: Container(
+            color: globalLightBlueColor,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: StreamBuilder(
+                initialData: 0,
+                stream: _filtersBloc.indexStream,
+                builder: (context, categoryIndexStream) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Categories'),
+                          ],
+                        ),
+                      ),
+                      categoryDivider,
+                      buildCategoryItem(
+                          width: width,
+                          index: 0,
+                          selectedIndex: categoryIndexStream.data,
+                          categoryName: 'Authorities'),
+                      buildCategoryItem(
+                          width: width,
+                          index: 1,
+                          selectedIndex: categoryIndexStream.data,
+                          categoryName: 'Bhawans'),
+                      buildCategoryItem(
+                          width: width,
+                          index: 2,
+                          selectedIndex: categoryIndexStream.data,
+                          categoryName: 'Campus Groups'),
+                      buildCategoryItem(
+                          width: width,
+                          index: 3,
+                          selectedIndex: categoryIndexStream.data,
+                          categoryName: 'Centres'),
+                      buildCategoryItem(
+                          width: width,
+                          index: 4,
+                          selectedIndex: categoryIndexStream.data,
+                          categoryName: 'Departments'),
+                      categoryDivider,
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: _filtersBloc.pushImportantNotices,
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 15.0),
+                            child: Text('Important')),
+                      ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: _filtersBloc.pushExpiredNotices,
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 15.0),
+                            child: Text('Expired')),
+                      ),
+                      categoryDivider,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, bottom: 10),
+                        child: StreamBuilder(
+                            stream: _filtersBloc.dateRangeStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.data == null) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _filtersBloc.eventSink
+                                        .add(FilterEvents.pickDateRange);
+                                  },
+                                  child: dateHeading,
+                                );
+                              } else {
+                                String start = formatDate(snapshot.data.start,
+                                    [yyyy, '-', mm, '-', dd]);
+                                String end = formatDate(snapshot.data.end,
+                                    [yyyy, '-', mm, '-', dd]);
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      start,
+                                      style: dateTxtStyle,
+                                    ),
+                                    Text('|', style: dateTxtStyle),
+                                    Text(end, style: dateTxtStyle),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          _filtersBloc.eventSink
+                                              .add(FilterEvents.resetDateRange);
+                                        },
+                                        child: resetDate)
+                                  ],
+                                );
+                              }
+                            }),
+                      )
+                    ],
+                  );
+                }),
+          ),
+        ),
       ),
     );
   }

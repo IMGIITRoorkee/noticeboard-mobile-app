@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noticeboard/styles/launching_constants.dart';
+import 'package:noticeboard/styles/profile_constants.dart';
 import '../services/auth/auth_repository.dart';
 import '../global/global_functions.dart';
 import '../styles/launching_constants.dart';
@@ -15,7 +16,7 @@ class _LauncherState extends State<Launcher> {
 
   @override
   void initState() {
-    //_authRepository.checkIfAlreadySignedIn(context);
+    _authRepository.checkIfAlreadySignedIn(context);
     super.initState();
   }
 
@@ -25,14 +26,13 @@ class _LauncherState extends State<Launcher> {
     final double _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: globalWhiteColor,
       body: SafeArea(
         child: Container(
           color: Colors.white,
           width: _width,
           height: _height,
           child: Stack(
-            alignment: Alignment.topRight,
             children: [
               Positioned.fill(
                   child: Align(

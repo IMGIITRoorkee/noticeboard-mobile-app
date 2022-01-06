@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noticeboard/global/global_functions.dart';
 import '../styles/profile_constants.dart';
 import '../bloc/profile_bloc.dart';
 import '../enum/profile_enum.dart';
@@ -34,7 +35,7 @@ class _ProfileState extends State<Profile> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           leading: IconButton(
-            icon: screenPopIcon,
+            icon: screenPopIcon(Colors.black),
             onPressed: () {
               Navigator.pop(context);
             },

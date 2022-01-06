@@ -225,38 +225,34 @@ class _ListNoticesState extends State<ListNotices> {
         initialData: false,
         builder: (context, snapshot) {
           return Container(
-            height: !widget.listNoticeMetaData.noFilters &&
-                    !widget.listNoticeMetaData.isSearch
-                ? height * 0.801
-                : height * 0.85,
             child: Column(
               children: [
-                Visibility(
-                    visible: snapshot.data,
+                Expanded(
+                  flex: snapshot.data ? 1 : 0,
+                  child: Visibility(
+                      visible: snapshot.data,
+                      maintainState: true,
+                      child: Container(
+                        height: height * 0.5,
+                        child: Filters(
+                          onApplyFilters: !widget.listNoticeMetaData.isSearch
+                              ? (FilterResult filterResult) =>
+                                  _listNoticesBloc.applyFilters(filterResult)
+                              : (FilterResult filterResult) => _listNoticesBloc
+                                  .applySearchFilters(filterResult),
+                          onCancel: _listNoticesBloc.toggleVisibility,
+                        ),
+                      )),
+                ),
+                Expanded(
+                  flex: !snapshot.data ? 1 : 0,
+                  child: Visibility(
+                    visible: !snapshot.data,
                     maintainState: true,
                     child: Container(
-                      height: !widget.listNoticeMetaData.noFilters &&
-                              !widget.listNoticeMetaData.isSearch
-                          ? height * 0.801
-                          : height * 0.85,
-                      child: Filters(
-                        onApplyFilters: !widget.listNoticeMetaData.isSearch
-                            ? (FilterResult filterResult) =>
-                                _listNoticesBloc.applyFilters(filterResult)
-                            : (FilterResult filterResult) => _listNoticesBloc
-                                .applySearchFilters(filterResult),
-                        onCancel: _listNoticesBloc.toggleVisibility,
-                      ),
-                    )),
-                Visibility(
-                  visible: !snapshot.data,
-                  maintainState: true,
-                  child: Container(
-                      height: !widget.listNoticeMetaData.noFilters &&
-                              !widget.listNoticeMetaData.isSearch
-                          ? height * 0.801
-                          : height * 0.85,
-                      child: buildListNoticesBox(height, width)),
+                        height: height * 0.5,
+                        child: buildListNoticesBox(height, width)),
+                  ),
                 ),
               ],
             ),
@@ -266,10 +262,6 @@ class _ListNoticesState extends State<ListNotices> {
 
   Container buildListNoticesBox(double height, double width) {
     return Container(
-      height: !widget.listNoticeMetaData.noFilters &&
-              !widget.listNoticeMetaData.isSearch
-          ? height * 0.801
-          : height * 0.85,
       child: RefreshIndicator(
         onRefresh: refreshNotices,
         child: Stack(children: [

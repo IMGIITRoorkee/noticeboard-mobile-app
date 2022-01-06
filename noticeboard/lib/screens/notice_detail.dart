@@ -43,6 +43,12 @@ class _NoticeDetailState extends State<NoticeDetail> {
       appBar: AppBar(
         elevation: 0.0,
         leadingWidth: 30.0,
+        leading: IconButton(
+          icon: screenPopIcon(Colors.white),
+          onPressed: () {
+            Navigator.pop(context, _noticeContentBloc.noticeIntro);
+          },
+        ),
         backgroundColor: globalBlueColor,
         centerTitle: false,
         title: Text(

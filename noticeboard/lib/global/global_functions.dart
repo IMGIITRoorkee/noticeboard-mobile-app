@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 Icon bookMarkIconDecider(bool isBookmarked) {
@@ -74,31 +74,6 @@ SpinKitChasingDots spinner() {
     color: Colors.blue[900],
     size: 35.0,
   );
-}
-
-void showMyFlushBar(BuildContext context, String message, bool success) {
-  Flushbar(
-    margin: EdgeInsets.only(top: 50.0, left: 100.0, right: 100.0),
-    padding: EdgeInsets.all(10.0),
-    borderRadius: 3.0,
-    backgroundColor: success ? Colors.green[400] : Colors.red[400],
-    boxShadows: [
-      BoxShadow(color: Colors.black45, offset: Offset(3, 3), blurRadius: 3)
-    ],
-    dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-    duration: Duration(seconds: 2),
-    forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-    messageText: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          message,
-          style: TextStyle(fontSize: 15.0, color: Colors.white),
-        ),
-      ],
-    ),
-    flushbarPosition: FlushbarPosition.TOP,
-  )..show(context);
 }
 
 Container buildSearchBar() {
@@ -190,3 +165,37 @@ Center buildErrorWidget(AsyncSnapshot snapshot) => Center(
         width: 250.0,
         height: 250.0,
         child: Image.asset('assets/images/error.png')));
+
+Icon screenPopIcon(Color color) {
+  return Icon(
+    Icons.keyboard_arrow_left,
+    color: color,
+    size: 35.0,
+  );
+}
+
+var globalBlue = HexColor('#5288da');
+
+Widget themeFormTextField(
+    String fieldName, String fieldHint, BuildContext context, bool isNumeric,
+    {bool isPassword = false}) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 15.0),
+    child: FormBuilderTextField(
+      obscureText: isPassword,
+      decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[200],
+          contentPadding: EdgeInsets.all(8.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide.none,
+          ),
+          isCollapsed: true,
+          hintText: fieldHint),
+      name: fieldName,
+      keyboardType: isNumeric ? TextInputType.number : TextInputType.name,
+      validator: FormBuilderValidators.required(context),
+    ),
+  );
+}
