@@ -17,6 +17,7 @@ class AuthRepository {
       await _authService.storeRefreshToken(_refreshTokenObj);
       await _authService.initHandle();
       UserProfile userProfile = await fetchUserProfile(context);
+      await _authService.registerNotificationToken();
       await _authService.storeProfile(userProfile);
       Navigator.pushReplacementNamed(context, bottomNavigationRoute);
     } catch (e) {
@@ -41,6 +42,7 @@ class AuthRepository {
 
       return userProfileObj;
     } catch (e) {
+      print(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Problem fetching profile"),
       ));
@@ -49,6 +51,7 @@ class AuthRepository {
   }
 
   Future logout() async {
+    await _authService.deRegisterNotificationToken();
     await _authService.deleteRefreshToken();
   }
 

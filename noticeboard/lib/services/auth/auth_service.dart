@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:noticeboard/models/notification_token.dart';
 import 'package:noticeboard/models/user_profile.dart';
 import '../endpoints/urls.dart';
 import 'package:http/http.dart' as http;
@@ -40,9 +42,7 @@ class AuthService {
 
   Future storeProfile(UserProfile userProfile) async {
     if (userProfile.picUrl != null) {
-      await storage.write(
-          key: "picUrl",
-          value: "https://internet.channeli.in/" + userProfile.picUrl);
+      await storage.write(key: "picUrl", value: BASE_URL + userProfile.picUrl);
     } else {
       await storage.write(key: "picUrl", value: "");
     }
@@ -50,6 +50,11 @@ class AuthService {
     await storage.write(key: "degreeName", value: userProfile.degreeName);
     await storage.write(key: "currentYear", value: userProfile.currentYear);
     await storage.write(key: "branchName", value: userProfile.branchName);
+  }
+
+  Future storeNotificationIdentifier(String notificationIdentifier) async {
+    await storage.write(
+        key: "notificationIdentifier", value: notificationIdentifier);
   }
 
   Future<UserProfile> fetchProfileFromStorage() async {
@@ -71,6 +76,12 @@ class AuthService {
     String refreshToken = await storage.read(key: "refreshToken");
 
     return RefreshToken(refreshToken: refreshToken);
+  }
+
+  Future<String> fetchNotificationIdentifier() async {
+    String notificationIdentifier =
+        await storage.read(key: "notificationIdentifier");
+    return notificationIdentifier;
   }
 
   Future<AccessToken> fetchAccessToken() async {
@@ -111,6 +122,60 @@ class AuthService {
       return UserProfile.fromJSON(jsonDecode(userProfileResponse.body));
     } else {
       throw Exception('Unable to fetch profile of user');
+    }
+  }
+
+  Future registerNotificationToken() async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await fetchAccessToken();
+      String token = await FirebaseMessaging.instance.getToken();
+      NotificationToken notificationToken = NotificationToken(token);
+      await storeNotificationIdentifier(notificationToken.clientIdentifier);
+      final http.Response postResponse =
+          await http.post(BASE_URL + NOTIFICATION_EP,
+              headers: {
+                AUTHORIZAION_KEY:
+                    AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
+                CONTENT_TYPE_KEY: CONTENT_TYPE
+              },
+              body: jsonEncode(notificationToken.retrievePayload()));
+      if (postResponse.statusCode != 201) {
+        throw Exception('Failure');
+      }
+      print(postResponse.body);
+      print("SUCCESSFULLY REGISTERED");
+    } catch (e) {
+      throw Exception('Failure');
+    }
+  }
+
+  Future deRegisterNotificationToken() async {
+    try {
+      AccessToken accessTokenObj =
+          // await _authService.fetchAccessTokenFromRefresh();
+          await fetchAccessToken();
+      String notificationIdentifier = await fetchNotificationIdentifier();
+
+      final request =
+          http.Request("DELETE", Uri.parse(BASE_URL + NOTIFICATION_EP));
+      request.headers.addAll(<String, String>{
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
+        CONTENT_TYPE_KEY: CONTENT_TYPE
+      });
+      request.body = jsonEncode(
+          {"client_identifier": notificationIdentifier, "token": "token"});
+
+      final response = await request.send();
+      if (response.statusCode != 204) {
+        print(response.statusCode);
+        throw Exception('Failure');
+      }
+      print("SUCCESSFULLY DEREGISTERED");
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Failure');
     }
   }
 }

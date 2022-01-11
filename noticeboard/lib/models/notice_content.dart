@@ -1,10 +1,12 @@
+import 'package:noticeboard/services/endpoints/urls.dart';
+
 class NoticeContent {
   final String content;
   NoticeContent({this.content});
 
   static String htmlCorrector(String incorrectHTML) {
     String correctHTML = incorrectHTML.replaceAll(
-        "/media/noticeboard", "https://internet.channeli.in/media/noticeboard");
+        "/media/noticeboard", "${BASE_URL}media/noticeboard");
     return correctHTML;
   }
 

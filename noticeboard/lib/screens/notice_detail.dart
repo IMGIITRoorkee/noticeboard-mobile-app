@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:noticeboard/enum/notice_content_enum.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
@@ -19,6 +22,8 @@ class _NoticeDetailState extends State<NoticeDetail> {
   _NoticeDetailState({this.noticeIntro});
 
   NoticeContentBloc _noticeContentBloc = NoticeContentBloc();
+  FlutterWebviewPlugin _flutterWebviewPlugin = FlutterWebviewPlugin();
+  bool pdfAlreadyOpened = false;
 
   @override
   void initState() {
@@ -26,12 +31,25 @@ class _NoticeDetailState extends State<NoticeDetail> {
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
     _noticeContentBloc.starred = widget.noticeIntro.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
+    _flutterWebviewPlugin.onUrlChanged.listen((String url) async {
+      print("function called");
+      if (url.endsWith('pdf') && !pdfAlreadyOpened) {
+        canLaunch(url).then((lau) {
+          launch(url);
+          setState(() {
+            pdfAlreadyOpened = true;
+          });
+        });
+      }
+    });
     super.initState();
   }
 
   @override
   void dispose() {
+    _flutterWebviewPlugin.close();
     _noticeContentBloc.disposeStreams();
+
     super.dispose();
   }
 
@@ -101,7 +119,8 @@ class _NoticeDetailState extends State<NoticeDetail> {
       child: WebviewScaffold(
           displayZoomControls: true,
           withZoom: true,
-          url: Uri.dataFromString(snapshot.data.content, mimeType: 'text/html')
+          url: Uri.dataFromString(snapshot.data.content,
+                  mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
               .toString()),
     );
   }

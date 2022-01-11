@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:noticeboard/enum/notice_content_enum.dart';
+import 'package:noticeboard/services/endpoints/urls.dart';
 import '../models/notice_content.dart';
 import '../models/notice_intro.dart';
 import '../repository/notice_content_repository.dart';
@@ -71,8 +72,7 @@ class NoticeContentBloc {
         }
       } else if (event == NoticeContentEvents.shareNotice) {
         Share.share(
-            'http://internet.channeli.in/noticeboard/notice/' +
-                noticeIntro.id.toString(),
+            '${BASE_URL}noticeboard/notice/' + noticeIntro.id.toString(),
             subject: 'Share notice');
       }
     });

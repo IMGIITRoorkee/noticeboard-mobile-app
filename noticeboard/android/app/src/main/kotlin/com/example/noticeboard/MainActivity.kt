@@ -1,4 +1,4 @@
-package com.example.noticeboard
+package com.img.noticeboard
 
 import io.flutter.embedding.android.FlutterActivity
 

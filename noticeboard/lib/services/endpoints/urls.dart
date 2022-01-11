@@ -14,3 +14,4 @@ const String PLACEMENT_NOTICES = 'api/noticeboard/filter/?banner=82';
 const String IMPORTANT_NOTICES = 'api/noticeboard/new/?important=true&page=';
 const String EXPIRED_NOTICES = 'api/noticeboard/old/?page=';
 const String BOOKMARKED_NOTICES = 'api/noticeboard/star_filter_view/?page=';
+const String NOTIFICATION_EP = 'api/notifications/token/';

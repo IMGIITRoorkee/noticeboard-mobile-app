@@ -9,7 +9,7 @@ BottomNavigationBarItem instituteNoticesBottomItem = BottomNavigationBarItem(
       Icons.account_balance,
       color: Colors.white,
     ),
-    label: 'Institute notices');
+    label: 'Institute Notices');
 
 BottomNavigationBarItem placementInternshipBottomItem = BottomNavigationBarItem(
     icon: Icon(

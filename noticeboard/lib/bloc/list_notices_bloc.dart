@@ -386,8 +386,10 @@ class ListNoticesBloc {
   }
 
   void updateUnreadCount() async {
-    String unreadCount = await _listNoticesRepository.importantUnreadCount();
-    _unreadCountSink.add(unreadCount);
+    try {
+      String unreadCount = await _listNoticesRepository.importantUnreadCount();
+      _unreadCountSink.add(unreadCount);
+    } catch (e) {}
   }
 
   void pushImportantNotices() {

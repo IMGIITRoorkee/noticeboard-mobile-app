@@ -4,6 +4,7 @@ import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/repository/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
+import 'package:noticeboard/services/endpoints/urls.dart';
 import '../enum/profile_enum.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,7 +50,7 @@ class ProfileBloc {
   }
 
   void notificationSettingsHandler() async {
-    const url = 'https://internet.channeli.in/settings/manage_notifications';
+    const url = '${BASE_URL}settings/manage_notifications';
     if (await canLaunch(url)) {
       await launch(url);
     }

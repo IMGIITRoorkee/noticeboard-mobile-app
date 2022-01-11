@@ -68,10 +68,10 @@ Container buildShimmerList(BuildContext context, int notices) {
   );
 }
 
-SpinKitChasingDots spinner() {
-  return SpinKitChasingDots(
+SpinKitFadingCircle spinner() {
+  return SpinKitFadingCircle(
     duration: Duration(milliseconds: 1000),
-    color: Colors.blue[900],
+    color: globalBlue,
     size: 35.0,
   );
 }
