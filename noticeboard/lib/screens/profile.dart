@@ -67,11 +67,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(50.0),
-                                    child: FadeInImage.assetNetwork(
-                                      placeholder: 'assets/images/user1.jpg',
-                                      image: snapshot.data.picUrl,
-                                      fit: BoxFit.fill,
-                                    ),
+                                    child: buildProfilePic(snapshot),
                                   ),
                                 ),
                                 sizedBox(10.0),
@@ -143,5 +139,19 @@ class _ProfileState extends State<Profile> {
         ],
       ),
     );
+  }
+
+  Widget buildProfilePic(AsyncSnapshot snapshot) {
+    if (snapshot.hasData &&
+        snapshot.data.picUrl != null &&
+        snapshot.data.picUrl != "") {
+      return FadeInImage.assetNetwork(
+        placeholder: 'assets/images/user1.jpg',
+        image: snapshot.data.picUrl,
+        fit: BoxFit.fill,
+      );
+    }
+
+    return Image.asset('assets/images/user1.jpg');
   }
 }

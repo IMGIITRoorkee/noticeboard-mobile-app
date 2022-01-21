@@ -99,6 +99,9 @@ class ListNoticesBloc {
       } catch (e) {
         object.read = false;
         updateUi(object);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Error!"),
+        ));
       }
     });
 
@@ -115,6 +118,9 @@ class ListNoticesBloc {
       } catch (e) {
         object.read = true;
         updateUi(object);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Error!"),
+        ));
       }
     });
 
@@ -131,6 +137,9 @@ class ListNoticesBloc {
         } catch (e) {
           object.starred = true;
           updateUi(object);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Error unmarking"),
+          ));
         }
       } else {
         object.starred = true;
@@ -144,6 +153,9 @@ class ListNoticesBloc {
         } catch (e) {
           object.starred = false;
           updateUi(object);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Error bookmarking"),
+          ));
         }
       }
     });

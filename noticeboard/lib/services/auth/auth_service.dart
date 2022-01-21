@@ -95,32 +95,40 @@ class AuthService {
   }
 
   Future<AccessToken> fetchAccessTokenFromRefresh() async {
-    RefreshToken refreshTokenObj = await fetchRefreshToken();
+    try {
+      RefreshToken refreshTokenObj = await fetchRefreshToken();
 
-    var refreshObj = {"refresh": refreshTokenObj.refreshToken};
-    final http.Response postResponse = await http.post(
-        BASE_URL + EP_ACCESS_TOKEN,
-        headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
-        body: jsonEncode(refreshObj));
+      var refreshObj = {"refresh": refreshTokenObj.refreshToken};
+      final http.Response postResponse = await http.post(
+          BASE_URL + EP_ACCESS_TOKEN,
+          headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
+          body: jsonEncode(refreshObj));
 
-    if (postResponse.statusCode == 200) {
-      return AccessToken.fromJSON(jsonDecode(postResponse.body));
-    } else {
-      throw Exception('Unable to fetch Access Token');
+      if (postResponse.statusCode == 200) {
+        return AccessToken.fromJSON(jsonDecode(postResponse.body));
+      } else {
+        throw Exception('Unable to Access');
+      }
+    } catch (e) {
+      throw Exception('Unable to Access');
     }
   }
 
   Future<UserProfile> fetchUserProfile() async {
     //AccessToken accessTokenObj = await fetchAccessTokenFromRefresh();
-    AccessToken accessTokenObj = await fetchAccessToken();
-    final http.Response userProfileResponse = await http
-        .get(BASE_URL + EP_WHO_AM_I, headers: {
-      AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-    });
+    try {
+      AccessToken accessTokenObj = await fetchAccessToken();
+      final http.Response userProfileResponse = await http
+          .get(BASE_URL + EP_WHO_AM_I, headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+      });
 
-    if (userProfileResponse.statusCode == 200) {
-      return UserProfile.fromJSON(jsonDecode(userProfileResponse.body));
-    } else {
+      if (userProfileResponse.statusCode == 200) {
+        return UserProfile.fromJSON(jsonDecode(userProfileResponse.body));
+      } else {
+        throw Exception('Unable to fetch profile of user');
+      }
+    } catch (e) {
       throw Exception('Unable to fetch profile of user');
     }
   }

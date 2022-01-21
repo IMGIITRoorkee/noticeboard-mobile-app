@@ -6,8 +6,12 @@ import '../global/global_functions.dart';
 class ProfileRepository {
   AuthRepository _authRepository = AuthRepository();
   Future logout(BuildContext context) async {
-    await _authRepository.logout();
-    Navigator.pop(context);
-    Navigator.pushReplacementNamed(context, loginRoute);
+    try {
+      await _authRepository.logout();
+      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, loginRoute);
+    } catch (e) {
+      showGenericError(context);
+    }
   }
 }

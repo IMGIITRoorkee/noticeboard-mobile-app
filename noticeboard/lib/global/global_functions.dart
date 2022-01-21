@@ -199,3 +199,9 @@ Widget themeFormTextField(
     ),
   );
 }
+
+void showGenericError(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text("Error!"),
+  ));
+}

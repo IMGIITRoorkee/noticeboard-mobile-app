@@ -16,7 +16,11 @@ class _LauncherState extends State<Launcher> {
 
   @override
   void initState() {
-    _authRepository.checkIfAlreadySignedIn(context);
+    try {
+      _authRepository.checkIfAlreadySignedIn(context);
+    } catch (e) {
+      showGenericError(context);
+    }
     super.initState();
   }
 

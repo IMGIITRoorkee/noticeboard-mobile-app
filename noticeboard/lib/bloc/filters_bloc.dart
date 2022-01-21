@@ -80,7 +80,7 @@ class FiltersBloc {
       category = categories[0];
       _categorySink.add(category);
     } catch (e) {
-      _categorySink.addError(e.message);
+      if (!_categoryController.isClosed) _categorySink.addError(e.message);
     }
   }
 

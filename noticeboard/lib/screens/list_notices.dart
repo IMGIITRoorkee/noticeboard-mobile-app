@@ -357,7 +357,7 @@ class _ListNoticesState extends State<ListNotices> {
         future: _authRepository.fetchProfileFromStorage(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.picUrl != "") {
+            if (snapshot.data.picUrl != null && snapshot.data.picUrl != "") {
               return Padding(
                 padding:
                     const EdgeInsets.only(left: 10.0, top: 6.0, bottom: 4.0),
