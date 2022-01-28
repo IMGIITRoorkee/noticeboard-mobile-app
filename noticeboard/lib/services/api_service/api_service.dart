@@ -34,6 +34,7 @@ class ApiService {
         throw Exception('Failed to load notices');
       }
     } catch (e) {
+      print(e);
       throw Exception('Failed to load notices');
     }
   }
