@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:noticeboard/styles/launching_constants.dart';
 import 'package:noticeboard/styles/profile_constants.dart';
 import '../services/auth/auth_repository.dart';
@@ -20,8 +21,14 @@ class _LauncherState extends State<Launcher> {
       _authRepository.checkIfAlreadySignedIn(context);
     } catch (e) {
       showGenericError(context);
+      logout();
     }
     super.initState();
+  }
+
+  Future logout() async {
+    await _authRepository.logout();
+    Navigator.pushReplacementNamed(context, loginRoute);
   }
 
   @override
