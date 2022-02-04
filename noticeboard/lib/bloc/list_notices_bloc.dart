@@ -304,6 +304,8 @@ class ListNoticesBloc {
         if (listNoticeMetaData.dynamicFetch ==
             DynamicFetch.fetchPlacementNotices)
           filterResult.endpoint += '&banner=82';
+
+        // TODO: Add the if condition for Institute Notices case
       }
       PaginatedInfo paginatedInfo = await _listNoticesRepository
           .fetchFilteredNotices(filterResult.endpoint, page);

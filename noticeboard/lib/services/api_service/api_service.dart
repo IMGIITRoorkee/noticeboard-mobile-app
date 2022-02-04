@@ -17,7 +17,7 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response allNoticesResponse = await http
-          .get(BASE_URL + ALL_NOTICES + page.toString(), headers: {
+          .get(BASE_URL + INSTITUTE_NOTICES + page.toString(), headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
       });
       if (allNoticesResponse.statusCode == 200) {
@@ -206,6 +206,7 @@ class ApiService {
       AccessToken accessTokenObj =
           //     await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
+      print(endpoint);
       final http.Response response = await http
           .get(BASE_URL + endpoint + '&page=${page.toString()}', headers: {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
