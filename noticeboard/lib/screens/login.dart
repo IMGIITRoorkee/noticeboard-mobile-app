@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:noticeboard/enum/login_enum.dart';
+import 'package:noticeboard/global/password_field.dart';
 import '../bloc/login_bloc.dart';
 import '../styles/login_constants.dart';
 import '../global/global_functions.dart';
@@ -59,11 +60,12 @@ class _LoginState extends State<Login> {
                                         'username', 'Username', context, false),
                                   ),
                                   Container(
-                                    width: 250,
-                                    child: themeFormTextField(
-                                        'password', 'Password', context, false,
-                                        isPassword: true),
-                                  ),
+                                      width: 250,
+                                      child: PasswordField(
+                                        fieldName: 'password',
+                                        fieldHint: 'Password',
+                                        context: context,
+                                      )),
                                   TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
