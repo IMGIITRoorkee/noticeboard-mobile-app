@@ -6,7 +6,21 @@ class UserProfile {
   final String picUrl;
 
   static String toStringYear(int year) {
-    return year.toString() + ' Year';
+    switch (year) {
+      case 1:
+        return "1st Year";
+      case 2:
+        return "2nd Year";
+      case 3:
+        return "3rd Year";
+      case 4:
+        return "4th Year";
+      case 5:
+        return "5th Year";
+      case 6:
+        return "6th Year";
+    }
+    return year.toString() + " Year";
   }
 
   UserProfile(
