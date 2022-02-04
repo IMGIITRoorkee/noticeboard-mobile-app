@@ -332,15 +332,19 @@ class _FiltersState extends State<Filters> {
 
   Container buildButtons() {
     return Container(
-      height: 48.0,
-      child: Row(
+      color: globalBlue,
+      child: Column(
         children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
-              child: buildApplyContainer(),
-            ),
-          )
+          SizedBox(
+            height: 15,
+          ),
+          GestureDetector(
+            onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
+            child: buildApplyContainer(),
+          ),
+          SizedBox(
+            height: 15,
+          ),
         ],
       ),
     );

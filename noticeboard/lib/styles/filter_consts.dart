@@ -55,17 +55,11 @@ TextStyle dateTxtStyle = TextStyle(color: globalBlueColor);
 TextStyle applyBtnTxtStyle =
     TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.w400);
 
-Container buildApplyContainer() {
-  return Container(
-    color: globalBlueColor,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 160.0, vertical: 15.0),
-      child: Center(
-        child: Text(
-          'Apply',
-          style: applyBtnTxtStyle,
-        ),
-      ),
+Center buildApplyContainer() {
+  return Center(
+    child: Text(
+      'Apply',
+      style: applyBtnTxtStyle,
     ),
   );
 }
