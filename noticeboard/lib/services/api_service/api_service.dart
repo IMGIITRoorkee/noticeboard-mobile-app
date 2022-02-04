@@ -21,7 +21,7 @@ class ApiService {
         AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
       });
       if (allNoticesResponse.statusCode == 200) {
-        final body = jsonDecode(allNoticesResponse.body);
+        final body = jsonDecode(utf8.decode(allNoticesResponse.bodyBytes));
 
         bool hasMore = body['next'] == null ? false : true;
 
