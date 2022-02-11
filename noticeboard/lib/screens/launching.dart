@@ -17,13 +17,17 @@ class _LauncherState extends State<Launcher> {
 
   @override
   void initState() {
+    initiateBrain();
+    super.initState();
+  }
+
+  Future initiateBrain() async {
     try {
-      _authRepository.checkIfAlreadySignedIn(context);
+      await _authRepository.checkIfAlreadySignedIn(context);
     } catch (e) {
       showGenericError(context);
       logout();
     }
-    super.initState();
   }
 
   Future logout() async {

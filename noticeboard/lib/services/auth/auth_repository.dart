@@ -51,8 +51,10 @@ class AuthRepository {
   }
 
   Future logout() async {
-    await _authService.deRegisterNotificationToken();
-    await _authService.deleteRefreshToken();
+    try {
+      await _authService.deRegisterNotificationToken();
+      await _authService.deleteRefreshToken();
+    } catch (e) {}
   }
 
   Future<UserProfile> fetchProfileFromStorage() async {

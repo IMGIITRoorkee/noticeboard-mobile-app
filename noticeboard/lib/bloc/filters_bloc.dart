@@ -180,7 +180,8 @@ class FiltersBloc {
       String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
       String dateFilterEndpoint =
           'api/noticeboard/date_filter_view/?start=$start&end=$end';
-      FilterResult filterResult = FilterResult(endpoint: dateFilterEndpoint);
+      FilterResult filterResult = FilterResult(
+          endpoint: dateFilterEndpoint, startDate: start, endDate: end);
       return filterResult;
     } else if (dateTimeRange == null) {
       FilterResult filterResult = FilterResult(

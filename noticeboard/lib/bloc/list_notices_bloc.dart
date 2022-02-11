@@ -304,7 +304,10 @@ class ListNoticesBloc {
         if (listNoticeMetaData.dynamicFetch ==
             DynamicFetch.fetchPlacementNotices)
           filterResult.endpoint += '&banner=82';
-
+        if (listNoticeMetaData.dynamicFetch ==
+            DynamicFetch.fetchInstituteNotices)
+          filterResult.endpoint =
+              'api/noticeboard/institute_notices/?start=${filterResult.startDate}&end=${filterResult.endDate}';
         // TODO: Add the if condition for Institute Notices case
       }
       PaginatedInfo paginatedInfo = await _listNoticesRepository

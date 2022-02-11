@@ -330,22 +330,22 @@ class _FiltersState extends State<Filters> {
         ));
   }
 
-  Container buildButtons() {
-    return Container(
-      color: globalBlue,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 15,
-          ),
-          GestureDetector(
-            onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
-            child: buildApplyContainer(),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-        ],
+  GestureDetector buildButtons() {
+    return GestureDetector(
+      onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
+      child: Container(
+        color: globalBlue,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 15,
+            ),
+            buildApplyContainer(),
+            SizedBox(
+              height: 15,
+            ),
+          ],
+        ),
       ),
     );
   }

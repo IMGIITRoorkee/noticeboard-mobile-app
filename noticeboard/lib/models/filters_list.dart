@@ -46,5 +46,7 @@ class GlobalSelection {
 class FilterResult {
   final String label;
   String endpoint;
-  FilterResult({this.endpoint, this.label});
+  String startDate;
+  String endDate;
+  FilterResult({this.endpoint, this.label, this.startDate, this.endDate});
 }
