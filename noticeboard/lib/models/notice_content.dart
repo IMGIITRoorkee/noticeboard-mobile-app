@@ -1,7 +1,7 @@
 import 'package:noticeboard/services/endpoints/urls.dart';
 
 class NoticeContent {
-  final String content;
+  final String? content;
   NoticeContent({this.content});
 
   static String htmlCorrector(String incorrectHTML) {

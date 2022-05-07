@@ -16,10 +16,11 @@ class ApiService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response allNoticesResponse = await http
-          .get(BASE_URL + INSTITUTE_NOTICES + page.toString(), headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response allNoticesResponse = await http.get(
+          Uri.parse(BASE_URL + INSTITUTE_NOTICES + page.toString()),
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
+          });
       if (allNoticesResponse.statusCode == 200) {
         final body = jsonDecode(utf8.decode(allNoticesResponse.bodyBytes));
 
@@ -29,7 +30,7 @@ class ApiService {
         //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
@@ -45,9 +46,10 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response allSearchResponse = await http.get(
-          BASE_URL + ALL_NOTICES + page.toString() + '&keyword=$keyword',
+          Uri.parse(
+              BASE_URL + ALL_NOTICES + page.toString() + '&keyword=$keyword'),
           headers: {
-            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
           });
       if (allSearchResponse.statusCode == 200) {
         final body = jsonDecode(allSearchResponse.body);
@@ -58,7 +60,7 @@ class ApiService {
         //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load search results');
       }
@@ -74,12 +76,12 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response allSearchFilteredResponse = await http.get(
-          BASE_URL +
+          Uri.parse(BASE_URL +
               endpoint +
               '&page=${page.toString()}' +
-              '&keyword=$keyword',
+              '&keyword=$keyword'),
           headers: {
-            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
           });
       if (allSearchFilteredResponse.statusCode == 200) {
         final body = jsonDecode(allSearchFilteredResponse.body);
@@ -90,7 +92,7 @@ class ApiService {
         //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load search filtered results');
       }
@@ -104,10 +106,11 @@ class ApiService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response allImportantNoticesResponse = await http
-          .get(BASE_URL + IMPORTANT_NOTICES + page.toString(), headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response allImportantNoticesResponse = await http.get(
+          Uri.dataFromString(BASE_URL + IMPORTANT_NOTICES + page.toString()),
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
+          });
       if (allImportantNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allImportantNoticesResponse.body);
         bool hasMore = body['next'] == null ? false : true;
@@ -115,7 +118,7 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load important notices');
       }
@@ -129,10 +132,11 @@ class ApiService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response allExpiredNoticesResponse = await http
-          .get(BASE_URL + EXPIRED_NOTICES + page.toString(), headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response allExpiredNoticesResponse = await http.get(
+          Uri.parse(BASE_URL + EXPIRED_NOTICES + page.toString()),
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
+          });
       if (allExpiredNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allExpiredNoticesResponse.body);
         bool hasMore = body['next'] == null ? false : true;
@@ -140,7 +144,7 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load expired notices');
       }
@@ -154,10 +158,11 @@ class ApiService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response allBookmarkedNoticesResponse = await http
-          .get(BASE_URL + BOOKMARKED_NOTICES + page.toString(), headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response allBookmarkedNoticesResponse = await http.get(
+          Uri.parse(BASE_URL + BOOKMARKED_NOTICES + page.toString()),
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
+          });
       if (allBookmarkedNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allBookmarkedNoticesResponse.body);
         bool hasMore = body['next'] == null ? false : true;
@@ -165,7 +170,7 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load bookmarked notices');
       }
@@ -180,9 +185,9 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response placementNoticesResponse = await http.get(
-          BASE_URL + PLACEMENT_NOTICES + '&page=${page.toString()}',
+          Uri.parse(BASE_URL + PLACEMENT_NOTICES + '&page=${page.toString()}'),
           headers: {
-            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
           });
 
       if (placementNoticesResponse.statusCode == 200) {
@@ -192,7 +197,7 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
@@ -207,10 +212,11 @@ class ApiService {
           //     await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       print(endpoint);
-      final http.Response response = await http
-          .get(BASE_URL + endpoint + '&page=${page.toString()}', headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response response = await http.get(
+          Uri.parse(BASE_URL + endpoint + '&page=${page.toString()}'),
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
+          });
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
 
@@ -219,7 +225,7 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list, hasMore: hasMore);
+        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
@@ -233,12 +239,14 @@ class ApiService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response postResponse = await http.post(BASE_URL + STAR_READ,
-          headers: {
-            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
-            CONTENT_TYPE_KEY: CONTENT_TYPE
-          },
-          body: jsonEncode(obj));
+      final http.Response postResponse =
+          await http.post(Uri.parse(BASE_URL + STAR_READ),
+              headers: {
+                AUTHORIZAION_KEY:
+                    AUTHORIZATION_PREFIX + accessTokenObj.accessToken!,
+                CONTENT_TYPE_KEY: CONTENT_TYPE
+              },
+              body: jsonEncode(obj));
       if (postResponse.statusCode != 201) {
         throw Exception('Failure');
       }
@@ -252,12 +260,14 @@ class ApiService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response postResponse = await http.post(BASE_URL + STAR_READ,
-          headers: {
-            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
-            CONTENT_TYPE_KEY: CONTENT_TYPE
-          },
-          body: jsonEncode(obj));
+      final http.Response postResponse =
+          await http.post(Uri.parse(BASE_URL + STAR_READ),
+              headers: {
+                AUTHORIZAION_KEY:
+                    AUTHORIZATION_PREFIX + accessTokenObj.accessToken!,
+                CONTENT_TYPE_KEY: CONTENT_TYPE
+              },
+              body: jsonEncode(obj));
       if (postResponse.statusCode != 201) {
         throw Exception('Failure');
       }
@@ -266,15 +276,16 @@ class ApiService {
     }
   }
 
-  Future<NoticeContent> fetchNoticeContent(int id) async {
+  Future<NoticeContent> fetchNoticeContent(int? id) async {
     try {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      final http.Response contentResponse = await http
-          .get(BASE_URL + NOTICE_DETAIL + id.toString() + '/', headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
-      });
+      final http.Response contentResponse = await http.get(
+          Uri.parse(BASE_URL + NOTICE_DETAIL + id.toString() + '/'),
+          headers: {
+            AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
+          });
       if (contentResponse.statusCode == 200) {
         return NoticeContent.fromJSON(jsonDecode(contentResponse.body));
       } else {
@@ -291,8 +302,8 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response filterListResponse = await http
-          .get(BASE_URL + FILTERS_LIST, headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+          .get(Uri.parse(BASE_URL + FILTERS_LIST), headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
       });
 
       if (filterListResponse.statusCode == 200) {
@@ -313,8 +324,8 @@ class ApiService {
           // await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
       final http.Response allNoticesResponse = await http
-          .get(BASE_URL + ALL_NOTICES + '1', headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+          .get(Uri.parse(BASE_URL + ALL_NOTICES + '1'), headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
       });
       if (allNoticesResponse.statusCode == 200) {
         final body = jsonDecode(allNoticesResponse.body);

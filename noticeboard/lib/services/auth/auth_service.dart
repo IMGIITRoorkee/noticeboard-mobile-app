@@ -18,7 +18,7 @@ class AuthService {
   Future<RefreshToken> fetchUserTokens(dynamic obj) async {
     try {
       final http.Response postResponse = await http.post(
-          BASE_URL + EP_REFRESH_TOKEN,
+          Uri.parse(BASE_URL + EP_REFRESH_TOKEN),
           headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
           body: jsonEncode(obj));
       if (postResponse.statusCode == 200) {
@@ -42,7 +42,7 @@ class AuthService {
 
   Future storeProfile(UserProfile userProfile) async {
     if (userProfile.picUrl != null) {
-      await storage.write(key: "picUrl", value: BASE_URL + userProfile.picUrl);
+      await storage.write(key: "picUrl", value: BASE_URL + userProfile.picUrl!);
     } else {
       await storage.write(key: "picUrl", value: "");
     }
@@ -52,17 +52,17 @@ class AuthService {
     await storage.write(key: "branchName", value: userProfile.branchName);
   }
 
-  Future storeNotificationIdentifier(String notificationIdentifier) async {
+  Future storeNotificationIdentifier(String? notificationIdentifier) async {
     await storage.write(
         key: "notificationIdentifier", value: notificationIdentifier);
   }
 
   Future<UserProfile> fetchProfileFromStorage() async {
-    String picUrl = await storage.read(key: "picUrl");
-    String fullName = await storage.read(key: "fullName");
-    String degreeName = await storage.read(key: "degreeName");
-    String currentYear = await storage.read(key: "currentYear");
-    String branchName = await storage.read(key: "branchName");
+    String? picUrl = await storage.read(key: "picUrl");
+    String? fullName = await storage.read(key: "fullName");
+    String? degreeName = await storage.read(key: "degreeName");
+    String? currentYear = await storage.read(key: "currentYear");
+    String? branchName = await storage.read(key: "branchName");
     UserProfile userProfile = UserProfile(
         picUrl: picUrl,
         fullName: fullName,
@@ -73,19 +73,19 @@ class AuthService {
   }
 
   Future<RefreshToken> fetchRefreshToken() async {
-    String refreshToken = await storage.read(key: "refreshToken");
+    String? refreshToken = await storage.read(key: "refreshToken");
 
     return RefreshToken(refreshToken: refreshToken);
   }
 
-  Future<String> fetchNotificationIdentifier() async {
-    String notificationIdentifier =
+  Future<String?> fetchNotificationIdentifier() async {
+    String? notificationIdentifier =
         await storage.read(key: "notificationIdentifier");
     return notificationIdentifier;
   }
 
   Future<AccessToken> fetchAccessToken() async {
-    String accessToken = await storage.read(key: "accessToken");
+    String? accessToken = await storage.read(key: "accessToken");
 
     return AccessToken(accessToken: accessToken);
   }
@@ -100,7 +100,7 @@ class AuthService {
 
       var refreshObj = {"refresh": refreshTokenObj.refreshToken};
       final http.Response postResponse = await http.post(
-          BASE_URL + EP_ACCESS_TOKEN,
+          Uri.parse(BASE_URL + EP_ACCESS_TOKEN),
           headers: {CONTENT_TYPE_KEY: CONTENT_TYPE},
           body: jsonEncode(refreshObj));
 
@@ -120,8 +120,8 @@ class AuthService {
       AccessToken accessTokenObj = await fetchAccessToken();
       print(accessTokenObj.accessToken);
       final http.Response userProfileResponse = await http
-          .get(BASE_URL + EP_WHO_AM_I, headers: {
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken
+          .get(Uri.parse(BASE_URL + EP_WHO_AM_I), headers: {
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!
       });
 
       if (userProfileResponse.statusCode == 200) {
@@ -139,14 +139,14 @@ class AuthService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await fetchAccessToken();
-      String token = await FirebaseMessaging.instance.getToken();
+      String? token = await FirebaseMessaging.instance.getToken();
       NotificationToken notificationToken = NotificationToken(token);
       await storeNotificationIdentifier(notificationToken.clientIdentifier);
       final http.Response postResponse =
-          await http.post(BASE_URL + NOTIFICATION_EP,
+          await http.post(Uri.parse(BASE_URL + NOTIFICATION_EP),
               headers: {
                 AUTHORIZAION_KEY:
-                    AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
+                    AUTHORIZATION_PREFIX + accessTokenObj.accessToken!,
                 CONTENT_TYPE_KEY: CONTENT_TYPE
               },
               body: jsonEncode(notificationToken.retrievePayload()));
@@ -165,12 +165,12 @@ class AuthService {
       AccessToken accessTokenObj =
           // await _authService.fetchAccessTokenFromRefresh();
           await fetchAccessToken();
-      String notificationIdentifier = await fetchNotificationIdentifier();
+      String? notificationIdentifier = await fetchNotificationIdentifier();
 
       final request =
           http.Request("DELETE", Uri.parse(BASE_URL + NOTIFICATION_EP));
       request.headers.addAll(<String, String>{
-        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken,
+        AUTHORIZAION_KEY: AUTHORIZATION_PREFIX + accessTokenObj.accessToken!,
         CONTENT_TYPE_KEY: CONTENT_TYPE
       });
       request.body = jsonEncode(

@@ -9,13 +9,13 @@ import '../enum/dynamic_fetch_enum.dart';
 import '../models/filters_list.dart';
 
 class ListNoticesBloc {
-  BuildContext context;
-  DynamicFetch dynamicFetch;
-  FilterResult filterResult;
-  ListNoticeMetaData listNoticeMetaData;
+  BuildContext? context;
+  DynamicFetch? dynamicFetch;
+  late FilterResult filterResult;
+  ListNoticeMetaData? listNoticeMetaData;
   int page = 1;
   bool lazyLoad = false;
-  List<NoticeIntro> dynamicNoticeList;
+  List<NoticeIntro?>? dynamicNoticeList;
   bool hasMore = true;
   bool isLoading = false;
   bool filterVisibility = false;
@@ -27,9 +27,10 @@ class ListNoticesBloc {
   StreamSink<ListNoticesEvent> get eventSink => _eventController.sink;
   Stream<ListNoticesEvent> get _eventStream => _eventController.stream;
 
-  final _listNoticesController = StreamController<PaginatedInfo>();
-  StreamSink<PaginatedInfo> get _listNoticesSink => _listNoticesController.sink;
-  Stream<PaginatedInfo> get listNoticesStream => _listNoticesController.stream;
+  final _listNoticesController = StreamController<PaginatedInfo?>();
+  StreamSink<PaginatedInfo?> get _listNoticesSink =>
+      _listNoticesController.sink;
+  Stream<PaginatedInfo?> get listNoticesStream => _listNoticesController.stream;
 
   final _toggleBookmarkController = StreamController<NoticeIntro>();
   StreamSink<NoticeIntro> get toggleBookMarkSink =>
@@ -45,9 +46,9 @@ class ListNoticesBloc {
   StreamSink<NoticeIntro> get markUnreadSink => _markUnreadController.sink;
   Stream<NoticeIntro> get _markUnreadStream => _markUnreadController.stream;
 
-  final _appBarLabelController = StreamController<String>();
-  StreamSink<String> get _appBarLabelSink => _appBarLabelController.sink;
-  Stream<String> get appBarLabelStream => _appBarLabelController.stream;
+  final _appBarLabelController = StreamController<String?>();
+  StreamSink<String?> get _appBarLabelSink => _appBarLabelController.sink;
+  Stream<String?> get appBarLabelStream => _appBarLabelController.stream;
 
   final _filterVisibilityController = StreamController<bool>();
   StreamSink<bool> get filterVisibilitySink => _filterVisibilityController.sink;
@@ -83,7 +84,7 @@ class ListNoticesBloc {
     });
     _eventStream.listen((event) async {
       if (event == ListNoticesEvent.pushProfileEvent) {
-        _listNoticesRepository.pushProfileScreen(context);
+        _listNoticesRepository.pushProfileScreen(context!);
       }
     });
 
@@ -99,7 +100,7 @@ class ListNoticesBloc {
       } catch (e) {
         object.read = false;
         updateUi(object);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
           content: Text("Error!"),
         ));
       }
@@ -118,14 +119,14 @@ class ListNoticesBloc {
       } catch (e) {
         object.read = true;
         updateUi(object);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
           content: Text("Error!"),
         ));
       }
     });
 
     _toggleBookMarkStream.listen((object) async {
-      if (object.starred) {
+      if (object.starred!) {
         object.starred = false;
         updateUi(object);
         var obj = {
@@ -137,7 +138,7 @@ class ListNoticesBloc {
         } catch (e) {
           object.starred = true;
           updateUi(object);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
             content: Text("Error unmarking"),
           ));
         }
@@ -153,7 +154,7 @@ class ListNoticesBloc {
         } catch (e) {
           object.starred = false;
           updateUi(object);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
             content: Text("Error bookmarking"),
           ));
         }
@@ -162,7 +163,7 @@ class ListNoticesBloc {
   }
 
   Future dynamicFetchNotices() async {
-    if (!listNoticeMetaData.isSearch && !listNoticeMetaData.noFilters)
+    if (!listNoticeMetaData!.isSearch && !listNoticeMetaData!.noFilters)
       updateUnreadCount();
     if (!lazyLoad) _listNoticesSink.add(null);
     if (dynamicFetch == DynamicFetch.fetchSearchResults)
@@ -184,17 +185,17 @@ class ListNoticesBloc {
   }
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
-    if (!noticeIntro.read) markReadSink.add(noticeIntro);
-    Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro)
-        .then((value) => updateUi(value));
+    if (!noticeIntro.read!) markReadSink.add(noticeIntro);
+    Navigator.pushNamed(context!, noticeDetailRoute, arguments: noticeIntro)
+        .then((value) => updateUi(value as NoticeIntro?));
   }
 
-  void handleAfterFetch(bool doesItHasMore, List<NoticeIntro> list) {
+  void handleAfterFetch(bool doesItHasMore, List<NoticeIntro?>? list) {
     if (!doesItHasMore) hasMore = false;
     if (!lazyLoad) {
       dynamicNoticeList = list;
     } else {
-      dynamicNoticeList.addAll(list);
+      dynamicNoticeList!.addAll(list!);
     }
     _listNoticesSink
         .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
@@ -245,11 +246,11 @@ class ListNoticesBloc {
       try {
         PaginatedInfo paginatedInfo = await _listNoticesRepository
             .fetchAllSearchResults(page, searchQuery);
-        List<NoticeIntro> allSearchResults = paginatedInfo.list;
-        handleAfterFetch(paginatedInfo.hasMore, allSearchResults);
+        List<NoticeIntro?>? allSearchResults = paginatedInfo.list;
+        handleAfterFetch(paginatedInfo.hasMore!, allSearchResults);
       } catch (e) {
         if (!_listNoticesController.isClosed)
-          _listNoticesSink.addError(e.message.toString());
+          _listNoticesSink.addError(e.toString());
       }
     }
   }
@@ -259,39 +260,39 @@ class ListNoticesBloc {
       try {
         PaginatedInfo paginatedInfo =
             await _listNoticesRepository.fetchSearchFilteredNotices(
-                filterResult.endpoint, page, searchQuery);
-        List<NoticeIntro> allSearchFilteredNotices = paginatedInfo.list;
-        handleAfterFetch(paginatedInfo.hasMore, allSearchFilteredNotices);
+                filterResult.endpoint!, page, searchQuery);
+        List<NoticeIntro?>? allSearchFilteredNotices = paginatedInfo.list;
+        handleAfterFetch(paginatedInfo.hasMore!, allSearchFilteredNotices);
       } catch (e) {
         if (!_listNoticesController.isClosed)
-          _listNoticesSink.addError(e.message.toString());
+          _listNoticesSink.addError(e.toString());
       }
     }
   }
 
   Future fetchInstituteNotices() async {
-    _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
+    _appBarLabelSink.add(listNoticeMetaData!.appBarLabel);
     try {
       PaginatedInfo paginatedInfo =
           await _listNoticesRepository.fetchInstituteNotices(page);
-      List<NoticeIntro> allInstituteNotices = paginatedInfo.list;
-      handleAfterFetch(paginatedInfo.hasMore, allInstituteNotices);
+      List<NoticeIntro?>? allInstituteNotices = paginatedInfo.list;
+      handleAfterFetch(paginatedInfo.hasMore!, allInstituteNotices);
     } catch (e) {
       if (!_listNoticesController.isClosed)
-        _listNoticesSink.addError(e.message.toString());
+        _listNoticesSink.addError(e.toString());
     }
   }
 
   Future fetchPlacementNotices() async {
-    _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
+    _appBarLabelSink.add(listNoticeMetaData!.appBarLabel);
     try {
       PaginatedInfo paginatedInfo =
           await _listNoticesRepository.fetchPlacementNotices(page);
-      List<NoticeIntro> allPlacementNotices = paginatedInfo.list;
-      handleAfterFetch(paginatedInfo.hasMore, allPlacementNotices);
+      List<NoticeIntro?>? allPlacementNotices = paginatedInfo.list;
+      handleAfterFetch(paginatedInfo.hasMore!, allPlacementNotices);
     } catch (e) {
       if (!_listNoticesController.isClosed)
-        _listNoticesSink.addError(e.message.toString());
+        _listNoticesSink.addError(e.toString());
     }
   }
 
@@ -300,23 +301,23 @@ class ListNoticesBloc {
       if (filterResult.label != null)
         _appBarLabelSink.add(filterResult.label);
       else {
-        _appBarLabelSink.add(listNoticeMetaData.appBarLabel);
-        if (listNoticeMetaData.dynamicFetch ==
+        _appBarLabelSink.add(listNoticeMetaData!.appBarLabel);
+        if (listNoticeMetaData!.dynamicFetch ==
             DynamicFetch.fetchPlacementNotices)
-          filterResult.endpoint += '&banner=82';
-        if (listNoticeMetaData.dynamicFetch ==
+          filterResult.endpoint = filterResult.endpoint! + '&banner=82';
+        if (listNoticeMetaData!.dynamicFetch ==
             DynamicFetch.fetchInstituteNotices)
           filterResult.endpoint =
               'api/noticeboard/institute_notices/?start=${filterResult.startDate}&end=${filterResult.endDate}';
         // TODO: Add the if condition for Institute Notices case
       }
       PaginatedInfo paginatedInfo = await _listNoticesRepository
-          .fetchFilteredNotices(filterResult.endpoint, page);
-      List<NoticeIntro> allFilteredNotices = paginatedInfo.list;
-      handleAfterFetch(paginatedInfo.hasMore, allFilteredNotices);
+          .fetchFilteredNotices(filterResult.endpoint!, page);
+      List<NoticeIntro?>? allFilteredNotices = paginatedInfo.list;
+      handleAfterFetch(paginatedInfo.hasMore!, allFilteredNotices);
     } catch (e) {
       if (!_listNoticesController.isClosed)
-        _listNoticesSink.addError(e.message.toString());
+        _listNoticesSink.addError(e.toString());
     }
   }
 
@@ -324,11 +325,11 @@ class ListNoticesBloc {
     try {
       PaginatedInfo paginatedInfo =
           await _listNoticesRepository.fetchImportantNotices(page);
-      List<NoticeIntro> allImportantNotices = paginatedInfo.list;
-      handleAfterFetch(paginatedInfo.hasMore, allImportantNotices);
+      List<NoticeIntro?>? allImportantNotices = paginatedInfo.list;
+      handleAfterFetch(paginatedInfo.hasMore!, allImportantNotices);
     } catch (e) {
       if (!_listNoticesController.isClosed)
-        _listNoticesSink.addError(e.message.toString());
+        _listNoticesSink.addError(e.toString());
     }
   }
 
@@ -336,11 +337,11 @@ class ListNoticesBloc {
     try {
       PaginatedInfo paginatedInfo =
           await _listNoticesRepository.fetchExpiredNotices(page);
-      List<NoticeIntro> allExpiredNotices = paginatedInfo.list;
-      handleAfterFetch(paginatedInfo.hasMore, allExpiredNotices);
+      List<NoticeIntro?>? allExpiredNotices = paginatedInfo.list;
+      handleAfterFetch(paginatedInfo.hasMore!, allExpiredNotices);
     } catch (e) {
       if (!_listNoticesController.isClosed)
-        _listNoticesSink.addError(e.message.toString());
+        _listNoticesSink.addError(e.toString());
     }
   }
 
@@ -348,15 +349,16 @@ class ListNoticesBloc {
     try {
       PaginatedInfo paginatedInfo =
           await _listNoticesRepository.fetchBookmarkedNotices(page);
-      List<NoticeIntro> allBookmarkedNotices = paginatedInfo.list;
-      handleAfterFetch(paginatedInfo.hasMore, allBookmarkedNotices);
+      List<NoticeIntro?>? allBookmarkedNotices = paginatedInfo.list;
+      handleAfterFetch(paginatedInfo.hasMore!, allBookmarkedNotices);
     } catch (e) {
       if (!_listNoticesController.isClosed)
-        _listNoticesSink.addError(e.message.toString());
+        _listNoticesSink.addError(e.toString());
     }
   }
 
-  void applySearchFilters(FilterResult value) async {
+  void applySearchFilters(FilterResult? value) async {
+    print("object");
     page = 1;
     hasMore = true;
     lazyLoad = false;
@@ -367,7 +369,7 @@ class ListNoticesBloc {
       dynamicFetch = DynamicFetch.fetchSearchFilteredResults;
       dynamicFetchNotices();
     } else {
-      dynamicFetch = listNoticeMetaData.dynamicFetch;
+      dynamicFetch = listNoticeMetaData!.dynamicFetch;
       dynamicFetchNotices();
     }
     if (dynamicFetch == DynamicFetch.fetchSearchFilteredResults)
@@ -376,7 +378,8 @@ class ListNoticesBloc {
       _filterActiveSink.add(false);
   }
 
-  void applyFilters(FilterResult value) async {
+  void applyFilters(FilterResult? value) async {
+    print(value);
     page = 1;
     hasMore = true;
     lazyLoad = false;
@@ -388,7 +391,7 @@ class ListNoticesBloc {
       dynamicFetch = DynamicFetch.fetchFilterNotices;
       dynamicFetchNotices();
     } else {
-      dynamicFetch = listNoticeMetaData.dynamicFetch;
+      dynamicFetch = listNoticeMetaData!.dynamicFetch;
       dynamicFetchNotices();
     }
     if (dynamicFetch == DynamicFetch.fetchFilterNotices)
@@ -415,7 +418,7 @@ class ListNoticesBloc {
         dynamicFetch: DynamicFetch.fetchImportantNotices,
         noFilters: true,
         isSearch: false);
-    Navigator.pushNamed(context, listNoticesRoute,
+    Navigator.pushNamed(context!, listNoticesRoute,
         arguments: impListNoticeMetaData);
   }
 
@@ -425,7 +428,7 @@ class ListNoticesBloc {
         dynamicFetch: DynamicFetch.fetchSearchResults,
         noFilters: false,
         isSearch: true);
-    Navigator.pushNamed(context, listNoticesRoute,
+    Navigator.pushNamed(context!, listNoticesRoute,
         arguments: listNoticeMetaData);
   }
 
@@ -439,9 +442,9 @@ class ListNoticesBloc {
     _isSearchingSink.add(isSearching);
   }
 
-  void updateUi(NoticeIntro object) {
-    dynamicNoticeList[dynamicNoticeList
-        .indexWhere((noticeIntro) => noticeIntro.id == object.id)] = object;
+  void updateUi(NoticeIntro? object) {
+    dynamicNoticeList![dynamicNoticeList!
+        .indexWhere((noticeIntro) => noticeIntro!.id == object!.id)] = object;
     _listNoticesSink
         .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
   }

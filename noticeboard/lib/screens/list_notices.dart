@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:noticeboard/models/filters_list.dart';
 import 'package:noticeboard/models/notice_intro.dart';
+import 'package:noticeboard/models/paginated_info.dart';
 import 'package:noticeboard/services/auth/auth_repository.dart';
 import '../enum/list_notices_enum.dart';
 import '../bloc/list_notices_bloc.dart';
@@ -10,11 +11,10 @@ import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'filters.dart';
 import '../styles/list_notices_consts.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class ListNotices extends StatefulWidget {
-  final ListNoticeMetaData listNoticeMetaData;
-  ListNotices({@required this.listNoticeMetaData});
+  final ListNoticeMetaData? listNoticeMetaData;
+  ListNotices({required this.listNoticeMetaData});
   @override
   _ListNoticesState createState() => _ListNoticesState();
 }
@@ -22,15 +22,15 @@ class ListNotices extends StatefulWidget {
 class _ListNoticesState extends State<ListNotices> {
   final ListNoticesBloc _listNoticesBloc = ListNoticesBloc();
   final AuthRepository _authRepository = AuthRepository();
-  TextEditingController _controller; // search
+  TextEditingController? _controller; // search
 
   @override
   void initState() {
     _controller = TextEditingController(); // search
     _listNoticesBloc.context = context;
     _listNoticesBloc.listNoticeMetaData = widget.listNoticeMetaData;
-    _controller.addListener(_handleQueryChanges);
-    _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData.dynamicFetch;
+    _controller!.addListener(_handleQueryChanges);
+    _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData!.dynamicFetch;
     _listNoticesBloc.dynamicFetchNotices();
     super.initState();
   }
@@ -41,17 +41,17 @@ class _ListNoticesState extends State<ListNotices> {
   }
 
   _handleQueryChanges() {
-    _listNoticesBloc.querySink.add(_controller.text);
+    _listNoticesBloc.querySink.add(_controller!.text);
   }
 
   void clearSearch() {
-    _controller.clear();
+    _controller!.clear();
   }
 
   @override
   void dispose() {
     _listNoticesBloc.disposeStreams();
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -73,12 +73,12 @@ class _ListNoticesState extends State<ListNotices> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: widget.listNoticeMetaData.noFilters
+      appBar: widget.listNoticeMetaData!.noFilters
           ? buildNoFiltersAppBar()
-          : widget.listNoticeMetaData.isSearch
+          : widget.listNoticeMetaData!.isSearch
               ? buildSearchBar(context)
               : buildFiltersAppBar(),
-      body: widget.listNoticeMetaData.noFilters
+      body: widget.listNoticeMetaData!.noFilters
           ? buildListNoticesBox(height, width)
           : buildAdvanceNoticesBox(height, width),
     );
@@ -121,22 +121,22 @@ class _ListNoticesState extends State<ListNotices> {
                         stream: _listNoticesBloc.isSearchingStream,
                         initialData: false,
                         builder: (context, snapshot) {
-                          if (snapshot.data) {
+                          if (snapshot.data as bool) {
                             return IconButton(
                               icon: Icon(
                                 Icons.clear,
-                                color: HexColor('#5288da'),
+                                color: Color(0xFF5288da),
                               ),
                               onPressed: clearSearch,
                             );
                           }
                           return Icon(
                             Icons.search,
-                            color: HexColor('#5288da'),
+                            color: Color(0xFF5288da),
                           );
                         }),
                     filled: true,
-                    fillColor: HexColor('#edf4ff'),
+                    fillColor: Color(0xFFedf4ff),
                     hintText: 'Search all notices',
                   ),
                 ),
@@ -145,11 +145,11 @@ class _ListNoticesState extends State<ListNotices> {
                 width: 10.0,
               ),
               IconButton(
-                icon: StreamBuilder(
+                icon: StreamBuilder<bool?>(
                     stream: _listNoticesBloc.filterActiveStream,
                     initialData: false,
                     builder: (context, snapshot) {
-                      return buildSearchFilterActive(snapshot.data);
+                      return buildSearchFilterActive(snapshot.data!);
                     }),
                 onPressed: () {
                   _listNoticesBloc.toggleVisibility();
@@ -172,11 +172,11 @@ class _ListNoticesState extends State<ListNotices> {
               _listNoticesBloc.pushSearch();
             }),
         IconButton(
-          icon: StreamBuilder(
+          icon: StreamBuilder<bool?>(
               stream: _listNoticesBloc.filterActiveStream,
               initialData: false,
               builder: (context, snapshot) {
-                return buildFilterActive(snapshot.data);
+                return buildFilterActive(snapshot.data!);
               }),
           onPressed: () {
             _listNoticesBloc.toggleVisibility();
@@ -208,7 +208,7 @@ class _ListNoticesState extends State<ListNotices> {
         ),
       ),
       leadingWidth: 40.0,
-      title: Text(widget.listNoticeMetaData.appBarLabel,
+      title: Text(widget.listNoticeMetaData!.appBarLabel,
           style: TextStyle(
               color: globalBlueColor,
               fontSize: 18.0,
@@ -219,7 +219,7 @@ class _ListNoticesState extends State<ListNotices> {
   }
 
   StreamBuilder<bool> buildAdvanceNoticesBox(double height, double width) {
-    return StreamBuilder(
+    return StreamBuilder<bool>(
         stream: _listNoticesBloc.filterVisibilityStream,
         initialData: false,
         builder: (context, snapshot) {
@@ -227,14 +227,14 @@ class _ListNoticesState extends State<ListNotices> {
             child: Column(
               children: [
                 Expanded(
-                  flex: snapshot.data ? 1 : 0,
+                  flex: snapshot.data! ? 1 : 0,
                   child: Visibility(
-                      visible: snapshot.data,
+                      visible: snapshot.data!,
                       maintainState: true,
                       child: Container(
                         height: height * 0.5,
                         child: Filters(
-                          onApplyFilters: !widget.listNoticeMetaData.isSearch
+                          onApplyFilters: widget.listNoticeMetaData!.isSearch
                               ? (FilterResult filterResult) =>
                                   _listNoticesBloc.applyFilters(filterResult)
                               : (FilterResult filterResult) => _listNoticesBloc
@@ -244,9 +244,9 @@ class _ListNoticesState extends State<ListNotices> {
                       )),
                 ),
                 Expanded(
-                  flex: !snapshot.data ? 1 : 0,
+                  flex: !snapshot.data! ? 1 : 0,
                   child: Visibility(
-                    visible: !snapshot.data,
+                    visible: !snapshot.data!,
                     maintainState: true,
                     child: Container(
                         height: height * 0.5,
@@ -268,25 +268,25 @@ class _ListNoticesState extends State<ListNotices> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              !widget.listNoticeMetaData.noFilters &&
-                      !widget.listNoticeMetaData.isSearch
-                  ? StreamBuilder(
-                      initialData: widget.listNoticeMetaData.appBarLabel,
+              !widget.listNoticeMetaData!.noFilters &&
+                      !widget.listNoticeMetaData!.isSearch
+                  ? StreamBuilder<String?>(
+                      initialData: widget.listNoticeMetaData!.appBarLabel,
                       stream: _listNoticesBloc.appBarLabelStream,
                       builder: (context, snapshot) {
                         return Container(
                           padding: EdgeInsets.only(
                               left: 19.0, right: 19.0, top: 15.0, bottom: 15.0),
                           child: Text(
-                            snapshot.data,
+                            snapshot.data!,
                             style: appLabelTxtStyle,
                           ),
                         );
                       })
                   : Container(),
-              !widget.listNoticeMetaData.noFilters &&
-                      !widget.listNoticeMetaData.isSearch
-                  ? StreamBuilder(
+              !widget.listNoticeMetaData!.noFilters &&
+                      !widget.listNoticeMetaData!.isSearch
+                  ? StreamBuilder<String>(
                       stream: _listNoticesBloc.unreadCountStream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -306,7 +306,8 @@ class _ListNoticesState extends State<ListNotices> {
                                       Container(
                                           padding: EdgeInsets.all(5.0),
                                           color: noticeCardColor,
-                                          child: Text(snapshot.data + ' Unread',
+                                          child: Text(
+                                              snapshot.data! + ' Unread',
                                               style: unreadTxtStyle))
                                     ],
                                   ),
@@ -327,17 +328,17 @@ class _ListNoticesState extends State<ListNotices> {
               Expanded(
                 child: Container(
                   width: width,
-                  child: StreamBuilder(
+                  child: StreamBuilder<PaginatedInfo?>(
                     stream: _listNoticesBloc.listNoticesStream,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        if (snapshot.data.list.length == 0)
+                        if (snapshot.data!.list!.length == 0)
                           return buildNoResults();
                         return buildNoticesList(snapshot, width, height);
                       } else if (snapshot.hasError) {
                         return buildErrorWidget(snapshot);
                       }
-                      if (widget.listNoticeMetaData.isSearch &&
+                      if (widget.listNoticeMetaData!.isSearch &&
                           _listNoticesBloc.searchQuery == '')
                         return Container();
                       return buildShimmerList(context, 3); //buildLoading();
@@ -427,14 +428,14 @@ class _ListNoticesState extends State<ListNotices> {
       menuItems: <FocusedMenuItem>[
         // Add Each FocusedMenuItem  for Menu Options
         FocusedMenuItem(
-            title: Text(bookMarkTextDecider(noticeIntroObj.starred)),
-            trailingIcon: bookMarkIconDecider(noticeIntroObj.starred),
+            title: Text(bookMarkTextDecider(noticeIntroObj.starred!)),
+            trailingIcon: bookMarkIconDecider(noticeIntroObj.starred!),
             onPressed: () {
               _listNoticesBloc.toggleBookMarkSink.add(noticeIntroObj);
               HapticFeedback.lightImpact();
             }),
 
-        !noticeIntroObj.read
+        !noticeIntroObj.read!
             ? FocusedMenuItem(
                 title: Text("Mark as Read"),
                 trailingIcon: Icon(Icons.visibility),
@@ -457,7 +458,7 @@ class _ListNoticesState extends State<ListNotices> {
   Container buildNoticeIntroContainer(
       NoticeIntro noticeIntroObj, double width, bool isTop) {
     return Container(
-      color: !noticeIntroObj.read ? globalWhiteColor : noticeReadColor,
+      color: !noticeIntroObj.read! ? globalWhiteColor : noticeReadColor,
       width: width,
       child: Padding(
         padding: !isTop
@@ -479,7 +480,7 @@ class _ListNoticesState extends State<ListNotices> {
                           children: [
                             Row(
                               children: [
-                                noticeIntroObj.starred
+                                noticeIntroObj.starred!
                                     ? Padding(
                                         padding:
                                             const EdgeInsets.only(right: 5.0),
@@ -492,7 +493,7 @@ class _ListNoticesState extends State<ListNotices> {
                                 Expanded(
                                   child: Container(
                                     width: width,
-                                    child: Text(noticeIntroObj.department,
+                                    child: Text(noticeIntroObj.department!,
                                         overflow: TextOverflow.ellipsis,
                                         style: departmentTxtStyle),
                                   ),
@@ -504,7 +505,7 @@ class _ListNoticesState extends State<ListNotices> {
                             ),
                             Container(
                               width: width,
-                              child: Text(noticeIntroObj.dateCreated,
+                              child: Text(noticeIntroObj.dateCreated!,
                                   style: dateTxtStyle,
                                   overflow: TextOverflow.ellipsis),
                             )
@@ -519,7 +520,7 @@ class _ListNoticesState extends State<ListNotices> {
                                     .add(noticeIntroObj);
                               },
                               child:
-                                  bookMarkIconDecider(noticeIntroObj.starred)))
+                                  bookMarkIconDecider(noticeIntroObj.starred!)))
                     ],
                   ),
                   SizedBox(
@@ -527,7 +528,7 @@ class _ListNoticesState extends State<ListNotices> {
                   ),
                   Container(
                       width: width,
-                      child: Text(noticeIntroObj.title,
+                      child: Text(noticeIntroObj.title!,
                           style: noticeTitleTxtStyle,
                           softWrap: false,
                           maxLines: 2,

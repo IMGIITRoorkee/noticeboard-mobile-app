@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import '../global/global_functions.dart';
 
-var globalLightBlueColor = HexColor('#edf4ff');
+var globalLightBlueColor = Color(0xFFedf4ff);
 var globalWhiteColor = Colors.white;
-var globalBlueColor = HexColor('#5288da');
+var globalBlueColor = Color(0xFF5288da);
 
 Icon shareIcon = Icon(
   Icons.share,
@@ -13,7 +12,7 @@ Icon shareIcon = Icon(
 
 Container buildErrorContainer(AsyncSnapshot snapshot) {
   return Container(
-    child: Text(snapshot.error),
+    child: Text(snapshot.error as String),
   );
 }
 

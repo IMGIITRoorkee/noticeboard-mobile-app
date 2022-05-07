@@ -6,10 +6,10 @@ class PasswordField extends StatefulWidget {
   final String fieldHint;
   final BuildContext context;
   const PasswordField(
-      {Key key,
-      @required this.fieldHint,
-      @required this.fieldName,
-      @required this.context})
+      {Key? key,
+      required this.fieldHint,
+      required this.fieldName,
+      required this.context})
       : super(key: key);
 
   @override
@@ -17,7 +17,7 @@ class PasswordField extends StatefulWidget {
 }
 
 class _PasswordFieldState extends State<PasswordField> {
-  bool _passwordVisible;
+  late bool _passwordVisible;
 
   @override
   void initState() {

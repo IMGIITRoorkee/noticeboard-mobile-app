@@ -14,30 +14,28 @@ class MyRouter {
     switch (settings.name) {
       case launchingRoute:
         return MaterialPageRoute(builder: (context) => Launcher());
-        break;
       case loginRoute:
         return MaterialPageRoute(builder: (context) => Login());
-        break;
       case bottomNavigationRoute:
         return MaterialPageRoute(builder: (context) => MyBottomNavigationBar());
-        break;
       case profileRoute:
         return MaterialPageRoute(builder: (context) => Profile());
-        break;
       case listNoticesRoute:
-        ListNoticeMetaData listNoticeMetaData = settings.arguments;
+        ListNoticeMetaData? listNoticeMetaData =
+            settings.arguments as ListNoticeMetaData?;
 
         return MaterialPageRoute(
             builder: (context) => ListNotices(
                   listNoticeMetaData: listNoticeMetaData,
                 ));
-        break;
       case noticeDetailRoute:
-        NoticeIntro noticeIntro = settings.arguments;
+        NoticeIntro? noticeIntro = settings.arguments as NoticeIntro?;
         return MaterialPageRoute(
             builder: (context) => NoticeDetail(
                   noticeIntro: noticeIntro,
                 ));
+      default:
+        return MaterialPageRoute(builder: (context) => Login());
     }
   }
 }

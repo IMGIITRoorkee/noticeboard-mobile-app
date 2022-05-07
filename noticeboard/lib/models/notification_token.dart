@@ -1,10 +1,10 @@
 import 'dart:math';
 
 class NotificationToken {
-  String token;
-  String clientIdentifier;
+  String? token;
+  String? clientIdentifier;
 
-  NotificationToken(String token) {
+  NotificationToken(String? token) {
     this.token = token;
     this.clientIdentifier = genClientIdentifier();
   }

@@ -1,10 +1,10 @@
 class Banner {
-  final String slug;
-  final String display;
-  final String mainDisplay;
+  final String? slug;
+  final String? display;
+  final String? mainDisplay;
   Banner({this.slug, this.display, this.mainDisplay});
 
-  static String toEndPoint(int id) {
+  static String toEndPoint(int? id) {
     return 'api/noticeboard/filter/?banner=' + id.toString();
   }
 
@@ -17,9 +17,9 @@ class Banner {
 }
 
 class Category {
-  final String mainDisplay;
-  final String mainSlug;
-  final List<Banner> bannerList;
+  final String? mainDisplay;
+  final String? mainSlug;
+  final List<Banner>? bannerList;
   Category({this.mainDisplay, this.mainSlug, this.bannerList});
 
   static String toMainEndPoint(String orSlug) {
@@ -37,16 +37,16 @@ class Category {
 }
 
 class GlobalSelection {
-  final String globalSlug;
-  final String globalDisplayName;
-  final String display;
+  final String? globalSlug;
+  final String? globalDisplayName;
+  final String? display;
   GlobalSelection({this.globalDisplayName, this.globalSlug, this.display});
 }
 
 class FilterResult {
-  final String label;
-  String endpoint;
-  String startDate;
-  String endDate;
+  final String? label;
+  String? endpoint;
+  String? startDate;
+  String? endDate;
   FilterResult({this.endpoint, this.label, this.startDate, this.endDate});
 }

@@ -1,11 +1,11 @@
 class UserProfile {
-  final String fullName;
-  final String degreeName;
-  final String currentYear;
-  final String branchName;
-  final String picUrl;
+  final String? fullName;
+  final String? degreeName;
+  final String? currentYear;
+  final String? branchName;
+  final String? picUrl;
 
-  static String toStringYear(int year) {
+  static String toStringYear(int? year) {
     switch (year) {
       case 1:
         return "1st Year";

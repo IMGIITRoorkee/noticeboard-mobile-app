@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
-var globalBlueColor = HexColor('#5288da');
+var globalBlueColor = Color(0xFF5288da);
 var globalWhiteColor = Colors.white;
 
 BottomNavigationBarItem instituteNoticesBottomItem = BottomNavigationBarItem(
@@ -19,4 +18,4 @@ BottomNavigationBarItem placementInternshipBottomItem = BottomNavigationBarItem(
     label: 'Placement and Internships');
 
 TextStyle fixedBottomItemTextStyle =
-    TextStyle(color: HexColor('#ffffff'), fontSize: 12.0);
+    TextStyle(color: Color(0xFFffffff), fontSize: 12.0);

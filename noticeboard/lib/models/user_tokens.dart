@@ -1,5 +1,5 @@
 class RefreshToken {
-  final String refreshToken;
+  final String? refreshToken;
 
   RefreshToken({this.refreshToken});
 
@@ -9,7 +9,7 @@ class RefreshToken {
 }
 
 class AccessToken {
-  final String accessToken;
+  final String? accessToken;
 
   AccessToken({this.accessToken});
 

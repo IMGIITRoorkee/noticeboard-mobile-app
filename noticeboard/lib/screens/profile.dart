@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noticeboard/global/global_functions.dart';
+import 'package:noticeboard/models/user_profile.dart';
 import '../styles/profile_constants.dart';
 import '../bloc/profile_bloc.dart';
 import '../enum/profile_enum.dart';
@@ -52,10 +53,11 @@ class _ProfileState extends State<Profile> {
                 children: [
                   Container(
                     constraints: BoxConstraints(minHeight: _height * 0.28),
-                    child: FutureBuilder(
+                    child: FutureBuilder<UserProfile>(
                         future: _authRepository.fetchProfileFromStorage(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
+                            print(snapshot.data!.fullName);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -73,27 +75,28 @@ class _ProfileState extends State<Profile> {
                                 sizedBox(10.0),
                                 noOverFlowTextContainer(
                                     _width,
-                                    snapshot.data.fullName,
+                                    snapshot.data!.fullName!,
                                     blackSuperBoldMediumSizeText),
                                 sizedBox(10.0),
                                 noOverFlowTextContainer(
                                     _width,
-                                    snapshot.data.degreeName,
+                                    snapshot.data!.degreeName!,
                                     lightGreySmallSizeText),
                                 sizedBox(5.0),
                                 noOverFlowTextContainer(
                                     _width,
-                                    snapshot.data.currentYear,
+                                    snapshot.data!.currentYear!,
                                     lightGreySmallSizeText),
                                 sizedBox(5.0),
                                 noOverFlowTextContainer(
                                     _width,
-                                    snapshot.data.branchName,
+                                    snapshot.data!.branchName!,
                                     lightGreySmallSizeText)
                               ],
                             );
                           } else if (snapshot.hasError) {
-                            return errorFetchingProfile(snapshot.error);
+                            return errorFetchingProfile(
+                                snapshot.error as String);
                           }
                           return inProgress;
                         }),

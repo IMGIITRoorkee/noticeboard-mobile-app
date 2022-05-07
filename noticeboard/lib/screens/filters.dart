@@ -8,8 +8,8 @@ import '../global/global_functions.dart';
 
 class Filters extends StatefulWidget {
   final VoidCallback onCancel;
-  final Function(FilterResult) onApplyFilters;
-  Filters({@required this.onCancel, @required this.onApplyFilters});
+  final void Function(FilterResult) onApplyFilters;
+  Filters({required this.onCancel, required this.onApplyFilters});
   @override
   _FiltersState createState() => _FiltersState();
 }
@@ -62,11 +62,11 @@ class _FiltersState extends State<Filters> {
         Expanded(
           child: Container(
             width: _width,
-            child: StreamBuilder(
+            child: StreamBuilder<Category?>(
               stream: _filtersBloc.categoryStream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  Category category = snapshot.data;
+                  Category? category = snapshot.data;
                   return buildFilters(_width, _height, category);
                 } else if (snapshot.hasError) {
                   return buildErrorWidget(snapshot);
@@ -80,13 +80,13 @@ class _FiltersState extends State<Filters> {
     );
   }
 
-  Column buildFilters(double width, double height, Category category) {
+  Column buildFilters(double width, double height, Category? category) {
     return Column(
       children: [buildFilterList(width, category, height), buildButtons()],
     );
   }
 
-  Expanded buildFilterList(double width, Category category, double height) {
+  Expanded buildFilterList(double width, Category? category, double height) {
     return Expanded(
       child: Row(
         children: [buildCategoryList(width, height), buildCategory(category)],
@@ -94,10 +94,10 @@ class _FiltersState extends State<Filters> {
     );
   }
 
-  Expanded buildCategory(Category category) {
+  Expanded buildCategory(Category? category) {
     return Expanded(
       flex: 5,
-      child: StreamBuilder(
+      child: StreamBuilder<GlobalSelection?>(
           stream: _filtersBloc.globalSelectionStream,
           builder: (context, globalSelectionStream) {
             return Container(
@@ -110,11 +110,11 @@ class _FiltersState extends State<Filters> {
                     children: [
                       Radio(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: category.mainSlug,
+                        value: category!.mainSlug,
                         groupValue: globalSelectionStream.data == null
                             ? null
-                            : globalSelectionStream.data.globalSlug,
-                        onChanged: (value) {
+                            : globalSelectionStream.data!.globalSlug,
+                        onChanged: (dynamic value) {
                           GlobalSelection selection = GlobalSelection(
                               globalDisplayName: category.mainDisplay,
                               globalSlug: value,
@@ -125,7 +125,7 @@ class _FiltersState extends State<Filters> {
                       ),
                       Expanded(
                         child: Text(
-                          'All ' + category.mainDisplay,
+                          'All ' + category.mainDisplay!,
                           style: TextStyle(fontSize: 13.0),
                           overflow: TextOverflow.clip,
                         ),
@@ -141,20 +141,21 @@ class _FiltersState extends State<Filters> {
                                   Radio(
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
-                                    value: category.bannerList[index].slug,
-                                    groupValue: globalSelectionStream.data ==
-                                            null
-                                        ? null
-                                        : globalSelectionStream.data.globalSlug,
-                                    onChanged: (value) {
+                                    value: category.bannerList![index].slug,
+                                    groupValue:
+                                        globalSelectionStream.data == null
+                                            ? null
+                                            : globalSelectionStream
+                                                .data!.globalSlug,
+                                    onChanged: (dynamic value) {
                                       GlobalSelection selection =
                                           GlobalSelection(
                                               globalDisplayName: category
-                                                  .bannerList[index]
+                                                  .bannerList![index]
                                                   .mainDisplay,
                                               globalSlug: value,
                                               display: category
-                                                  .bannerList[index].display);
+                                                  .bannerList![index].display);
                                       _filtersBloc.globalSelectionSink
                                           .add(selection);
                                     },
@@ -162,7 +163,7 @@ class _FiltersState extends State<Filters> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      category.bannerList[index].display,
+                                      category.bannerList![index].display!,
                                       style: TextStyle(fontSize: 13.0),
                                       overflow: TextOverflow.clip,
                                     ),
@@ -170,7 +171,7 @@ class _FiltersState extends State<Filters> {
                                 ],
                               ),
                           separatorBuilder: (context, index) => filterDivider,
-                          itemCount: category.bannerList.length),
+                          itemCount: category.bannerList!.length),
                     ),
                   )
                 ],
@@ -189,7 +190,7 @@ class _FiltersState extends State<Filters> {
           child: Container(
             color: globalLightBlueColor,
             padding: const EdgeInsets.only(bottom: 10),
-            child: StreamBuilder(
+            child: StreamBuilder<int?>(
                 initialData: 0,
                 stream: _filtersBloc.indexStream,
                 builder: (context, categoryIndexStream) {
@@ -252,7 +253,7 @@ class _FiltersState extends State<Filters> {
                       categoryDivider,
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, bottom: 10),
-                        child: StreamBuilder(
+                        child: StreamBuilder<DateTimeRange?>(
                             stream: _filtersBloc.dateRangeStream,
                             builder: (context, snapshot) {
                               if (snapshot.data == null) {
@@ -264,9 +265,9 @@ class _FiltersState extends State<Filters> {
                                   child: dateHeading,
                                 );
                               } else {
-                                String start = formatDate(snapshot.data.start,
+                                String start = formatDate(snapshot.data!.start,
                                     [yyyy, '-', mm, '-', dd]);
-                                String end = formatDate(snapshot.data.end,
+                                String end = formatDate(snapshot.data!.end,
                                     [yyyy, '-', mm, '-', dd]);
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +302,7 @@ class _FiltersState extends State<Filters> {
   }
 
   GestureDetector buildCategoryItem(
-      {double width, int index, int selectedIndex, String categoryName}) {
+      {double? width, int? index, int? selectedIndex, String? categoryName}) {
     return GestureDetector(
         onTap: () {
           _filtersBloc.indexSink.add(index);
@@ -311,13 +312,13 @@ class _FiltersState extends State<Filters> {
           color:
               selectedIndex == index ? globalWhiteColor : globalLightBlueColor,
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-          child: StreamBuilder<Object>(
+          child: StreamBuilder<Object?>(
               stream: _filtersBloc.selectedCatStream,
               builder: (context, snapshot) {
                 if (snapshot.data == index) {
                   return Row(
                     children: [
-                      Text(categoryName),
+                      Text(categoryName!),
                       SizedBox(
                         width: 10.0,
                       ),
@@ -325,14 +326,14 @@ class _FiltersState extends State<Filters> {
                     ],
                   );
                 }
-                return Text(categoryName);
+                return Text(categoryName!);
               }),
         ));
   }
 
   GestureDetector buildButtons() {
     return GestureDetector(
-      onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
+      onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()!),
       child: Container(
         color: globalBlue,
         child: Column(

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:noticeboard/global/global_functions.dart';
 
-var globalLightBlueColor = HexColor('#edf4ff');
+var globalLightBlueColor = Color(0xFFedf4ff);
 var globalWhiteColor = Colors.white;
-var globalBlueColor = HexColor('#5288da');
+var globalBlueColor = Color(0xFF5288da);
 
 Divider mainFilterDivider = Divider(
   color: Colors.black,
