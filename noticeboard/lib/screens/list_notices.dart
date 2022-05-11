@@ -235,10 +235,10 @@ class _ListNoticesState extends State<ListNotices> {
                         height: height * 0.5,
                         child: Filters(
                           onApplyFilters: widget.listNoticeMetaData!.isSearch
-                              ? (FilterResult filterResult) =>
-                                  _listNoticesBloc.applyFilters(filterResult)
-                              : (FilterResult filterResult) => _listNoticesBloc
-                                  .applySearchFilters(filterResult),
+                              ? (FilterResult? filterResult) => _listNoticesBloc
+                                  .applySearchFilters(filterResult)
+                              : (FilterResult? filterResult) =>
+                                  _listNoticesBloc.applyFilters(filterResult),
                           onCancel: _listNoticesBloc.toggleVisibility,
                         ),
                       )),

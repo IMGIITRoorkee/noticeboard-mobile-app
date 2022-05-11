@@ -173,8 +173,6 @@ class FiltersBloc {
   }
 
   FilterResult? applyFilter() {
-    print(globalSelection);
-    print(dateTimeRange);
     if (globalSelection == null && dateTimeRange == null) {
       return null;
     } else if (globalSelection == null) {
@@ -186,7 +184,6 @@ class FiltersBloc {
           endpoint: dateFilterEndpoint, startDate: start, endDate: end);
       return filterResult;
     } else if (dateTimeRange == null) {
-      print(globalSelection!.globalSlug);
       FilterResult filterResult = FilterResult(
           endpoint: globalSelection!.globalSlug,
           label: globalSelection!.display);

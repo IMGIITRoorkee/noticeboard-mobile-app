@@ -30,12 +30,12 @@ class ApiService {
         //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
     } catch (e) {
-      print(e);
       throw Exception('Failed to load notices');
     }
   }
@@ -60,7 +60,8 @@ class ApiService {
         //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load search results');
       }
@@ -92,7 +93,8 @@ class ApiService {
         //   list = list.where((notice) => notice['banner']['id'] != 82).toList();
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
 
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load search filtered results');
       }
@@ -118,7 +120,8 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load important notices');
       }
@@ -144,7 +147,8 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load expired notices');
       }
@@ -170,7 +174,8 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load bookmarked notices');
       }
@@ -197,7 +202,8 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }
@@ -211,7 +217,6 @@ class ApiService {
       AccessToken accessTokenObj =
           //     await _authService.fetchAccessTokenFromRefresh();
           await _authService.fetchAccessToken();
-      print(endpoint);
       final http.Response response = await http.get(
           Uri.parse(BASE_URL + endpoint + '&page=${page.toString()}'),
           headers: {
@@ -225,7 +230,8 @@ class ApiService {
         Iterable list = body['results'];
 
         list = list.map((notice) => NoticeIntro.fromJSON(notice)).toList();
-        return PaginatedInfo(list: list as List<NoticeIntro?>?, hasMore: hasMore);
+        return PaginatedInfo(
+            list: list as List<NoticeIntro?>?, hasMore: hasMore);
       } else {
         throw Exception('Failed to load notices');
       }

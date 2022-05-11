@@ -57,7 +57,6 @@ class _ProfileState extends State<Profile> {
                         future: _authRepository.fetchProfileFromStorage(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            print(snapshot.data!.fullName);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [

@@ -174,9 +174,9 @@ class ListNoticesBloc {
       await fetchInstituteNotices();
     else if (dynamicFetch == DynamicFetch.fetchPlacementNotices)
       await fetchPlacementNotices();
-    else if (dynamicFetch == DynamicFetch.fetchFilterNotices)
+    else if (dynamicFetch == DynamicFetch.fetchFilterNotices) {
       await fetchFilteredNotices();
-    else if (dynamicFetch == DynamicFetch.fetchImportantNotices)
+    } else if (dynamicFetch == DynamicFetch.fetchImportantNotices)
       await fetchImportantNotices();
     else if (dynamicFetch == DynamicFetch.fetchExpiredNotices)
       await fetchExpiredNotices();
@@ -358,7 +358,6 @@ class ListNoticesBloc {
   }
 
   void applySearchFilters(FilterResult? value) async {
-    print("object");
     page = 1;
     hasMore = true;
     lazyLoad = false;
@@ -379,7 +378,6 @@ class ListNoticesBloc {
   }
 
   void applyFilters(FilterResult? value) async {
-    print(value);
     page = 1;
     hasMore = true;
     lazyLoad = false;

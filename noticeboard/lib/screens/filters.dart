@@ -8,7 +8,7 @@ import '../global/global_functions.dart';
 
 class Filters extends StatefulWidget {
   final VoidCallback onCancel;
-  final void Function(FilterResult) onApplyFilters;
+  final void Function(FilterResult?) onApplyFilters;
   Filters({required this.onCancel, required this.onApplyFilters});
   @override
   _FiltersState createState() => _FiltersState();
@@ -333,7 +333,7 @@ class _FiltersState extends State<Filters> {
 
   GestureDetector buildButtons() {
     return GestureDetector(
-      onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()!),
+      onTap: () => widget.onApplyFilters(_filtersBloc.applyFilter()),
       child: Container(
         color: globalBlue,
         child: Column(
