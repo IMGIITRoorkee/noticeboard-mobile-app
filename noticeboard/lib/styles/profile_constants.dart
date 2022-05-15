@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:noticeboard/global/global_functions.dart';
 
 var globalWhiteColor = Colors.white;
@@ -8,10 +7,10 @@ TextStyle blackSuperBoldMediumSizeText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0);
 
 TextStyle lightGreySmallSizeText =
-    TextStyle(color: HexColor('#999999'), fontSize: 12.0);
+    TextStyle(color: Color(0xFF999999), fontSize: 12.0);
 
 TextStyle boldMediumGreyMediumSizeText = TextStyle(
-    fontWeight: FontWeight.w400, color: HexColor('#5288da'), fontSize: 16.0);
+    fontWeight: FontWeight.w400, color: Color(0xFF5288da), fontSize: 16.0);
 
 SizedBox sizedBox(double height) {
   return SizedBox(
@@ -38,7 +37,7 @@ Icon logoutIcon = Icon(
 
 Container divider(double width) {
   return Container(
-    color: HexColor('#5288da'),
+    color: Color(0xFF5288da),
     width: width,
     height: 2.0,
   );

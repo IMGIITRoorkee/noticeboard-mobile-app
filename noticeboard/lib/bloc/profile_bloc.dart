@@ -9,7 +9,7 @@ import '../enum/profile_enum.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileBloc {
-  BuildContext context;
+  late BuildContext context;
 
   final _eventController = StreamController<ProfileEvents>();
   StreamSink<ProfileEvents> get eventSink => _eventController.sink;

@@ -5,7 +5,7 @@ import '../enum/login_enum.dart';
 import '../services/auth/auth_repository.dart';
 
 class LoginBloc {
-  BuildContext context;
+  late BuildContext context;
   AuthRepository _authRepository = AuthRepository();
   final formKey = GlobalKey<FormBuilderState>();
 
@@ -18,12 +18,12 @@ class LoginBloc {
   }
 
   Future<void> login() async {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
       _progressSink.add(LoginState.inProgress);
       try {
-        String username = formKey.currentState.fields['username'].value;
-        String password = formKey.currentState.fields['password'].value;
+        String? username = formKey.currentState!.fields['username']!.value;
+        String? password = formKey.currentState!.fields['password']!.value;
         await _authRepository.signInWithUsernamePassword(
             username: username, password: password, context: context);
       } catch (e) {

@@ -58,11 +58,11 @@ class ListNoticesRepository {
     return searchFilteredNotices;
   }
 
-  Future bookmarkNotice(var obj, BuildContext context) async {
+  Future bookmarkNotice(var obj, BuildContext? context) async {
     await _apiService.markUnmarkNotice(obj);
   }
 
-  Future unbookmarkNotice(var obj, BuildContext context) async {
+  Future unbookmarkNotice(var obj, BuildContext? context) async {
     await _apiService.markUnmarkNotice(obj);
   }
 

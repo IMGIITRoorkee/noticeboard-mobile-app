@@ -1,53 +1,40 @@
 import 'dart:convert';
 
 import 'package:noticeboard/enum/notice_content_enum.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
 import '../global/global_functions.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../styles/notice_detail_consts.dart';
 
 class NoticeDetail extends StatefulWidget {
-  final NoticeIntro noticeIntro;
-  NoticeDetail({@required this.noticeIntro});
+  final NoticeIntro? noticeIntro;
+  NoticeDetail({required this.noticeIntro});
 
   @override
   _NoticeDetailState createState() => _NoticeDetailState();
 }
 
 class _NoticeDetailState extends State<NoticeDetail> {
-  final NoticeIntro noticeIntro;
+  final NoticeIntro? noticeIntro;
   _NoticeDetailState({this.noticeIntro});
 
   NoticeContentBloc _noticeContentBloc = NoticeContentBloc();
-  FlutterWebviewPlugin _flutterWebviewPlugin = FlutterWebviewPlugin();
   bool pdfAlreadyOpened = false;
 
   @override
   void initState() {
     _noticeContentBloc.context = context;
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
-    _noticeContentBloc.starred = widget.noticeIntro.starred;
+    _noticeContentBloc.starred = widget.noticeIntro!.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
-    _flutterWebviewPlugin.onUrlChanged.listen((String url) async {
-      print("function called");
-      if (url.endsWith('pdf') && !pdfAlreadyOpened) {
-        canLaunch(url).then((lau) {
-          launch(url);
-          setState(() {
-            pdfAlreadyOpened = true;
-          });
-        });
-      }
-    });
     super.initState();
   }
 
   @override
   void dispose() {
-    _flutterWebviewPlugin.close();
     _noticeContentBloc.disposeStreams();
 
     super.dispose();
@@ -70,7 +57,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
         backgroundColor: globalBlueColor,
         centerTitle: false,
         title: Text(
-          widget.noticeIntro.department,
+          widget.noticeIntro!.department!,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
         ),
@@ -114,14 +101,31 @@ class _NoticeDetailState extends State<NoticeDetail> {
   }
 
   Container buildContent(AsyncSnapshot snapshot) {
+    Uri uri = Uri.dataFromString(
+      snapshot.data.content,
+      mimeType: 'text/html',
+      encoding: Encoding.getByName('utf-8'),
+    );
     return Container(
       padding: EdgeInsets.all(10.0),
-      child: WebviewScaffold(
-          displayZoomControls: true,
-          withZoom: true,
-          url: Uri.dataFromString(snapshot.data.content,
-                  mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-              .toString()),
+      child: WebView(
+        initialUrl: uri.toString(),
+        zoomEnabled: true,
+        javascriptMode: JavascriptMode.unrestricted,
+        allowsInlineMediaPlayback: true,
+        navigationDelegate: (navigation) async {
+          print(navigation.url);
+          if (navigation.url.endsWith("pdf") && !pdfAlreadyOpened) {
+            if (await canLaunchUrlString(navigation.url)) {
+              String newUrl =
+                  "https://docs.google.com/gview?embedded=true&url=${navigation.url}";
+              print('\n' + newUrl + '\n' + '\n' + '\n');
+              await launchUrlString(newUrl);
+            }
+          }
+          return NavigationDecision.prevent;
+        },
+      ),
     );
   }
 
@@ -137,7 +141,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.noticeIntro.title,
+                    widget.noticeIntro!.title!,
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                 )
@@ -147,19 +151,19 @@ class _NoticeDetailState extends State<NoticeDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.noticeIntro.dateCreated),
+                Text(widget.noticeIntro!.dateCreated!),
                 Row(
                   children: [
-                    StreamBuilder(
+                    StreamBuilder<bool?>(
                       stream: _noticeContentBloc.starStream,
-                      initialData: widget.noticeIntro.starred,
+                      initialData: widget.noticeIntro!.starred,
                       builder: (context, snapshot) {
                         return GestureDetector(
                             onTap: () {
                               _noticeContentBloc.eventSink
                                   .add(NoticeContentEvents.toggleStar);
                             },
-                            child: bookMarkIconDecider(snapshot.data));
+                            child: bookMarkIconDecider(snapshot.data!));
                       },
                     ),
                     SizedBox(

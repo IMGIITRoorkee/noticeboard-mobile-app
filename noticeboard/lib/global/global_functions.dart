@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 Icon bookMarkIconDecider(bool isBookmarked) {
   if (!isBookmarked)
     return Icon(
       Icons.bookmark_border,
-      color: HexColor('#F8C384'),
+      color: Color(0xFFF8C384),
       size: 25.0,
     );
   return Icon(
     Icons.bookmark,
-    color: HexColor('#F8C384'),
+    color: Color(0xFFF8C384),
     size: 25.0,
   );
 }
@@ -31,8 +30,8 @@ Container buildShimmerList(BuildContext context, int notices) {
         itemCount: notices,
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.grey[200],
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[200]!,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 19.0, vertical: 20.0),
@@ -102,7 +101,7 @@ Widget buildFilterActive(bool filterActive) {
         children: [
           Icon(
             Icons.filter_list,
-            color: HexColor('#5288da'),
+            color: Color(0xFF5288da),
             size: 30.0,
           ),
           Align(
@@ -118,7 +117,7 @@ Widget buildFilterActive(bool filterActive) {
   }
   return Icon(
     Icons.filter_list,
-    color: HexColor('#5288da'),
+    color: Color(0xFF5288da),
     size: 30.0,
   );
 }
@@ -130,7 +129,7 @@ Widget buildSearchFilterActive(bool filterActive) {
         children: [
           Icon(
             Icons.filter_list,
-            color: HexColor('#5288da'),
+            color: Color(0xFF5288da),
             size: 30.0,
           ),
           Align(
@@ -146,7 +145,7 @@ Widget buildSearchFilterActive(bool filterActive) {
   }
   return Icon(
     Icons.filter_list,
-    color: HexColor('#5288da'),
+    color: Color(0xFF5288da),
     size: 30.0,
   );
 }
@@ -174,7 +173,7 @@ Icon screenPopIcon(Color color) {
   );
 }
 
-var globalBlue = HexColor('#5288da');
+var globalBlue = Color(0xFF5288da);
 
 Widget themeFormTextField(
     String fieldName, String fieldHint, BuildContext context, bool isNumeric,

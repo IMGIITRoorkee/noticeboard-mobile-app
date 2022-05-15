@@ -9,38 +9,38 @@ import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 
 class FiltersBloc {
-  BuildContext context;
-  List<Category> categories;
-  Category category;
-  DateTimeRange dateTimeRange;
-  GlobalSelection globalSelection;
+  late BuildContext context;
+  late List<Category> categories;
+  Category? category;
+  DateTimeRange? dateTimeRange;
+  GlobalSelection? globalSelection;
 
-  final _categoryIndexController = StreamController<int>.broadcast();
-  StreamSink<int> get indexSink => _categoryIndexController.sink;
-  Stream<int> get indexStream => _categoryIndexController.stream;
+  final _categoryIndexController = StreamController<int?>.broadcast();
+  StreamSink<int?> get indexSink => _categoryIndexController.sink;
+  Stream<int?> get indexStream => _categoryIndexController.stream;
 
   final _eventController = StreamController<FilterEvents>();
   StreamSink<FilterEvents> get eventSink => _eventController.sink;
   Stream<FilterEvents> get _eventStream => _eventController.stream;
 
-  final _categoryController = StreamController<Category>();
-  StreamSink<Category> get _categorySink => _categoryController.sink;
-  Stream<Category> get categoryStream => _categoryController.stream;
+  final _categoryController = StreamController<Category?>();
+  StreamSink<Category?> get _categorySink => _categoryController.sink;
+  Stream<Category?> get categoryStream => _categoryController.stream;
 
-  final _dateRangeController = StreamController<DateTimeRange>();
-  StreamSink<DateTimeRange> get _dateRangeSink => _dateRangeController.sink;
-  Stream<DateTimeRange> get dateRangeStream => _dateRangeController.stream;
+  final _dateRangeController = StreamController<DateTimeRange?>();
+  StreamSink<DateTimeRange?> get _dateRangeSink => _dateRangeController.sink;
+  Stream<DateTimeRange?> get dateRangeStream => _dateRangeController.stream;
 
   final _globalSelectionController =
-      StreamController<GlobalSelection>.broadcast();
-  StreamSink<GlobalSelection> get globalSelectionSink =>
+      StreamController<GlobalSelection?>.broadcast();
+  StreamSink<GlobalSelection?> get globalSelectionSink =>
       _globalSelectionController.sink;
-  Stream<GlobalSelection> get globalSelectionStream =>
+  Stream<GlobalSelection?> get globalSelectionStream =>
       _globalSelectionController.stream;
 
-  final _selectedCatController = StreamController<int>.broadcast();
-  StreamSink<int> get _selectedCatSink => _selectedCatController.sink;
-  Stream<int> get selectedCatStream => _selectedCatController.stream;
+  final _selectedCatController = StreamController<int?>.broadcast();
+  StreamSink<int?> get _selectedCatSink => _selectedCatController.sink;
+  Stream<int?> get selectedCatStream => _selectedCatController.stream;
 
   FiltersRepository _filtersRepository = FiltersRepository();
 
@@ -80,28 +80,28 @@ class FiltersBloc {
       category = categories[0];
       _categorySink.add(category);
     } catch (e) {
-      if (!_categoryController.isClosed) _categorySink.addError(e.message);
+      if (!_categoryController.isClosed) _categorySink.addError(e);
     }
   }
 
-  void globalSlugHandler(GlobalSelection selection) {
+  void globalSlugHandler(GlobalSelection? selection) {
     globalSelection = selection;
     if (globalSelection != null) {
-      if (globalSelection.globalDisplayName == 'Authorities') {
+      if (globalSelection!.globalDisplayName == 'Authorities') {
         _selectedCatSink.add(0);
-      } else if (globalSelection.globalDisplayName == 'Bhawans') {
+      } else if (globalSelection!.globalDisplayName == 'Bhawans') {
         _selectedCatSink.add(1);
-      } else if (globalSelection.globalDisplayName == 'Campus Groups') {
+      } else if (globalSelection!.globalDisplayName == 'Campus Groups') {
         _selectedCatSink.add(2);
-      } else if (globalSelection.globalDisplayName == 'Centres') {
+      } else if (globalSelection!.globalDisplayName == 'Centres') {
         _selectedCatSink.add(3);
-      } else if (globalSelection.globalDisplayName == 'Departments') {
+      } else if (globalSelection!.globalDisplayName == 'Departments') {
         _selectedCatSink.add(4);
       }
     }
   }
 
-  void indexHandler(int x) {
+  void indexHandler(int? x) {
     switch (x) {
       case 0:
         category = categories[0];
@@ -128,7 +128,7 @@ class FiltersBloc {
   }
 
   void pickDateRange() async {
-    DateTimeRange picked = await showDateRangePicker(
+    DateTimeRange? picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime(DateTime.now().year - 3),
       lastDate: DateTime(DateTime.now().year + 1),
@@ -172,12 +172,12 @@ class FiltersBloc {
         arguments: expiredListNoticeMetaData);
   }
 
-  FilterResult applyFilter() {
+  FilterResult? applyFilter() {
     if (globalSelection == null && dateTimeRange == null) {
       return null;
     } else if (globalSelection == null) {
-      String start = formatDate(dateTimeRange.start, [yyyy, '-', mm, '-', dd]);
-      String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
+      String start = formatDate(dateTimeRange!.start, [yyyy, '-', mm, '-', dd]);
+      String end = formatDate(dateTimeRange!.end, [yyyy, '-', mm, '-', dd]);
       String dateFilterEndpoint =
           'api/noticeboard/date_filter_view/?start=$start&end=$end';
       FilterResult filterResult = FilterResult(
@@ -185,15 +185,16 @@ class FiltersBloc {
       return filterResult;
     } else if (dateTimeRange == null) {
       FilterResult filterResult = FilterResult(
-          endpoint: globalSelection.globalSlug, label: globalSelection.display);
+          endpoint: globalSelection!.globalSlug,
+          label: globalSelection!.display);
       return filterResult;
     } else {
-      String start = formatDate(dateTimeRange.start, [yyyy, '-', mm, '-', dd]);
-      String end = formatDate(dateTimeRange.end, [yyyy, '-', mm, '-', dd]);
+      String start = formatDate(dateTimeRange!.start, [yyyy, '-', mm, '-', dd]);
+      String end = formatDate(dateTimeRange!.end, [yyyy, '-', mm, '-', dd]);
       String endPoint =
-          'api/noticeboard/date_filter_view/?start=$start&end=$end&${globalSelection.globalSlug.substring(24)}';
+          'api/noticeboard/date_filter_view/?start=$start&end=$end&${globalSelection!.globalSlug!.substring(24)}';
       FilterResult filterResult =
-          FilterResult(label: globalSelection.display, endpoint: endPoint);
+          FilterResult(label: globalSelection!.display, endpoint: endPoint);
       return filterResult;
     }
   }

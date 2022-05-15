@@ -40,7 +40,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<int>(
         initialData: 0,
         stream: _bottomNavigatorBloc.indexStream,
         builder: (context, snapshot) {
@@ -57,7 +57,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
                 placementInternshipBottomItem,
               ],
               unselectedItemColor: globalWhiteColor,
-              currentIndex: snapshot.data,
+              currentIndex: snapshot.data!,
               fixedColor: globalWhiteColor,
               onTap: onItemTapped,
               iconSize: 25.0,
