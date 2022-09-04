@@ -1,5 +1,4 @@
 import 'package:date_format/date_format.dart';
-import 'package:flutter/material.dart';
 import '../enum/dynamic_fetch_enum.dart';
 
 class NoticeIntro {
