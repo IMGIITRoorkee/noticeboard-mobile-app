@@ -44,15 +44,21 @@ class ProfileBloc {
   void feedbackHandler() async {
     const url =
         'https://play.google.com/store/apps/details?id=com.channeli.img.noticeboard&hl=en_US&gl=IN';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
     }
   }
 
   void notificationSettingsHandler() async {
     const url = '${BASE_URL}settings/manage_notifications';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
     }
   }
 
