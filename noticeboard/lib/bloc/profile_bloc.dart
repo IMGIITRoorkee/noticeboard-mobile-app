@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:noticeboard/enum/dynamic_fetch_enum.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/repository/profile_repository.dart';
@@ -42,8 +43,18 @@ class ProfileBloc {
   }
 
   void feedbackHandler() async {
-    const url =
+    const String playStoreurl =
         'https://play.google.com/store/apps/details?id=com.channeli.img.noticeboard&hl=en_US&gl=IN';
+    const String iosUrl =
+        "https://www.apple.com/in/app-store/"; // TODO: Change to actual app url on app store
+
+    late String url;
+
+    if (Platform.isIOS) {
+      url = iosUrl;
+    } else {
+      url = playStoreurl;
+    }
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(
         Uri.parse(url),
