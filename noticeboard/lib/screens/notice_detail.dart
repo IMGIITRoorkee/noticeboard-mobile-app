@@ -114,11 +114,11 @@ class _NoticeDetailState extends State<NoticeDetail> {
         javascriptMode: JavascriptMode.unrestricted,
         allowsInlineMediaPlayback: true,
         navigationDelegate: (navigation) async {
+          print(navigation.url);
           if (navigation.url.endsWith("pdf") && !pdfAlreadyOpened) {
             if (await canLaunchUrlString(navigation.url)) {
               String newUrl =
                   "https://docs.google.com/gview?embedded=true&url=${navigation.url}";
-              print('\n' + newUrl + '\n' + '\n' + '\n');
               await launchUrlString(newUrl);
             }
             return NavigationDecision.prevent;

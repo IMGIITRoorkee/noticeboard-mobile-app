@@ -44,7 +44,7 @@ class ProfileBloc {
 
   void feedbackHandler() async {
     const String playStoreurl =
-        'https://play.google.com/store/apps/details?id=com.channeli.img.noticeboard&hl=en_US&gl=IN';
+        'https://play.google.com/store/apps/details?id=com.img.noticeboard&hl=en_US&gl=IN';
     const String iosUrl =
         "https://www.apple.com/in/app-store/"; // TODO: Change to actual app url on app store
 

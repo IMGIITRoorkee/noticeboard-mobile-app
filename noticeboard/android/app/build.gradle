@@ -44,7 +44,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.channeli.img.noticeboard"
+        applicationId "com.img.noticeboard"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
