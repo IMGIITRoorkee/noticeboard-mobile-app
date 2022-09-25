@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noticeboard/models/paginated_info.dart';
+import '../global/global_constants.dart';
 import '../routes/routing_constants.dart';
 import '../services/api_service/api_service.dart';
 import '../models/notice_intro.dart';
@@ -8,11 +9,12 @@ class ListNoticesRepository {
   ApiService _apiService = ApiService();
 
   Future pushProfileScreen(BuildContext context) async {
-    Navigator.pushNamed(context, profileRoute);
+    navigatorKey.currentState!.pushNamed(profileRoute);
   }
 
   void noticeDetail(BuildContext context, NoticeIntro noticeIntro) {
-    Navigator.pushNamed(context, noticeDetailRoute, arguments: noticeIntro);
+    navigatorKey.currentState!
+        .pushNamed(noticeDetailRoute, arguments: noticeIntro);
   }
 
   Future<PaginatedInfo> fetchInstituteNotices(int page) async {

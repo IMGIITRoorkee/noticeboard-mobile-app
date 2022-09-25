@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:noticeboard/global/global_constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -199,8 +200,8 @@ Widget themeFormTextField(
   );
 }
 
-void showGenericError(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+void showGenericError() {
+  snackKey.currentState!.showSnackBar(SnackBar(
     content: Text("Error!"),
   ));
 }

@@ -7,6 +7,7 @@ import 'package:noticeboard/models/paginated_info.dart';
 import 'package:noticeboard/services/auth/auth_repository.dart';
 import '../enum/list_notices_enum.dart';
 import '../bloc/list_notices_bloc.dart';
+import '../global/global_constants.dart';
 import '../global/global_functions.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'filters.dart';
@@ -106,7 +107,7 @@ class _ListNoticesState extends State<ListNotices> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    navigatorKey.currentState!.pop();
                   }),
               Expanded(
                 child: TextField(
@@ -199,7 +200,7 @@ class _ListNoticesState extends State<ListNotices> {
     return AppBar(
       leading: IconButton(
         onPressed: () {
-          Navigator.pop(context);
+          navigatorKey.currentState!.pop();
         },
         icon: Icon(
           Icons.keyboard_arrow_left,

@@ -1,3 +1,4 @@
+import '../global/global_constants.dart';
 import '../services/auth/auth_repository.dart';
 import 'package:flutter/material.dart';
 import '../routes/routing_constants.dart';
@@ -8,10 +9,10 @@ class ProfileRepository {
   Future logout(BuildContext context) async {
     try {
       await _authRepository.logout();
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, loginRoute);
+      navigatorKey.currentState!.pop();
+      navigatorKey.currentState!.pushNamed(loginRoute);
     } catch (e) {
-      showGenericError(context);
+      showGenericError();
     }
   }
 }

@@ -9,6 +9,8 @@ import 'package:noticeboard/services/endpoints/urls.dart';
 import '../enum/profile_enum.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../global/global_constants.dart';
+
 class ProfileBloc {
   late BuildContext context;
 
@@ -38,8 +40,8 @@ class ProfileBloc {
         dynamicFetch: DynamicFetch.fetchBookmarkedNotices,
         noFilters: true,
         isSearch: false);
-    Navigator.pushNamed(context, listNoticesRoute,
-        arguments: bookmarkListNoticeMetaData);
+    navigatorKey.currentState!
+        .pushNamed(listNoticesRoute, arguments: bookmarkListNoticeMetaData);
   }
 
   void feedbackHandler() async {

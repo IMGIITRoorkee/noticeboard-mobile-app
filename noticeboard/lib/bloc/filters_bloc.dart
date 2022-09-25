@@ -3,6 +3,7 @@ import 'package:noticeboard/enum/dynamic_fetch_enum.dart';
 import 'package:noticeboard/enum/filter_enum.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
+import '../global/global_constants.dart';
 import '../repository/filters_repository.dart';
 import '../models/filters_list.dart';
 import 'package:flutter/material.dart';
@@ -158,8 +159,8 @@ class FiltersBloc {
         dynamicFetch: DynamicFetch.fetchImportantNotices,
         noFilters: true,
         isSearch: false);
-    Navigator.pushNamed(context, listNoticesRoute,
-        arguments: impListNoticeMetaData);
+    navigatorKey.currentState!
+        .pushNamed(listNoticesRoute, arguments: impListNoticeMetaData);
   }
 
   void pushExpiredNotices() {
@@ -168,8 +169,8 @@ class FiltersBloc {
         dynamicFetch: DynamicFetch.fetchExpiredNotices,
         noFilters: true,
         isSearch: false);
-    Navigator.pushNamed(context, listNoticesRoute,
-        arguments: expiredListNoticeMetaData);
+    navigatorKey.currentState!
+        .pushNamed(listNoticesRoute, arguments: expiredListNoticeMetaData);
   }
 
   FilterResult? applyFilter() {

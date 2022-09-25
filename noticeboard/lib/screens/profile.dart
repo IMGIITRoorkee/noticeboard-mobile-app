@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noticeboard/global/global_constants.dart';
 import 'package:noticeboard/global/global_functions.dart';
 import 'package:noticeboard/models/user_profile.dart';
 import '../styles/profile_constants.dart';
@@ -38,7 +39,7 @@ class _ProfileState extends State<Profile> {
           leading: IconButton(
             icon: screenPopIcon(Colors.black),
             onPressed: () {
-              Navigator.pop(context);
+              navigatorKey.currentState!.pop(context);
             },
           ),
           backgroundColor: globalWhiteColor,
