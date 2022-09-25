@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:noticeboard/models/paginated_info.dart';
 import 'package:noticeboard/repository/list_notices_repository.dart';
+import '../global/global_constants.dart';
 import '../models/notice_intro.dart';
 import '../enum/list_notices_enum.dart';
 import 'package:flutter/material.dart';
@@ -186,7 +187,8 @@ class ListNoticesBloc {
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
     if (!noticeIntro.read!) markReadSink.add(noticeIntro);
-    Navigator.pushNamed(context!, noticeDetailRoute, arguments: noticeIntro)
+    navigatorKey.currentState!
+        .pushNamed(noticeDetailRoute, arguments: noticeIntro)
         .then((value) => updateUi(value as NoticeIntro?));
   }
 
@@ -416,8 +418,8 @@ class ListNoticesBloc {
         dynamicFetch: DynamicFetch.fetchImportantNotices,
         noFilters: true,
         isSearch: false);
-    Navigator.pushNamed(context!, listNoticesRoute,
-        arguments: impListNoticeMetaData);
+    navigatorKey.currentState!
+        .pushNamed(listNoticesRoute, arguments: impListNoticeMetaData);
   }
 
   void pushSearch() {
@@ -426,8 +428,8 @@ class ListNoticesBloc {
         dynamicFetch: DynamicFetch.fetchSearchResults,
         noFilters: false,
         isSearch: true);
-    Navigator.pushNamed(context!, listNoticesRoute,
-        arguments: listNoticeMetaData);
+    navigatorKey.currentState!
+        .pushNamed(listNoticesRoute, arguments: listNoticeMetaData);
   }
 
   void enableClear() {

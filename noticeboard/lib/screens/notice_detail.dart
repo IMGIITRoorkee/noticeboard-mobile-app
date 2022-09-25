@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:noticeboard/enum/notice_content_enum.dart';
+import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import '../global/global_constants.dart';
 import '../models/notice_intro.dart';
 import 'package:flutter/material.dart';
 import '../bloc/notice_content_bloc.dart';
@@ -51,7 +52,8 @@ class _NoticeDetailState extends State<NoticeDetail> {
         leading: IconButton(
           icon: screenPopIcon(Colors.white),
           onPressed: () {
-            Navigator.pop(context, _noticeContentBloc.noticeIntro);
+            navigatorKey.currentState!
+                .pushReplacementNamed(bottomNavigationRoute);
           },
         ),
         backgroundColor: globalBlueColor,
@@ -64,7 +66,8 @@ class _NoticeDetailState extends State<NoticeDetail> {
       ),
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context, _noticeContentBloc.noticeIntro);
+          navigatorKey.currentState!
+              .pushReplacementNamed(bottomNavigationRoute);
           return false;
         },
         child: Container(
@@ -119,11 +122,11 @@ class _NoticeDetailState extends State<NoticeDetail> {
             if (await canLaunchUrlString(navigation.url)) {
               String newUrl =
                   "https://docs.google.com/gview?embedded=true&url=${navigation.url}";
-              print('\n' + newUrl + '\n' + '\n' + '\n');
               await launchUrlString(newUrl);
             }
+            return NavigationDecision.prevent;
           }
-          return NavigationDecision.prevent;
+          return NavigationDecision.navigate;
         },
       ),
     );

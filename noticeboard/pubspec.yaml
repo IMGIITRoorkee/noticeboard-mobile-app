@@ -1,5 +1,5 @@
 name: noticeboard
-description: A new Flutter project.
+description: A digital noticeboard for IIT Roorkee.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -39,6 +39,7 @@ dependencies:
   firebase_core: ^1.14.1
   firebase_messaging: ^11.2.8
   webview_flutter: ^3.0.2
+  uni_links: ^0.5.1
 
 
 dev_dependencies:

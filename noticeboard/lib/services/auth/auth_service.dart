@@ -153,7 +153,6 @@ class AuthService {
       if (postResponse.statusCode != 201) {
         throw Exception('Failure');
       }
-      print(postResponse.body);
       print("SUCCESSFULLY REGISTERED");
     } catch (e) {
       throw Exception('Failure');
@@ -178,7 +177,6 @@ class AuthService {
 
       final response = await request.send();
       if (response.statusCode != 204) {
-        print(response.statusCode);
         throw Exception('Failure');
       }
       print("SUCCESSFULLY DEREGISTERED");

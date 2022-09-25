@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:noticeboard/enum/dynamic_fetch_enum.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/repository/profile_repository.dart';
@@ -7,6 +8,8 @@ import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:noticeboard/services/endpoints/urls.dart';
 import '../enum/profile_enum.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../global/global_constants.dart';
 
 class ProfileBloc {
   late BuildContext context;
@@ -37,13 +40,23 @@ class ProfileBloc {
         dynamicFetch: DynamicFetch.fetchBookmarkedNotices,
         noFilters: true,
         isSearch: false);
-    Navigator.pushNamed(context, listNoticesRoute,
-        arguments: bookmarkListNoticeMetaData);
+    navigatorKey.currentState!
+        .pushNamed(listNoticesRoute, arguments: bookmarkListNoticeMetaData);
   }
 
   void feedbackHandler() async {
-    const url =
-        'https://play.google.com/store/apps/details?id=com.channeli.img.noticeboard&hl=en_US&gl=IN';
+    const String playStoreurl =
+        'https://play.google.com/store/apps/details?id=com.img.noticeboard&hl=en_US&gl=IN';
+    const String iosUrl =
+        "https://www.apple.com/in/app-store/"; // TODO: Change to actual app url on app store
+
+    late String url;
+
+    if (Platform.isIOS) {
+      url = iosUrl;
+    } else {
+      url = playStoreurl;
+    }
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(
         Uri.parse(url),

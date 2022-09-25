@@ -1,5 +1,10 @@
 import 'dart:async';
+import 'package:noticeboard/global/global_functions.dart';
+import 'package:noticeboard/models/notice_content.dart';
+import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
+import 'package:noticeboard/services/api_service/api_service.dart';
+import '../../global/global_constants.dart';
 import '../../models/user_tokens.dart';
 import 'auth_service.dart';
 import 'package:flutter/material.dart';
@@ -21,20 +26,44 @@ class AuthRepository {
       UserProfile userProfile = (await fetchUserProfile(context))!;
       await _authService.registerNotificationToken();
       await _authService.storeProfile(userProfile);
-      Navigator.pushReplacementNamed(context, bottomNavigationRoute);
+      navigatorKey.currentState!.pushNamed(bottomNavigationRoute);
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future checkIfAlreadySignedIn(BuildContext context) async {
+  Future checkIfAlreadySignedIn(String? initialNotice) async {
     RefreshToken refreshToken = await _authService.fetchRefreshToken();
     await Future.delayed(Duration(seconds: 1));
     if (refreshToken.refreshToken != null) {
       await _authService.initHandle();
-      Navigator.pushReplacementNamed(context, bottomNavigationRoute);
+      if (initialNotice != null) {
+        try {
+          NoticeContent notice = await ApiService().fetchNoticeContent(
+            int.parse(initialNotice),
+          );
+          NoticeIntro noticeIntro = NoticeIntro(
+            id: notice.id,
+            title: notice.title,
+            dateCreated: notice.dateCreated,
+            department: notice.department,
+            read: notice.read,
+            starred: notice.starred,
+          );
+          // print(notice.content);
+          navigatorKey.currentState!.pushNamed(
+            noticeDetailRoute,
+            arguments: noticeIntro,
+          );
+        } catch (e) {
+          showGenericError();
+          navigatorKey.currentState!.pushNamed(bottomNavigationRoute);
+        }
+      } else {
+        navigatorKey.currentState!.pushNamed(bottomNavigationRoute);
+      }
     } else {
-      Navigator.pushReplacementNamed(context, loginRoute);
+      navigatorKey.currentState!.pushNamed(loginRoute);
     }
   }
 
