@@ -48,7 +48,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="channeli.in" android:pathPrefix="/noticeboard"/>
+                <data android:scheme="http" android:host="channeli.in" android:pathPrefix="/noticeboard/notice"/>
                 <data android:scheme="https" />
             </intent-filter>
         </activity>
