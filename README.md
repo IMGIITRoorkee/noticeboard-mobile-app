@@ -4,13 +4,13 @@
 </div>
 
 <div>
-    <img src="readmeAssets/ds1.png" width=75> &emsp;
-    <img src="readmeAssets/ds2.png" width=75> &emsp;
-    <img src="readmeAssets/ds3.png" width=75> &emsp;
-    <img src="readmeAssets/ds4.png" width=75> &emsp;
-    <img src="readmeAssets/ds5.png" width=75> &emsp;
-    <img src="readmeAssets/ds6.png" width=75> &emsp;
-    <img src="readmeAssets/ds7.png" width=75 height=157.285> &emsp;
+    <img src="readmeAssets/ds1.png" width=85> &emsp;
+    <img src="readmeAssets/ds2.png" width=85> &emsp;
+    <img src="readmeAssets/ds3.png" width=85> &emsp;
+    <img src="readmeAssets/ds4.png" width=85> &emsp;
+    <img src="readmeAssets/ds5.png" width=85> &emsp;
+    <img src="readmeAssets/ds6.png" width=85> &emsp;
+    <img src="readmeAssets/ds7.png" width=85 height=178.256> &emsp;
 </div>
 </br>
 
