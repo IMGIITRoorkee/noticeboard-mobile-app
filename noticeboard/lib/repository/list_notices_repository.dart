@@ -9,10 +9,12 @@ class ListNoticesRepository {
   ApiService _apiService = ApiService();
 
   Future pushProfileScreen(BuildContext context) async {
+    previousRoute = bottomNavigationRoute;
     navigatorKey.currentState!.pushNamed(profileRoute);
   }
 
   void noticeDetail(BuildContext context, NoticeIntro noticeIntro) {
+    previousRoute = bottomNavigationRoute;
     navigatorKey.currentState!
         .pushNamed(noticeDetailRoute, arguments: noticeIntro);
   }

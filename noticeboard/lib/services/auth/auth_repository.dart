@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:noticeboard/global/global_functions.dart';
 import 'package:noticeboard/models/notice_content.dart';
 import 'package:noticeboard/models/notice_intro.dart';
@@ -26,6 +27,7 @@ class AuthRepository {
       UserProfile userProfile = (await fetchUserProfile(context))!;
       await _authService.registerNotificationToken();
       await _authService.storeProfile(userProfile);
+      previousRoute = loginRoute;
       navigatorKey.currentState!.pushNamed(bottomNavigationRoute);
     } catch (e) {
       throw Exception(e);
@@ -35,6 +37,8 @@ class AuthRepository {
   Future checkIfAlreadySignedIn(String? initialNotice) async {
     RefreshToken refreshToken = await _authService.fetchRefreshToken();
     await Future.delayed(Duration(seconds: 1));
+    previousRoute = launchingRoute;
+    log(previousRoute);
     if (refreshToken.refreshToken != null) {
       await _authService.initHandle();
       if (initialNotice != null) {

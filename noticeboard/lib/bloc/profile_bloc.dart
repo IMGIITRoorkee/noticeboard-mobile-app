@@ -40,6 +40,7 @@ class ProfileBloc {
         dynamicFetch: DynamicFetch.fetchBookmarkedNotices,
         noFilters: true,
         isSearch: false);
+    previousRoute = profileRoute;
     navigatorKey.currentState!
         .pushNamed(listNoticesRoute, arguments: bookmarkListNoticeMetaData);
   }
