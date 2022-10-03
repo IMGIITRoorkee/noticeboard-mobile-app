@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:noticeboard/enum/notice_content_enum.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -52,8 +53,12 @@ class _NoticeDetailState extends State<NoticeDetail> {
         leading: IconButton(
           icon: screenPopIcon(Colors.white),
           onPressed: () {
-            navigatorKey.currentState!
-                .pushReplacementNamed(bottomNavigationRoute);
+            if (previousRoute == launchingRoute) {
+              navigatorKey.currentState!
+                  .pushReplacementNamed(bottomNavigationRoute);
+            } else {
+              navigatorKey.currentState!.pop();
+            }
           },
         ),
         backgroundColor: globalBlueColor,
@@ -66,8 +71,12 @@ class _NoticeDetailState extends State<NoticeDetail> {
       ),
       body: WillPopScope(
         onWillPop: () async {
-          navigatorKey.currentState!
-              .pushReplacementNamed(bottomNavigationRoute);
+          if (previousRoute == launchingRoute) {
+            navigatorKey.currentState!
+                .pushReplacementNamed(bottomNavigationRoute);
+          } else {
+            navigatorKey.currentState!.pop();
+          }
           return false;
         },
         child: Container(

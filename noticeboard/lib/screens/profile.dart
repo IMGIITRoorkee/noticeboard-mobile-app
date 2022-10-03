@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noticeboard/global/global_constants.dart';
 import 'package:noticeboard/global/global_functions.dart';
 import 'package:noticeboard/models/user_profile.dart';
+import 'package:noticeboard/routes/routing_constants.dart';
 import '../styles/profile_constants.dart';
 import '../bloc/profile_bloc.dart';
 import '../enum/profile_enum.dart';
@@ -39,6 +40,7 @@ class _ProfileState extends State<Profile> {
           leading: IconButton(
             icon: screenPopIcon(Colors.black),
             onPressed: () {
+              previousRoute = profileRoute;
               navigatorKey.currentState!.pop(context);
             },
           ),

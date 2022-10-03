@@ -10,6 +10,7 @@ class ProfileRepository {
     try {
       await _authRepository.logout();
       navigatorKey.currentState!.pop();
+      previousRoute = bottomNavigationRoute;
       navigatorKey.currentState!.pushNamed(loginRoute);
     } catch (e) {
       showGenericError();

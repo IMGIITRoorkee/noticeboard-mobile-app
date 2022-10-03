@@ -4,3 +4,4 @@ final GlobalKey<ScaffoldMessengerState> snackKey =
     GlobalKey<ScaffoldMessengerState>();
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+String previousRoute = "";

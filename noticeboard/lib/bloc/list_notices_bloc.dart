@@ -187,6 +187,7 @@ class ListNoticesBloc {
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
     if (!noticeIntro.read!) markReadSink.add(noticeIntro);
+    previousRoute = bottomNavigationRoute;
     navigatorKey.currentState!
         .pushNamed(noticeDetailRoute, arguments: noticeIntro)
         .then((value) => updateUi(value as NoticeIntro?));
@@ -428,6 +429,7 @@ class ListNoticesBloc {
         dynamicFetch: DynamicFetch.fetchSearchResults,
         noFilters: false,
         isSearch: true);
+    previousRoute = bottomNavigationRoute;
     navigatorKey.currentState!
         .pushNamed(listNoticesRoute, arguments: listNoticeMetaData);
   }
