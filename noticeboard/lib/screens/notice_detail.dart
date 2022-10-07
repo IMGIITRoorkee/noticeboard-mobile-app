@@ -134,6 +134,14 @@ class _NoticeDetailState extends State<NoticeDetail> {
               await launchUrlString(newUrl);
             }
             return NavigationDecision.prevent;
+          } else {
+            if (await canLaunchUrlString(navigation.url)) {
+              await launchUrlString(
+                navigation.url,
+                mode: LaunchMode.externalApplication,
+              );
+              return NavigationDecision.prevent;
+            }
           }
           return NavigationDecision.navigate;
         },
