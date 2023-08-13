@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class PasswordField extends StatefulWidget {
   final String fieldName;
@@ -57,7 +58,7 @@ class _PasswordFieldState extends State<PasswordField> {
           ),
         ),
         name: widget.fieldName,
-        validator: FormBuilderValidators.required(context),
+        validator: FormBuilderValidators.required(),
       ),
     );
   }
