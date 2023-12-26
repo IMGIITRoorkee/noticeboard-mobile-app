@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:noticeboard/global/global_constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -195,7 +196,7 @@ Widget themeFormTextField(
           hintText: fieldHint),
       name: fieldName,
       keyboardType: isNumeric ? TextInputType.number : TextInputType.name,
-      validator: FormBuilderValidators.required(context),
+      validator: FormBuilderValidators.required(),
     ),
   );
 }
