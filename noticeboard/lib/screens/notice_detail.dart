@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:noticeboard/enum/notice_content_enum.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -134,6 +133,14 @@ class _NoticeDetailState extends State<NoticeDetail> {
               await launchUrlString(newUrl);
             }
             return NavigationDecision.prevent;
+          } else {
+            if (await canLaunchUrlString(navigation.url)) {
+              await launchUrlString(
+                navigation.url,
+                mode: LaunchMode.externalApplication,
+              );
+              return NavigationDecision.prevent;
+            }
           }
           return NavigationDecision.navigate;
         },

@@ -46,7 +46,7 @@ Text resetDate =
 
 Text dateHeading = Text(
   'Date',
-  style: TextStyle(color: globalBlueColor, fontWeight: FontWeight.w700),
+  style: TextStyle(fontSize: 14),
 );
 
 TextStyle dateTxtStyle = TextStyle(color: globalBlueColor);

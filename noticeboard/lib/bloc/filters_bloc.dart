@@ -12,6 +12,7 @@ import 'package:date_format/date_format.dart';
 class FiltersBloc {
   late BuildContext context;
   late List<Category> categories;
+  void Function()? onFilterTap;
   Category? category;
   DateTimeRange? dateTimeRange;
   GlobalSelection? globalSelection;
@@ -55,7 +56,7 @@ class FiltersBloc {
     _selectedCatController.close();
   }
 
-  FiltersBloc() {
+  FiltersBloc({this.onFilterTap}) {
     indexStream.listen((index) {
       indexHandler(index);
     });
@@ -71,6 +72,7 @@ class FiltersBloc {
     });
 
     globalSelectionStream.listen((selection) {
+      if (onFilterTap != null) onFilterTap!();
       globalSlugHandler(selection);
     });
   }

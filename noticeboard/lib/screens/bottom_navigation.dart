@@ -17,17 +17,20 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   final widgetOptions = [
     ListNotices(
       listNoticeMetaData: ListNoticeMetaData(
-          appBarLabel: 'Institute Notices',
-          dynamicFetch: DynamicFetch.fetchInstituteNotices,
-          noFilters: false,
-          isSearch: false),
+        appBarLabel: 'Institute Notices',
+        dynamicFetch: DynamicFetch.fetchInstituteNotices,
+        noFilters: false,
+        isSearch: false,
+      ),
     ),
     ListNotices(
-        listNoticeMetaData: ListNoticeMetaData(
-            appBarLabel: 'Placement and Internships',
-            dynamicFetch: DynamicFetch.fetchPlacementNotices,
-            noFilters: false,
-            isSearch: false)),
+      listNoticeMetaData: ListNoticeMetaData(
+        appBarLabel: 'Placement and Internships',
+        dynamicFetch: DynamicFetch.fetchPlacementNotices,
+        noFilters: false,
+        isSearch: false,
+      ),
+    ),
   ];
 
   void onItemTapped(int index) {
@@ -55,31 +58,32 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         }
       },
       child: StreamBuilder<int>(
-          initialData: 0,
-          stream: _bottomNavigatorBloc.indexStream,
-          builder: (context, snapshot) {
-            return Scaffold(
-              body: IndexedStack(
-                index: snapshot.data,
-                children: widgetOptions,
-              ),
-              bottomNavigationBar: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: globalBlueColor,
-                items: <BottomNavigationBarItem>[
-                  instituteNoticesBottomItem,
-                  placementInternshipBottomItem,
-                ],
-                unselectedItemColor: globalWhiteColor,
-                currentIndex: snapshot.data!,
-                fixedColor: globalWhiteColor,
-                onTap: onItemTapped,
-                iconSize: 25.0,
-                unselectedLabelStyle: fixedBottomItemTextStyle,
-                selectedLabelStyle: fixedBottomItemTextStyle,
-              ),
-            );
-          }),
+        initialData: 0,
+        stream: _bottomNavigatorBloc.indexStream,
+        builder: (context, snapshot) {
+          return Scaffold(
+            body: IndexedStack(
+              index: snapshot.data,
+              children: widgetOptions,
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: globalBlueColor,
+              items: <BottomNavigationBarItem>[
+                instituteNoticesBottomItem,
+                placementInternshipBottomItem,
+              ],
+              unselectedItemColor: Color(0XFFD4D4D4),
+              currentIndex: snapshot.data!,
+              fixedColor: globalWhiteColor,
+              onTap: onItemTapped,
+              iconSize: 25.0,
+              unselectedLabelStyle: fixedBottomItemTextStyle,
+              selectedLabelStyle: fixedBottomItemTextStyle,
+            ),
+          );
+        },
+      ),
     );
   }
 }
