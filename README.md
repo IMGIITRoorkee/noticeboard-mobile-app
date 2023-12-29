@@ -17,7 +17,7 @@
 ## Download the app!
 Click the below links to download.
 - Android: https://play.google.com/store/apps/details?id=com.img.noticeboard
-- iOS: 
+- iOS: https://apps.apple.com/in/app/channel-i-noticeboard/id6443708603
 
 ## About the app
 The official digital noticeboard of IITR. Provides easy access to the Channel i notices, even from outside the campus or without intranet. You must have a Channel i account to use the app.
