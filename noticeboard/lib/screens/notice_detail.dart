@@ -46,47 +46,65 @@ class _NoticeDetailState extends State<NoticeDetail> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        leadingWidth: 30.0,
-        leading: IconButton(
-          icon: screenPopIcon(Colors.white),
-          onPressed: () {
-            if (previousRoute == launchingRoute) {
-              navigatorKey.currentState!
-                  .pushReplacementNamed(bottomNavigationRoute);
-            } else {
-              navigatorKey.currentState!.pop();
-            }
-          },
-        ),
-        backgroundColor: globalBlueColor,
-        centerTitle: false,
-        title: Text(
-          widget.noticeIntro!.department!,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
-        ),
-      ),
-      body: WillPopScope(
-        onWillPop: () async {
-          if (previousRoute == launchingRoute) {
-            navigatorKey.currentState!
-                .pushReplacementNamed(bottomNavigationRoute);
-          } else {
-            navigatorKey.currentState!.pop();
-          }
-          return false;
-        },
-        child: Container(
-          width: _width,
-          height: _height * 0.88,
-          child: Column(
-            children: [buildNoticeIntro(_width), buildNoticeContent(_width)],
+        appBar: AppBar(
+          elevation: 0.0,
+          leadingWidth: 30.0,
+          leading: IconButton(
+            icon: screenPopIcon(Colors.white),
+            onPressed: () {
+              if (previousRoute == launchingRoute) {
+                navigatorKey.currentState!
+                    .pushReplacementNamed(bottomNavigationRoute);
+              } else {
+                navigatorKey.currentState!.pop();
+              }
+            },
+          ),
+          backgroundColor: globalBlueColor,
+          centerTitle: false,
+          title: Text(
+            widget.noticeIntro!.department!,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
           ),
         ),
-      ),
-    );
+        body: SizedBox.expand(
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              // Can swipe anywhere and detects left swipe
+              if (details.delta.dx < 0) {
+                debugPrint("Left swipe occoured!");
+                if (previousRoute == launchingRoute) {
+                  navigatorKey.currentState!
+                      .pushReplacementNamed(bottomNavigationRoute);
+                } else {
+                  navigatorKey.currentState!.pop();
+                }
+              }
+            },
+            child: WillPopScope(
+              onWillPop: () async {
+                if (previousRoute == launchingRoute) {
+                  navigatorKey.currentState!
+                      .pushReplacementNamed(bottomNavigationRoute);
+                } else {
+                  navigatorKey.currentState!.pop();
+                }
+                return false;
+              },
+              child: Container(
+                width: _width,
+                height: _height * 0.88,
+                child: Column(
+                  children: [
+                    buildNoticeIntro(_width),
+                    buildNoticeContent(_width)
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   Expanded buildNoticeContent(double width) {
