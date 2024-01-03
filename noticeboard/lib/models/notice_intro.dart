@@ -8,6 +8,7 @@ class NoticeIntro {
   final String? department;
   bool? read;
   bool? starred;
+  bool fromDeepLink = false;
 
   NoticeIntro({
     this.id,

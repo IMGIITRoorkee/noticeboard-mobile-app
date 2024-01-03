@@ -91,7 +91,9 @@ class ListNoticesBloc {
 
     _markReadStream.listen((object) async {
       object.read = true;
-      updateUi(object);
+      if(!object.fromDeepLink){
+        updateUi(object);
+      }
       var obj = {
         "keyword": "read",
         "notices": [object.id]
