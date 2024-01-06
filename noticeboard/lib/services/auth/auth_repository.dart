@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:noticeboard/bloc/list_notices_bloc.dart';
 import 'package:noticeboard/global/global_functions.dart';
 import 'package:noticeboard/models/notice_content.dart';
 import 'package:noticeboard/models/notice_intro.dart';
@@ -54,7 +55,11 @@ class AuthRepository {
             read: notice.read,
             starred: notice.starred,
           );
-          // print(notice.content);
+          // This is to let the list_notices_bloc mark read sink no to not call update UI func
+          noticeIntro.fromDeepLink = true;
+          //If notice is accessed via deeplink , then also state should be marked as read
+          final ListNoticesBloc listNoticesBloc = ListNoticesBloc();
+          listNoticesBloc.markReadSink.add(noticeIntro);
           navigatorKey.currentState!.pushNamed(
             noticeDetailRoute,
             arguments: noticeIntro,
