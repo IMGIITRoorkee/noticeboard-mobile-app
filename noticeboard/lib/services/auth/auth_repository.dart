@@ -57,8 +57,7 @@ class AuthRepository {
           );
           // This is to let the list_notices_bloc mark read sink no to not call update UI func
           noticeIntro.fromDeepLink = true;
-          // print(notice.content);
-          //If notice is accessed via deeplink , then also state shud be marked as read
+          //If notice is accessed via deeplink , then also state should be marked as read
           final ListNoticesBloc listNoticesBloc = ListNoticesBloc();
           listNoticesBloc.markReadSink.add(noticeIntro);
           navigatorKey.currentState!.pushNamed(
