@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Setup actions
+        working-directory: ./noticeboard
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
@@ -31,8 +33,6 @@ jobs:
         with:
           channel: 'stable'
           flutter-version: '3.13.0'
-
-      - run: cd noticeboard
       
       - run: flutter pub get
 
