@@ -30,6 +30,8 @@ class ProfileBloc {
         feedbackHandler();
       } else if (event == ProfileEvents.notificationSettingsEvent) {
         notificationSettingsHandler();
+      } else if (event == ProfileEvents.aboutUsEvent) {
+        aboutUsHandler();
       }
     });
   }
@@ -73,6 +75,13 @@ class ProfileBloc {
         Uri.parse(url),
         mode: LaunchMode.externalApplication,
       );
+    }
+  }
+
+  void aboutUsHandler() async {
+    const url = "https://channeli.in/maintainer_site/";
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
     }
   }
 

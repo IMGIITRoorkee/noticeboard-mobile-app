@@ -34,6 +34,10 @@ Icon logoutIcon = Icon(
   Icons.exit_to_app,
   color: globalBlue,
 );
+Icon aboutUsIcon = Icon(
+  Icons.person_search_sharp,
+  color: globalBlue,
+);
 
 Container divider(double width) {
   return Container(
