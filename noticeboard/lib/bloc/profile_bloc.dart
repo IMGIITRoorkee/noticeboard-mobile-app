@@ -51,7 +51,7 @@ class ProfileBloc {
     const String playStoreurl =
         'https://play.google.com/store/apps/details?id=com.img.noticeboard&hl=en_US&gl=IN';
     const String iosUrl =
-        "https://www.apple.com/in/app-store/"; // TODO: Change to actual app url on app store
+        "https://apps.apple.com/in/app/channel-i-noticeboard/id6443708603"; 
 
     late String url;
 
