@@ -30,6 +30,8 @@ class ProfileBloc {
         feedbackHandler();
       } else if (event == ProfileEvents.notificationSettingsEvent) {
         notificationSettingsHandler();
+      } else if (event == ProfileEvents.aboutUsEvent) {
+        aboutUsHandler();
       }
     });
   }
@@ -49,7 +51,7 @@ class ProfileBloc {
     const String playStoreurl =
         'https://play.google.com/store/apps/details?id=com.img.noticeboard&hl=en_US&gl=IN';
     const String iosUrl =
-        "https://www.apple.com/in/app-store/"; // TODO: Change to actual app url on app store
+        "https://apps.apple.com/in/app/channel-i-noticeboard/id6443708603"; 
 
     late String url;
 
@@ -73,6 +75,13 @@ class ProfileBloc {
         Uri.parse(url),
         mode: LaunchMode.externalApplication,
       );
+    }
+  }
+
+  void aboutUsHandler() async {
+    const url = "https://channeli.in/maintainer_site/";
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
     }
   }
 

@@ -117,6 +117,8 @@ class _ProfileState extends State<Profile> {
                       'Notification settings',
                       ProfileEvents.notificationSettingsEvent),
                   sizedBox(20.0),
+                  buildMenuItem(aboutUsIcon, "About us", ProfileEvents.aboutUsEvent),
+                  sizedBox(20.0),
                   buildMenuItem(logoutIcon, 'Logout', ProfileEvents.logoutEvent)
                 ],
               ),
