@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:noticeboard/enum/connectivity_status_enum.dart';
 import 'package:noticeboard/global/global_constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -205,4 +208,18 @@ void showGenericError() {
   snackKey.currentState!.showSnackBar(SnackBar(
     content: Text("Error!"),
   ));
+}
+
+Future<ConnectivityStatus> checkConnectivityStatus() async {
+  try {
+    final result = await InternetAddress.lookup("www.example.com");
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return ConnectivityStatus.connected;
+    }
+    else{
+      return ConnectivityStatus.notConnected;
+    }
+  } catch (e) {
+    return ConnectivityStatus.notConnected;
+  }
 }
