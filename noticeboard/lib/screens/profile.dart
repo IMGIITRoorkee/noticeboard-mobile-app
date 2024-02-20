@@ -27,14 +27,17 @@ class _ProfileState extends State<Profile> {
   void initState() {
     _profileBloc.context = context;
     _connectivityStatusBloc.context = context;
-    _timer = addConnectivityStatusToSink(context);
+    _timer = addConnectivityStatusToSink();
     super.initState();
   }
 
   @override
   void dispose() {
     _profileBloc.disposeStreams();
-    _timer.cancel();
+    if(_timer.isActive){
+      _timer.cancel();
+    }
+    
     super.dispose();
   }
 

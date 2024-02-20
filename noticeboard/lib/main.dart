@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
 import './routes/routing_constants.dart';
 import './routes/routing.dart';
 import 'global/global_constants.dart';
@@ -19,6 +20,8 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   void initState() {
+    ConnectivityStatusBloc _connectivityStatusBloc = ConnectivityStatusBloc();
+    _connectivityStatusBloc.context = context;
     super.initState();
   }
 

@@ -17,14 +17,14 @@ class ConnectivityStatusBloc {
   final backOnlineSnackbar = const SnackBar(content: Text("Back online!"));
 
   factory ConnectivityStatusBloc() => _connectivityStatusBloc;
-  
+
   ConnectivityStatusBloc._() {
     _eventStream.listen((connectivityEvent) {
       if (connectivityEvent == ConnectivityStatus.notConnected &&
-          previousResult == ConnectivityStatus.connected) {
+          previousResult == ConnectivityStatus.connected && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
       } else if (connectivityEvent == ConnectivityStatus.connected &&
-          previousResult == ConnectivityStatus.notConnected) {
+          previousResult == ConnectivityStatus.notConnected && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(backOnlineSnackbar);
       }
       previousResult = connectivityEvent;

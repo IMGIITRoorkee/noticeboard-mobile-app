@@ -42,7 +42,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
 
   @override
   void initState() {
-    _timer = addConnectivityStatusToSink(context);
+    _timer = addConnectivityStatusToSink();
     super.initState();
   }
 

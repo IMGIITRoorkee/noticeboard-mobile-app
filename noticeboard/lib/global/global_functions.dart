@@ -225,10 +225,9 @@ Future<ConnectivityStatus> checkConnectivityStatus() async {
   }
 }
 
-Timer addConnectivityStatusToSink(BuildContext context) {
+Timer addConnectivityStatusToSink() {
   final ConnectivityStatusBloc _connectivityStatusBloc =
       ConnectivityStatusBloc();
-  _connectivityStatusBloc.context = context;
   Timer _timer = Timer.periodic(Duration(seconds: 15), (timer) async {
     ConnectivityStatus connectivityStatus = await checkConnectivityStatus();
     _connectivityStatusBloc.eventSink.add(connectivityStatus);

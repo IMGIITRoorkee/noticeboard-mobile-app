@@ -37,14 +37,17 @@ class _NoticeDetailState extends State<NoticeDetail> {
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
     _noticeContentBloc.starred = widget.noticeIntro!.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
-    _timer = addConnectivityStatusToSink(context);
+    _timer = addConnectivityStatusToSink();
     super.initState();
   }
 
   @override
   void dispose() {
     _noticeContentBloc.disposeStreams();
-    _timer.cancel();
+    if(_timer.isActive){
+       _timer.cancel();
+    }
+   
     super.dispose();
   }
 
