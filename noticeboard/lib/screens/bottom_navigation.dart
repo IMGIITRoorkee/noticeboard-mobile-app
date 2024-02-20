@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:noticeboard/global/global_functions.dart';
 import '../enum/dynamic_fetch_enum.dart';
 import '../screens/list_notices.dart';
 import '../models/notice_intro.dart';
@@ -14,6 +16,7 @@ class MyBottomNavigationBar extends StatefulWidget {
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   BottomNavigatorBloc _bottomNavigatorBloc = BottomNavigatorBloc();
+  late Timer _timer;
   final widgetOptions = [
     ListNotices(
       listNoticeMetaData: ListNoticeMetaData(
@@ -38,8 +41,15 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   }
 
   @override
+  void initState() {
+    _timer = addConnectivityStatusToSink(context);
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _bottomNavigatorBloc.disposeStreams();
+    if (_timer.isActive) _timer.cancel();
     super.dispose();
   }
 

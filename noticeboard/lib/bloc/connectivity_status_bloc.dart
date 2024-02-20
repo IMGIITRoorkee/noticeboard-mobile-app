@@ -9,11 +9,16 @@ class ConnectivityStatusBloc {
   Stream<ConnectivityStatus> get _eventStream => _eventController.stream;
   ConnectivityStatus previousResult = ConnectivityStatus.connected;
 
+  static final ConnectivityStatusBloc _connectivityStatusBloc =
+      ConnectivityStatusBloc._();
+
   final networkSnackBar =
       const SnackBar(content: Text("Please check your internet connection!"));
   final backOnlineSnackbar = const SnackBar(content: Text("Back online!"));
 
-  ConnectivityStatusBloc() {
+  factory ConnectivityStatusBloc() => _connectivityStatusBloc;
+  
+  ConnectivityStatusBloc._() {
     _eventStream.listen((connectivityEvent) {
       if (connectivityEvent == ConnectivityStatus.notConnected &&
           previousResult == ConnectivityStatus.connected) {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
-import 'package:noticeboard/enum/connectivity_status_enum.dart';
 import 'package:noticeboard/models/filters_list.dart';
 import 'package:noticeboard/models/notice_intro.dart';
 import 'package:noticeboard/models/paginated_info.dart';
@@ -30,7 +29,6 @@ class _ListNoticesState extends State<ListNotices> {
   final ConnectivityStatusBloc _connectivityStatusBloc =
       ConnectivityStatusBloc();
   TextEditingController? _controller;
-  late Timer _timer;
 
   @override
   void initState() {
@@ -41,11 +39,6 @@ class _ListNoticesState extends State<ListNotices> {
     _controller!.addListener(_handleQueryChanges);
     _listNoticesBloc.dynamicFetch = widget.listNoticeMetaData!.dynamicFetch;
     _listNoticesBloc.dynamicFetchNotices();
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
-      ConnectivityStatus connectivityStatus = await checkConnectivityStatus();
-      _connectivityStatusBloc.eventSink.add(connectivityStatus);
-      print(connectivityStatus);
-    });
     super.initState();
   }
 

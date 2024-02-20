@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
+import 'package:noticeboard/enum/connectivity_status_enum.dart';
 import 'package:noticeboard/enum/notice_content_enum.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -21,23 +24,27 @@ class NoticeDetail extends StatefulWidget {
 class _NoticeDetailState extends State<NoticeDetail> {
   final NoticeIntro? noticeIntro;
   _NoticeDetailState({this.noticeIntro});
-
+  final ConnectivityStatusBloc _connectivityStatusBloc =
+      ConnectivityStatusBloc();
   NoticeContentBloc _noticeContentBloc = NoticeContentBloc();
   bool pdfAlreadyOpened = false;
+  late Timer _timer;
 
   @override
   void initState() {
     _noticeContentBloc.context = context;
+    _connectivityStatusBloc.context = context;
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
     _noticeContentBloc.starred = widget.noticeIntro!.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
+    _timer = addConnectivityStatusToSink(context);
     super.initState();
   }
 
   @override
   void dispose() {
     _noticeContentBloc.disposeStreams();
-
+    _timer.cancel();
     super.dispose();
   }
 
