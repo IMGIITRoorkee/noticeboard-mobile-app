@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
-import 'package:noticeboard/enum/connectivity_status_enum.dart';
 import 'package:noticeboard/enum/notice_content_enum.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -23,6 +22,7 @@ class NoticeDetail extends StatefulWidget {
 
 class _NoticeDetailState extends State<NoticeDetail> {
   final NoticeIntro? noticeIntro;
+  // ignore: unused_element
   _NoticeDetailState({this.noticeIntro});
   final ConnectivityStatusBloc _connectivityStatusBloc =
       ConnectivityStatusBloc();
@@ -44,10 +44,10 @@ class _NoticeDetailState extends State<NoticeDetail> {
   @override
   void dispose() {
     _noticeContentBloc.disposeStreams();
-    if(_timer.isActive){
-       _timer.cancel();
+    if (_timer.isActive) {
+      _timer.cancel();
     }
-   
+
     super.dispose();
   }
 
@@ -92,15 +92,18 @@ class _NoticeDetailState extends State<NoticeDetail> {
                 }
               }
             },
-            child: WillPopScope(
-              onWillPop: () async {
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) async {
+                if (didPop) {
+                  return;
+                }
                 if (previousRoute == launchingRoute) {
                   navigatorKey.currentState!
                       .pushReplacementNamed(bottomNavigationRoute);
                 } else {
                   navigatorKey.currentState!.pop();
                 }
-                return false;
               },
               child: Container(
                 width: _width,

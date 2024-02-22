@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
-import 'package:noticeboard/enum/connectivity_status_enum.dart';
 import 'package:noticeboard/global/global_constants.dart';
 import 'package:noticeboard/global/global_functions.dart';
 import 'package:noticeboard/models/user_profile.dart';

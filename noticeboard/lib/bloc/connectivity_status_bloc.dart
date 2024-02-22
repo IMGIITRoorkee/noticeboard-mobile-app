@@ -21,13 +21,19 @@ class ConnectivityStatusBloc {
   ConnectivityStatusBloc._() {
     _eventStream.listen((connectivityEvent) {
       if (connectivityEvent == ConnectivityStatus.notConnected &&
-          previousResult == ConnectivityStatus.connected && context.mounted) {
+          previousResult == ConnectivityStatus.connected &&
+          context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
       } else if (connectivityEvent == ConnectivityStatus.connected &&
-          previousResult == ConnectivityStatus.notConnected && context.mounted) {
+          previousResult == ConnectivityStatus.notConnected &&
+          context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(backOnlineSnackbar);
       }
       previousResult = connectivityEvent;
     });
+  }
+
+  void disposeStream() {
+    _eventController.close();
   }
 }

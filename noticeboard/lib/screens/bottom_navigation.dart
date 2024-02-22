@@ -55,16 +55,18 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
         await Future.delayed(
           Duration(milliseconds: 500),
         );
         if (Platform.isAndroid) {
           SystemNavigator.pop();
-          return true;
         } else {
-          return false;
         }
       },
       child: StreamBuilder<int>(
