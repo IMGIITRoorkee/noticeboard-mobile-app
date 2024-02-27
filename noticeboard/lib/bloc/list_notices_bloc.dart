@@ -314,7 +314,6 @@ class ListNoticesBloc {
             DynamicFetch.fetchInstituteNotices)
           filterResult.endpoint =
               'api/noticeboard/institute_notices/?start=${filterResult.startDate}&end=${filterResult.endDate}';
-        // TODO: Add the if condition for Institute Notices case
       }
       PaginatedInfo paginatedInfo = await _listNoticesRepository
           .fetchFilteredNotices(filterResult.endpoint!, page);

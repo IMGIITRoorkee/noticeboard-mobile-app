@@ -1,0 +1,4 @@
+enum CurrentWidget {
+  listNotices,
+  noticeDetail
+}

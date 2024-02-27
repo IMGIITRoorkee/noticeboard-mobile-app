@@ -1,4 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
+import 'package:noticeboard/bloc/notice_detail_bloc.dart';
+import 'package:noticeboard/enum/current_widget_enum.dart';
 import 'package:noticeboard/enum/notice_content_enum.dart';
 import 'package:noticeboard/routes/routing_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -20,23 +25,40 @@ class NoticeDetail extends StatefulWidget {
 
 class _NoticeDetailState extends State<NoticeDetail> {
   final NoticeIntro? noticeIntro;
+  // ignore: unused_element
   _NoticeDetailState({this.noticeIntro});
-
+  final ConnectivityStatusBloc _connectivityStatusBloc =
+      ConnectivityStatusBloc();
   NoticeContentBloc _noticeContentBloc = NoticeContentBloc();
+  WebViewController _webViewController = WebViewController();
+  NoticeDetailBloc _noticeDetailBloc = NoticeDetailBloc();
   bool pdfAlreadyOpened = false;
+  late Timer _timer;
 
   @override
   void initState() {
     _noticeContentBloc.context = context;
+    _connectivityStatusBloc.context = context;
+    _connectivityStatusBloc.currentWidget = CurrentWidget.noticeDetail;
     _noticeContentBloc.noticeIntro = widget.noticeIntro;
     _noticeContentBloc.starred = widget.noticeIntro!.starred;
     _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
+    _timer = addConnectivityStatusToSink();
+    _noticeDetailBloc.eventStream.listen((event) {
+      if (event == CurrentWidget.noticeDetail) {
+        _noticeContentBloc.eventSink.add(NoticeContentEvents.fetchContent);
+        _webViewController.reload();
+      }
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     _noticeContentBloc.disposeStreams();
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
 
     super.dispose();
   }
@@ -72,7 +94,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
           child: GestureDetector(
             onPanUpdate: (details) {
               // Can swipe anywhere and detects left swipe
-              if (details.delta.dx < 0) {
+              if (details.delta.dx < 0 && Platform.isIOS) {
                 debugPrint("Left swipe occoured!");
                 if (previousRoute == launchingRoute) {
                   navigatorKey.currentState!
@@ -82,15 +104,18 @@ class _NoticeDetailState extends State<NoticeDetail> {
                 }
               }
             },
-            child: WillPopScope(
-              onWillPop: () async {
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) async {
+                if (didPop) {
+                  return;
+                }
                 if (previousRoute == launchingRoute) {
                   navigatorKey.currentState!
                       .pushReplacementNamed(bottomNavigationRoute);
                 } else {
                   navigatorKey.currentState!.pop();
                 }
-                return false;
               },
               child: Container(
                 width: _width,
@@ -98,7 +123,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
                 child: Column(
                   children: [
                     buildNoticeIntro(_width),
-                    buildNoticeContent(_width)
+                    buildNoticeContent(_width),
                   ],
                 ),
               ),
@@ -135,35 +160,33 @@ class _NoticeDetailState extends State<NoticeDetail> {
       mimeType: 'text/html',
       encoding: Encoding.getByName('utf-8'),
     );
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      child: WebView(
-        initialUrl: uri.toString(),
-        zoomEnabled: true,
-        javascriptMode: JavascriptMode.unrestricted,
-        allowsInlineMediaPlayback: true,
-        navigationDelegate: (navigation) async {
-          print(navigation.url);
-          if (navigation.url.endsWith("pdf") && !pdfAlreadyOpened) {
-            if (await canLaunchUrlString(navigation.url)) {
-              String newUrl =
-                  "https://docs.google.com/gview?embedded=true&url=${navigation.url}";
-              await launchUrlString(newUrl);
-            }
-            return NavigationDecision.prevent;
-          } else {
-            if (await canLaunchUrlString(navigation.url)) {
-              await launchUrlString(
-                navigation.url,
-                mode: LaunchMode.externalApplication,
-              );
-              return NavigationDecision.prevent;
-            }
+    _webViewController
+      ..enableZoom(true)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+          NavigationDelegate(onNavigationRequest: (navigation) async {
+        if (navigation.url.endsWith("pdf") && !pdfAlreadyOpened) {
+          if (await canLaunchUrlString(navigation.url)) {
+            String newUrl =
+                "https://docs.google.com/gview?embedded=true&url=${navigation.url}";
+            await launchUrlString(newUrl);
           }
-          return NavigationDecision.navigate;
-        },
-      ),
-    );
+          return NavigationDecision.prevent;
+        } else {
+          if (await canLaunchUrlString(navigation.url)) {
+            await launchUrlString(
+              navigation.url,
+              mode: LaunchMode.externalApplication,
+            );
+            return NavigationDecision.prevent;
+          }
+        }
+        return NavigationDecision.navigate;
+      }))
+      ..loadRequest(uri);
+    return Container(
+        padding: EdgeInsets.all(10.0),
+        child: WebViewWidget(controller: _webViewController));
   }
 
   Container buildNoticeIntro(double _width) {

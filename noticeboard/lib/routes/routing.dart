@@ -6,7 +6,6 @@ import './routing_constants.dart';
 import '../screens/login.dart';
 import '../screens/list_notices.dart';
 import '../screens/launching.dart';
-import '../models/notice_intro.dart';
 import '../screens/notice_detail.dart';
 
 class MyRouter {
