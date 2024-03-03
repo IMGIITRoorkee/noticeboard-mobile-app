@@ -33,6 +33,8 @@ class _NoticeDetailState extends State<NoticeDetail> {
   WebViewController _webViewController = WebViewController();
   NoticeDetailBloc _noticeDetailBloc = NoticeDetailBloc();
   bool pdfAlreadyOpened = false;
+  bool gestureToPop = false;
+  bool gestureToNav = false;
   late Timer _timer;
 
   @override
@@ -92,16 +94,22 @@ class _NoticeDetailState extends State<NoticeDetail> {
         ),
         body: SizedBox.expand(
           child: GestureDetector(
-            onPanUpdate: (details) {
-              // Can swipe anywhere and detects left swipe
-              if (details.delta.dx < 0 && Platform.isIOS) {
-                debugPrint("Left swipe occoured!");
+            onHorizontalDragStart: (details) {
+              if (details.localPosition.dx < 50.0 && Platform.isIOS) {
                 if (previousRoute == launchingRoute) {
                   navigatorKey.currentState!
                       .pushReplacementNamed(bottomNavigationRoute);
                 } else {
                   navigatorKey.currentState!.pop();
                 }
+              }
+            },
+            onHorizontalDragUpdate: (details) {
+              if(details.delta.dx > 10){
+                // Forward swipe. Have to show previous notice
+              }
+              else if(details.delta.dx < -10){
+                // Backward Swipe. Have to show next notice
               }
             },
             child: PopScope(
