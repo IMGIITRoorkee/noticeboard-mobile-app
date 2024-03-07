@@ -5,3 +5,6 @@ final GlobalKey<ScaffoldMessengerState> snackKey =
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 String previousRoute = "";
+
+SnackBar noprevNoticeSnackBar =
+    const SnackBar(content: Text("You are already on the first notice!"));
