@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
+import 'package:noticeboard/bloc/list_notices_bloc.dart';
 import 'package:noticeboard/bloc/notice_detail_bloc.dart';
 import 'package:noticeboard/enum/current_widget_enum.dart';
 import 'package:noticeboard/enum/notice_content_enum.dart';
@@ -15,9 +18,15 @@ import '../global/global_functions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../styles/notice_detail_consts.dart';
 
+// ignore: must_be_immutable
 class NoticeDetail extends StatefulWidget {
   final NoticeIntro? noticeIntro;
-  NoticeDetail({required this.noticeIntro});
+  List<NoticeIntro?>? listOfNotices;
+  ListNoticesBloc listNoticesBloc;
+  NoticeDetail(
+      {required this.noticeIntro,
+      required this.listOfNotices,
+      required this.listNoticesBloc});
 
   @override
   _NoticeDetailState createState() => _NoticeDetailState();
@@ -33,7 +42,10 @@ class _NoticeDetailState extends State<NoticeDetail> {
   WebViewController _webViewController = WebViewController();
   NoticeDetailBloc _noticeDetailBloc = NoticeDetailBloc();
   bool pdfAlreadyOpened = false;
+  bool snackBarShown = false;
+  bool isGestureZoom = false;
   late Timer _timer;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -50,6 +62,18 @@ class _NoticeDetailState extends State<NoticeDetail> {
         _webViewController.reload();
       }
     });
+    for (int i = 0; i < widget.listOfNotices!.length; i++) {
+      if (widget.listOfNotices?[i]?.id == widget.noticeIntro?.id) {
+        currentIndex = i;
+      }
+    }
+    if (currentIndex == widget.listOfNotices!.length - 1) {
+      widget.listNoticesBloc.loadMore().whenComplete(() {
+        setState(() {
+          widget.listOfNotices = widget.listNoticesBloc.dynamicNoticeList;
+        });
+      });
+    }
     super.initState();
   }
 
@@ -92,16 +116,54 @@ class _NoticeDetailState extends State<NoticeDetail> {
         ),
         body: SizedBox.expand(
           child: GestureDetector(
-            onPanUpdate: (details) {
-              // Can swipe anywhere and detects left swipe
-              if (details.delta.dx < 0 && Platform.isIOS) {
-                debugPrint("Left swipe occoured!");
+            onScaleUpdate: (details) async {
+              isGestureZoom = true;
+              await _webViewController.enableZoom(true);
+              return;
+              // Your zoom logic here
+            },
+            onScaleEnd: (details) {
+              isGestureZoom = false;
+            },
+            onHorizontalDragStart: (details) {
+              if (isGestureZoom) {
+                return;
+              }
+              if (details.localPosition.dx < 75.0 && Platform.isIOS) {
                 if (previousRoute == launchingRoute) {
                   navigatorKey.currentState!
                       .pushReplacementNamed(bottomNavigationRoute);
                 } else {
                   navigatorKey.currentState!.pop();
                 }
+              }
+            },
+            onHorizontalDragUpdate: (details) {
+              if (isGestureZoom) {
+                return;
+              }
+              if (details.delta.dx > 10) {
+                // Forward swipe. Have to show previous notice
+                if (currentIndex > 0)
+                  widget.listNoticesBloc.swipeBetweenNoticeDetail(
+                      widget.listOfNotices![currentIndex - 1]!,
+                      widget.listOfNotices,
+                      widget.listNoticesBloc,
+                      true);
+                else {
+                  if (!snackBarShown) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(noprevNoticeSnackBar);
+                    snackBarShown = true;
+                  }
+                }
+              } else if (details.delta.dx < -10) {
+                // Backward Swipe. Have to show next notice
+                widget.listNoticesBloc.swipeBetweenNoticeDetail(
+                    widget.listOfNotices![currentIndex + 1]!,
+                    widget.listOfNotices,
+                    widget.listNoticesBloc,
+                    false);
               }
             },
             child: PopScope(
@@ -161,7 +223,6 @@ class _NoticeDetailState extends State<NoticeDetail> {
       encoding: Encoding.getByName('utf-8'),
     );
     _webViewController
-      ..enableZoom(true)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
           NavigationDelegate(onNavigationRequest: (navigation) async {
@@ -183,10 +244,14 @@ class _NoticeDetailState extends State<NoticeDetail> {
         }
         return NavigationDecision.navigate;
       }))
-      ..loadRequest(uri);
+      ..loadRequest(uri).then((value) async {
+        await _webViewController.enableZoom(true);
+      });
     return Container(
         padding: EdgeInsets.all(10.0),
-        child: WebViewWidget(controller: _webViewController));
+        child: WebViewWidget(controller: _webViewController , gestureRecognizers: Set()
+    ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer()))
+    ..add(Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer())),));
   }
 
   Container buildNoticeIntro(double _width) {

@@ -72,7 +72,7 @@ class _ListNoticesState extends State<ListNotices> {
   }
 
   void pushNoticeDetail(NoticeIntro noticeIntro) {
-    _listNoticesBloc.pushNoticeDetail(noticeIntro);
+    _listNoticesBloc.pushNoticeDetail(noticeIntro , _listNoticesBloc.dynamicNoticeList , _listNoticesBloc);
   }
 
   bool _handleScrollNotification(ScrollNotification scrollInfo) {
