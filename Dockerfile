@@ -1,7 +1,7 @@
 # Use ubuntu 22.04 LTS as Base Image
 FROM ubuntu:22.04
 
-# This sets up java and git in the container
+# This sets up java in the container
 RUN apt update && apt install -y curl git unzip xz-utils zip libglu1-mesa openjdk-8-jdk wget adb libjaxb-api-java
 
 # Set up new user
@@ -42,14 +42,14 @@ RUN apt install -y openjdk-17-jdk
 RUN flutter doctor --android-licenses
 
 # Verify android toolchain is set up for development
-RUN flutter doctor
+RUN flutter doctor -v
 
 # Go to noticeboard-mobile directory
-RUN cd /workspaces/noticeboard-mobile-app/noticeboard
+WORKDIR  /workspaces/noticeboard-mobile-app/noticeboard
+
 
 # Install dependencies
-RUN flutter pub get
+CMD [ "flutter" "pub" "get" ]
 
-# Set up work directory and current user in container
-WORKDIR /workspaces/noticeboard-mobile-app
-USER developer
+
+
