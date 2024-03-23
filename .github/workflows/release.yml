@@ -44,4 +44,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: NoticeBoard
-          path: build/app/outputs/apk/release/NoticeBoardApp.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
