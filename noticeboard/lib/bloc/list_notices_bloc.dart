@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:noticeboard/models/notice_detail_route_arguments.dart';
 import 'package:noticeboard/models/paginated_info.dart';
 import 'package:noticeboard/repository/list_notices_repository.dart';
 import '../global/global_constants.dart';
@@ -91,7 +92,7 @@ class ListNoticesBloc {
 
     _markReadStream.listen((object) async {
       object.read = true;
-      if(!object.fromDeepLink){
+      if (!object.fromDeepLink) {
         updateUi(object);
       }
       var obj = {
@@ -187,11 +188,28 @@ class ListNoticesBloc {
       await fetchBookmarkedNotices();
   }
 
-  void pushNoticeDetail(NoticeIntro noticeIntro) {
+  void pushNoticeDetail(NoticeIntro noticeIntro,
+      List<NoticeIntro?>? listOfNotices, ListNoticesBloc listNoticesBloc) {
     if (!noticeIntro.read!) markReadSink.add(noticeIntro);
     previousRoute = bottomNavigationRoute;
     navigatorKey.currentState!
-        .pushNamed(noticeDetailRoute, arguments: noticeIntro)
+        .pushNamed(noticeDetailRoute,
+            arguments: NoticeDetailArgument(
+                noticeIntro, listOfNotices, listNoticesBloc , false))
+        .then((value) => updateUi(value as NoticeIntro?));
+  }
+
+  void swipeBetweenNoticeDetail(
+    NoticeIntro noticeIntro,
+    List<NoticeIntro?>? listOfNotices,
+    ListNoticesBloc listNoticesBloc,
+    bool goingToPrevNotice
+  ) {
+    if (!noticeIntro.read!) markReadSink.add(noticeIntro);
+    navigatorKey.currentState!
+        .pushReplacementNamed(noticeDetailRoute,
+            arguments: NoticeDetailArgument(
+                noticeIntro, listOfNotices, listNoticesBloc , goingToPrevNotice))
         .then((value) => updateUi(value as NoticeIntro?));
   }
 
@@ -314,7 +332,6 @@ class ListNoticesBloc {
             DynamicFetch.fetchInstituteNotices)
           filterResult.endpoint =
               'api/noticeboard/institute_notices/?start=${filterResult.startDate}&end=${filterResult.endDate}';
-        // TODO: Add the if condition for Institute Notices case
       }
       PaginatedInfo paginatedInfo = await _listNoticesRepository
           .fetchFilteredNotices(filterResult.endpoint!, page);
@@ -447,9 +464,12 @@ class ListNoticesBloc {
   }
 
   void updateUi(NoticeIntro? object) {
-    dynamicNoticeList![dynamicNoticeList!
-        .indexWhere((noticeIntro) => noticeIntro!.id == object!.id)] = object;
+    if(object != null){
+       dynamicNoticeList![dynamicNoticeList!
+        .indexWhere((noticeIntro) => noticeIntro!.id == object.id)] = object;
     _listNoticesSink
         .add(PaginatedInfo(list: dynamicNoticeList, hasMore: hasMore));
+    }
+   
   }
 }

@@ -55,7 +55,7 @@ class _FiltersState extends State<Filters> {
                 child: GestureDetector(
                   onTap: () {
                     _filtersBloc.eventSink.add(FilterEvents.resetGlobalSlug);
-                    WidgetsBinding.instance!.addPostFrameCallback((time) {
+                    WidgetsBinding.instance.addPostFrameCallback((time) {
                       onFilterClear();
                     });
                   },

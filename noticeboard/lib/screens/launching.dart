@@ -12,7 +12,6 @@ import '../models/notice_intro.dart';
 import '../services/api_service/api_service.dart';
 import '../services/auth/auth_repository.dart';
 import '../global/global_functions.dart';
-import '../styles/launching_constants.dart';
 import '../styles/login_constants.dart';
 
 class Launcher extends StatefulWidget {
