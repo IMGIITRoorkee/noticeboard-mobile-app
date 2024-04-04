@@ -32,74 +32,77 @@ class _LoginState extends State<Login> {
     final double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: StreamBuilder<LoginState>(
-          initialData: LoginState.initLogin,
-          stream: _loginBloc.progressStream,
-          builder: (context, snapshot) {
-            if (snapshot.data == LoginState.initLogin)
-              return SingleChildScrollView(
-                child: Container(
-                  height: _height,
-                  width: _width,
-                  child: Stack(children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          containsBranding(context, _width, _height),
-                          sizedBox(20.0),
-                          FormBuilder(
-                              key: _loginBloc.formKey,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: 250.0,
-                                    child: themeFormTextField(
-                                        'username', 'Username', context, false),
-                                  ),
-                                  Container(
-                                      width: 250,
-                                      child: PasswordField(
-                                        fieldName: 'password',
-                                        fieldHint: 'Password',
-                                        context: context,
-                                      )),
-                                  TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              globalBlue),
-                                      foregroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.white),
+      body: PopScope(
+        canPop: false,
+        child: StreamBuilder<LoginState>(
+            initialData: LoginState.initLogin,
+            stream: _loginBloc.progressStream,
+            builder: (context, snapshot) {
+              if (snapshot.data == LoginState.initLogin)
+                return SingleChildScrollView(
+                  child: Container(
+                    height: _height,
+                    width: _width,
+                    child: Stack(children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            containsBranding(context, _width, _height),
+                            sizedBox(20.0),
+                            FormBuilder(
+                                key: _loginBloc.formKey,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 250.0,
+                                      child: themeFormTextField(
+                                          'username', 'Username', context, false),
                                     ),
-                                    onPressed: () => _loginBloc.login(),
-                                    child: Text('Login'),
-                                  ),
-                                  SizedBox(height: 10.0),
-                                ],
-                              )),
-                          sizedBox(_height * 0.02),
-                          buildContactImgContainer(_width),
-                        ],
+                                    Container(
+                                        width: 250,
+                                        child: PasswordField(
+                                          fieldName: 'password',
+                                          fieldHint: 'Password',
+                                          context: context,
+                                        )),
+                                    TextButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                globalBlue),
+                                        foregroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.white),
+                                      ),
+                                      onPressed: () => _loginBloc.login(),
+                                      child: Text('Login'),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                  ],
+                                )),
+                            sizedBox(_height * 0.02),
+                            buildContactImgContainer(_width),
+                          ],
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: lotsOfLove(context, _width),
-                      ),
-                    )
-                  ]),
-                ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: lotsOfLove(context, _width),
+                        ),
+                      )
+                    ]),
+                  ),
+                );
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
+            }),
+      ),
     );
   }
 }
