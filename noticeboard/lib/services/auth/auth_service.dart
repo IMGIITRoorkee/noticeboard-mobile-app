@@ -6,6 +6,7 @@ import '../endpoints/urls.dart';
 import 'package:http/http.dart' as http;
 import '../../models/user_tokens.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:developer';
 
 class AuthService {
   final storage = new FlutterSecureStorage();
@@ -141,6 +142,7 @@ class AuthService {
           await fetchAccessToken();
       String? token = await FirebaseMessaging.instance.getToken();
       NotificationToken notificationToken = NotificationToken(token);
+      log(notificationToken.token.toString());
       await storeNotificationIdentifier(notificationToken.clientIdentifier);
       final http.Response postResponse =
           await http.post(Uri.parse(BASE_URL + NOTIFICATION_EP),
@@ -153,7 +155,7 @@ class AuthService {
       if (postResponse.statusCode != 201) {
         throw Exception('Failure');
       }
-      print("SUCCESSFULLY REGISTERED");
+      log("FCM Token regisetered successfully!");
     } catch (e) {
       throw Exception('Failure');
     }
@@ -179,7 +181,7 @@ class AuthService {
       if (response.statusCode != 204) {
         throw Exception('Failure');
       }
-      print("SUCCESSFULLY DEREGISTERED");
+      log("SUCCESSFULLY DEREGISTERED");
     } catch (e) {
       print(e.toString());
       throw Exception('Failure');

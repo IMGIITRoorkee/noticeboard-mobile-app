@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:noticeboard/bloc/connectivity_status_bloc.dart';
+import 'package:noticeboard/services/notifications/notification_service.dart';
 import './routes/routing_constants.dart';
 import './routes/routing.dart';
 import 'global/global_constants.dart';
@@ -19,6 +19,9 @@ Future<void> main() async {
           storageBucket: "channeli-v2-notifications.appspot.com",
         ))
       : await Firebase.initializeApp();
+  NotificationService notificationService = NotificationService();
+  await notificationService.setUpBackgroundNotifs();
+  await notificationService.setUpForegroundNotifs();
   runApp(MyApp());
 }
 
