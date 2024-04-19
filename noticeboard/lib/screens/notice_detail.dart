@@ -44,11 +44,20 @@ class _NoticeDetailState extends State<NoticeDetail> {
   bool pdfAlreadyOpened = false;
   bool snackBarShown = false;
   bool isGestureZoom = false;
+  Offset currentScrollPos = Offset(0, 0);
   late Timer _timer;
   int currentIndex = 0;
-
+  double currentScale = 1;
+  late TransformationController _transformationController;
+  Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = Set();
+  Set<Factory<OneSequenceGestureRecognizer>> zoomgestureRecognizers = Set();
   @override
   void initState() {
+    gestureRecognizers.add(Factory(() => TapAndPanGestureRecognizer()));
+    //gestureRecognizers.add(Factory(() => VerticalDragGestureRecognizer()));
+    zoomgestureRecognizers.add(Factory(() => PanGestureRecognizer()));
+    //zoomgestureRecognizers.add(Factory(() => VerticalDragGestureRecognizer()));
+    _transformationController = TransformationController();
     _noticeContentBloc.context = context;
     _connectivityStatusBloc.context = context;
     _connectivityStatusBloc.currentWidget = CurrentWidget.noticeDetail;
@@ -70,6 +79,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     if (currentIndex == widget.listOfNotices!.length - 1) {
       widget.listNoticesBloc.loadMore().whenComplete(() {
         setState(() {
+          print("Set State called!");
           widget.listOfNotices = widget.listNoticesBloc.dynamicNoticeList;
         });
       });
@@ -83,7 +93,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     if (_timer.isActive) {
       _timer.cancel();
     }
-
+    _transformationController.dispose();
     super.dispose();
   }
 
@@ -91,114 +101,112 @@ class _NoticeDetailState extends State<NoticeDetail> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
+    isGestureZoom = currentScale > 1;
+    print(currentScale);
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leadingWidth: 30.0,
-          leading: IconButton(
-            icon: screenPopIcon(Colors.white),
-            onPressed: () {
-              if (previousRoute == launchingRoute) {
-                navigatorKey.currentState!
-                    .pushReplacementNamed(bottomNavigationRoute);
-              } else {
-                navigatorKey.currentState!.pop();
-              }
-            },
-          ),
-          backgroundColor: globalBlueColor,
-          centerTitle: false,
-          title: Text(
-            widget.noticeIntro!.department!,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
-          ),
+      appBar: AppBar(
+        elevation: 0.0,
+        leadingWidth: 30.0,
+        leading: IconButton(
+          icon: screenPopIcon(Colors.white),
+          onPressed: () {
+            if (previousRoute == launchingRoute) {
+              navigatorKey.currentState!
+                  .pushReplacementNamed(bottomNavigationRoute);
+            } else {
+              navigatorKey.currentState!.pop();
+            }
+          },
         ),
-        body: SizedBox.expand(
+        backgroundColor: globalBlueColor,
+        centerTitle: false,
+        title: Text(
+          widget.noticeIntro!.department!,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+        ),
+      ),
+      body: SizedBox.expand(
           child: GestureDetector(
-            onScaleUpdate: (details) async {
-              isGestureZoom = true;
-              await _webViewController.enableZoom(true);
-              return;
-              // Your zoom logic here
-            },
-            onScaleEnd: (details) {
-              isGestureZoom = false;
-            },
-            onHorizontalDragStart: (details) {
-              if (isGestureZoom) {
-                return;
-              }
-              if (details.localPosition.dx < 75.0 && Platform.isIOS) {
-                if (previousRoute == launchingRoute) {
-                  navigatorKey.currentState!
-                      .pushReplacementNamed(bottomNavigationRoute);
-                } else {
-                  navigatorKey.currentState!.pop();
-                }
-              }
-            },
-            onHorizontalDragUpdate: (details) {
-              if (isGestureZoom) {
-                return;
-              }
-              if (details.delta.dx > 10) {
-                // Forward swipe. Have to show previous notice
-                if (currentIndex > 0)
-                  widget.listNoticesBloc.swipeBetweenNoticeDetail(
-                      widget.listOfNotices![currentIndex - 1]!,
-                      widget.listOfNotices,
-                      widget.listNoticesBloc,
-                      true);
-                else {
-                  if (!snackBarShown) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(noprevNoticeSnackBar);
-                    snackBarShown = true;
+              onHorizontalDragStart: isGestureZoom
+                  ? null
+                  : (details) {
+                      if (isGestureZoom) {
+                        return;
+                      }
+                      if (details.localPosition.dx < 75.0 && Platform.isIOS) {
+                        if (previousRoute == launchingRoute) {
+                          navigatorKey.currentState!
+                              .pushReplacementNamed(bottomNavigationRoute);
+                        } else {
+                          navigatorKey.currentState!.pop();
+                        }
+                      }
+                    },
+              onHorizontalDragEnd: isGestureZoom
+                  ? null
+                  : (details) {
+                      if (isGestureZoom) {
+                        return;
+                      }
+                      if (details.primaryVelocity! > 0 && !isGestureZoom) {
+                        // Forward swipe. Have to show previous notice
+                        if (currentIndex > 0)
+                          widget.listNoticesBloc.swipeBetweenNoticeDetail(
+                              widget.listOfNotices![currentIndex - 1]!,
+                              widget.listOfNotices,
+                              widget.listNoticesBloc,
+                              true);
+                        else {
+                          if (!snackBarShown) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(noprevNoticeSnackBar);
+                            snackBarShown = true;
+                          }
+                        }
+                      } else if (details.primaryVelocity! < 0) {
+                        // Backward Swipe. Have to show next notice
+                        widget.listNoticesBloc.swipeBetweenNoticeDetail(
+                            widget.listOfNotices![currentIndex + 1]!,
+                            widget.listOfNotices,
+                            widget.listNoticesBloc,
+                            false);
+                      }
+                    },
+              child: PopScope(
+                canPop: false,
+                onPopInvoked: (didPop) async {
+                  if (didPop) {
+                    return;
                   }
-                }
-              } else if (details.delta.dx < -10) {
-                // Backward Swipe. Have to show next notice
-                widget.listNoticesBloc.swipeBetweenNoticeDetail(
-                    widget.listOfNotices![currentIndex + 1]!,
-                    widget.listOfNotices,
-                    widget.listNoticesBloc,
-                    false);
-              }
-            },
-            child: PopScope(
-              canPop: false,
-              onPopInvoked: (didPop) async {
-                if (didPop) {
-                  return;
-                }
-                if (previousRoute == launchingRoute) {
-                  navigatorKey.currentState!
-                      .pushReplacementNamed(bottomNavigationRoute);
-                } else {
-                  navigatorKey.currentState!.pop();
-                }
-              },
-              child: Container(
-                width: _width,
-                height: _height * 0.88,
-                child: Column(
-                  children: [
-                    buildNoticeIntro(_width),
-                    buildNoticeContent(_width),
-                  ],
+                  if (previousRoute == launchingRoute) {
+                    navigatorKey.currentState!
+                        .pushReplacementNamed(bottomNavigationRoute);
+                  } else {
+                    navigatorKey.currentState!.pop();
+                  }
+                },
+                child: Container(
+                  width: _width,
+                  height: _height * 0.88,
+                  child: Column(
+                    children: [
+                      buildNoticeIntro(_width),
+                      buildNoticeContent(_width, _height),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ));
+              ))),
+      resizeToAvoidBottomInset: true,
+    );
   }
 
-  Expanded buildNoticeContent(double width) {
+  Expanded buildNoticeContent(double width, double height) {
     return Expanded(
       child: Container(
         color: Colors.white,
         width: width,
+        height: height,
         child: Center(
           child: StreamBuilder(
             stream: _noticeContentBloc.contentStream,
@@ -244,14 +252,34 @@ class _NoticeDetailState extends State<NoticeDetail> {
         }
         return NavigationDecision.navigate;
       }))
+      //..scrollTo(currentScrollPos.dx.toInt(), currentScrollPos.dy.toInt())
       ..loadRequest(uri).then((value) async {
-        await _webViewController.enableZoom(true);
+        if (Platform.isAndroid) await _webViewController.enableZoom(true);
       });
     return Container(
         padding: EdgeInsets.all(10.0),
-        child: WebViewWidget(controller: _webViewController , gestureRecognizers: Set()
-    ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer()))
-    ..add(Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer())),));
+        child: InteractiveViewer(
+          minScale: 1,
+          maxScale: 4,
+          boundaryMargin: EdgeInsets.all(10),
+          transformationController: _transformationController,
+          onInteractionEnd: (details) {
+            print(_transformationController.value.getMaxScaleOnAxis());
+            if (_transformationController.value.getMaxScaleOnAxis() !=
+                currentScale) {
+              setState(() {
+                print("Set State called!");
+
+                currentScale =
+                    _transformationController.value.getMaxScaleOnAxis();
+              });
+            }
+          },
+          child: WebViewWidget(
+              controller: _webViewController,
+              gestureRecognizers:
+                  isGestureZoom ? zoomgestureRecognizers : gestureRecognizers),
+        ));
   }
 
   Container buildNoticeIntro(double _width) {

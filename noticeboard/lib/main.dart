@@ -22,15 +22,15 @@ Future<void> main() async {
   NotificationService notificationService = NotificationService();
   await notificationService.setUpBackgroundNotifs();
   await notificationService.setUpForegroundNotifs();
-  runApp(MyApp());
+  runApp(Noticeboard());
 }
 
-class MyApp extends StatefulWidget {
+class Noticeboard extends StatefulWidget {
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<Noticeboard> createState() => _NoticeboardState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _NoticeboardState extends State<Noticeboard> {
   // This widget is the root of your application.
   @override
   void initState() {
@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentScope = FocusScope.of(context);
