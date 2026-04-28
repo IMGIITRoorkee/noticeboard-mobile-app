@@ -36,7 +36,8 @@ platform :ios do
     project_root = File.expand_path("../..", __dir__)
     ios_dir = File.join(project_root, "ios")
     dry = ENV["DRY_RUN"] == "true"
-    team_id = ENV["IOS_TEAM_ID"] || "RVM9855V5X"
+    team_id = ENV["IOS_TEAM_ID"].to_s.strip
+    team_id = "RVM9855V5X" if team_id.empty?
     bundle_id = ENV["IOS_BUNDLE_ID"] || "com.img.noticeboard"
     profile_name = ENV.fetch("IOS_PROVISIONING_PROFILE_NAME")
 
