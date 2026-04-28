@@ -1,0 +1,111 @@
+# frozen_string_literal: true
+
+require "securerandom"
+require "cgi"
+
+default_platform(:ios)
+
+def write_export_plist(path, team_id, profile_name, bundle_id)
+  escaped_profile = CGI.escapeHTML(profile_name)
+  File.write(path, <<~PLIST)
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>method</key>
+      <string>app-store</string>
+      <key>teamID</key>
+      <string>#{team_id}</string>
+      <key>uploadSymbols</key>
+      <true/>
+      <key>signingStyle</key>
+      <string>manual</string>
+      <key>provisioningProfiles</key>
+      <dict>
+        <key>#{bundle_id}</key>
+        <string>#{escaped_profile}</string>
+      </dict>
+    </dict>
+    </plist>
+  PLIST
+end
+
+platform :ios do
+  desc "Build release IPA and upload to TestFlight (App Store Connect)"
+  lane :release do
+    project_root = File.expand_path("../..", __dir__)
+    ios_dir = File.join(project_root, "ios")
+    dry = ENV["DRY_RUN"] == "true"
+    team_id = ENV["IOS_TEAM_ID"] || "RVM9855V5X"
+    bundle_id = ENV["IOS_BUNDLE_ID"] || "com.img.noticeboard"
+    profile_name = ENV.fetch("IOS_PROVISIONING_PROFILE_NAME")
+
+    cert_path = ENV.fetch("IOS_DIST_CERT_P12_PATH")
+    profile_path = ENV.fetch("IOS_PROVISION_PROFILE_PATH")
+    cert_password = ENV.fetch("IOS_DIST_CERT_PASSWORD")
+
+    keychain_name = "fastlane_noticeboard_ci"
+    keychain_password = SecureRandom.hex(32)
+
+    begin
+      delete_keychain(name: keychain_name)
+    rescue StandardError
+      # Keychain may not exist on first run
+    end
+
+    create_keychain(
+      name: keychain_name,
+      password: keychain_password,
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
+    )
+
+    import_certificate(
+      certificate_path: cert_path,
+      certificate_password: cert_password,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password
+    )
+    install_provisioning_profile(path: profile_path)
+
+    export_plist = File.join(ios_dir, "ExportOptions.ci.plist")
+    write_export_plist(export_plist, team_id, profile_name, bundle_id)
+
+    Dir.chdir(ios_dir) do
+      sh("bundle", "exec", "pod", "install", "--repo-update")
+    end
+
+    Dir.chdir(project_root) do
+      sh("flutter", "pub", "get")
+      build_cmd = ["flutter", "build", "ipa", "--release", "--export-options-plist=ios/ExportOptions.ci.plist"]
+      build_cmd += ["--build-name", ENV["FLUTTER_BUILD_NAME"]] if ENV["FLUTTER_BUILD_NAME"] && !ENV["FLUTTER_BUILD_NAME"].empty?
+      build_cmd += ["--build-number", ENV["FLUTTER_BUILD_NUMBER"]] if ENV["FLUTTER_BUILD_NUMBER"] && !ENV["FLUTTER_BUILD_NUMBER"].empty?
+      sh(*build_cmd)
+    end
+
+    ipa_glob = Dir[File.join(project_root, "build", "ios", "ipa", "*.ipa")]
+    ipa_path = ipa_glob.first
+    UI.user_error!("IPA not found under build/ios/ipa/") if ipa_path.nil?
+
+    if dry
+      UI.success("Dry run: skip TestFlight upload. IPA: #{ipa_path}")
+      next
+    end
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      key_filepath: ENV.fetch("ASC_API_KEY_PATH"),
+      duration: 1200,
+      in_house: false
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: ipa_path,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
