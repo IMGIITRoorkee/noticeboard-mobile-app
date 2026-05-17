@@ -1,0 +1,172 @@
+name: Manual release
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Target store(s)"
+        required: true
+        type: choice
+        options:
+          - both
+          - android
+          - ios
+      release_track:
+        description: "Google Play track (Android only)"
+        type: choice
+        options:
+          - internal
+          - beta
+          - production
+        default: internal
+      build_name:
+        description: "Optional Flutter --build-name (e.g. 1.0.4)"
+        required: false
+        type: string
+      build_number:
+        description: "Optional Flutter --build-number (must increase for each store upload)"
+        required: false
+        type: string
+      dry_run:
+        description: "Build and sign only; skip store uploads"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  FLUTTER_VERSION: "2.10.5"
+
+jobs:
+  android:
+    name: Android (Play Store)
+    if: github.event.inputs.platform == 'android' || github.event.inputs.platform == 'both'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: noticeboard/android
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "11"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Flutter pub get
+        working-directory: noticeboard
+        run: flutter pub get
+
+      - name: Decode Android release keystore
+        env:
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+        run: |
+          echo "$ANDROID_KEYSTORE_B64" | base64 -d > "${RUNNER_TEMP}/release.jks"
+
+      - name: Write key.properties
+        env:
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEYSTORE_PATH: ${{ runner.temp }}/release.jks
+        run: |
+          cat > key.properties <<EOF
+          storePassword=${STORE_PASSWORD}
+          keyPassword=${KEY_PASSWORD}
+          keyAlias=${KEY_ALIAS}
+          storeFile=${KEYSTORE_PATH}
+          EOF
+
+      - name: Decode Play Console service account JSON
+        if: ${{ !(github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true') }}
+        env:
+          PLAY_JSON_B64: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON_B64 }}
+        run: |
+          echo "$PLAY_JSON_B64" | base64 -d > "${RUNNER_TEMP}/play.json"
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          working-directory: noticeboard/android
+          bundler-cache: false
+
+      - name: Bundle install (Fastlane)
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Fastlane release
+        env:
+          PLAY_TRACK: ${{ github.event.inputs.release_track }}
+          DRY_RUN: ${{ (github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true') && 'true' || 'false' }}
+          FLUTTER_BUILD_NAME: ${{ github.event.inputs.build_name }}
+          FLUTTER_BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+          PLAY_SERVICE_ACCOUNT_JSON_PATH: ${{ runner.temp }}/play.json
+        run: bundle exec fastlane release
+
+  ios:
+    name: iOS (TestFlight)
+    if: github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'both'
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Flutter pub get
+        working-directory: noticeboard
+        run: flutter pub get
+
+      - name: Decode signing assets
+        env:
+          IOS_CERT_B64: ${{ secrets.IOS_DISTRIBUTION_CERT_P12_B64 }}
+          IOS_PROFILE_B64: ${{ secrets.IOS_PROVISION_PROFILE_B64 }}
+          ASC_KEY_B64: ${{ secrets.ASC_API_KEY_P8_B64 }}
+        run: |
+          mkdir -p noticeboard/ios/certs
+          echo "$IOS_CERT_B64" | base64 -d > noticeboard/ios/certs/dist.p12
+          echo "$IOS_PROFILE_B64" | base64 -d > noticeboard/ios/certs/app_store.mobileprovision
+          echo "$ASC_KEY_B64" | base64 -d > noticeboard/ios/certs/AuthKey.p8
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          working-directory: noticeboard/ios
+          bundler-cache: false
+
+      - name: Bundle install (Fastlane + CocoaPods)
+        working-directory: noticeboard/ios
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Fastlane release
+        working-directory: noticeboard/ios
+        env:
+          DRY_RUN: ${{ (github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true') && 'true' || 'false' }}
+          FLUTTER_BUILD_NAME: ${{ github.event.inputs.build_name }}
+          FLUTTER_BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+          IOS_DIST_CERT_P12_PATH: ${{ github.workspace }}/noticeboard/ios/certs/dist.p12
+          IOS_PROVISION_PROFILE_PATH: ${{ github.workspace }}/noticeboard/ios/certs/app_store.mobileprovision
+          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_NAME: ${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}
+          IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_API_KEY_PATH: ${{ github.workspace }}/noticeboard/ios/certs/AuthKey.p8
+        run: bundle exec fastlane release

@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+default_platform(:android)
+
+platform :android do
+  desc "Build release App Bundle and optionally upload to Google Play"
+  lane :release do
+    project_root = File.expand_path("../..", __dir__)
+    dry = ENV["DRY_RUN"] == "true"
+    track = ENV["PLAY_TRACK"] || "internal"
+
+    Dir.chdir(project_root) do
+      sh("flutter", "pub", "get")
+      build_cmd = ["flutter", "build", "appbundle", "--release"]
+      build_cmd += ["--build-name", ENV["FLUTTER_BUILD_NAME"]] if ENV["FLUTTER_BUILD_NAME"] && !ENV["FLUTTER_BUILD_NAME"].empty?
+      build_cmd += ["--build-number", ENV["FLUTTER_BUILD_NUMBER"]] if ENV["FLUTTER_BUILD_NUMBER"] && !ENV["FLUTTER_BUILD_NUMBER"].empty?
+      sh(*build_cmd)
+    end
+
+    aab = File.join(project_root, "build", "app", "outputs", "bundle", "release", "app-release.aab")
+    UI.user_error!("AAB not found at #{aab}") unless File.exist?(aab)
+
+    if dry
+      UI.success("Dry run: skipping Play upload. AAB: #{aab}")
+      next
+    end
+
+    json_key = ENV["PLAY_SERVICE_ACCOUNT_JSON_PATH"]
+    UI.user_error!("Set PLAY_SERVICE_ACCOUNT_JSON_PATH for upload") if json_key.nil? || json_key.empty?
+
+    upload_to_play_store(
+      track: track,
+      aab: aab,
+      json_key: json_key,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
